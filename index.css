@@ -1,0 +1,29 @@
+    *{
+        padding: 0;
+        margin: 0;
+        overflow: hidden;
+    }
+    body {
+        width: 100vw;
+        height: 100vh;
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #456aa3;
+    }
+    header{
+        width: 100vw;
+        height: 10vh;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px;
+        background: #9e0404;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+.logos{
+    width: 80%;
+    height: auto;
+}
+    .btns{
+
+    }

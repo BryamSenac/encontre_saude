@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encontre Saúde</title>
+    <link rel="stylesheet" href="./index.css">
+    <script type="module" src="index.js" defer></script>
+</head>
+<body>
+    <header>
+        <div class="logos">
+            <img src="./assets/logo.png" alt="logo">
+        </div>
+        <div class="buttons">
+            <button class="btns btn1">Primeiros Socorros</button>
+            <button class="btns btn2">Ações Preventivas</button>
+            <button class="btns btn3">Farmácias</button>
+            <button class="btns btn4">Sintomas</button>
+            <button class="btns btn5">Home</button>
+        </div>
+    </header>
+
+    <main></main>
+    <footer></footer>
+
+    <script type="module">
+        import { ROUTES } from "./routes/routes.js"; 
+
+        const btnConfigs = [
+            { selector: ".btn1", href: ROUTES.primeirosSocorros },
+            { selector: ".btn2", href: ROUTES.prevensao },
+            { selector: ".btn3", href: ROUTES.farmacia },
+            { selector: ".btn4", href: ROUTES.sintomas },
+            { selector: ".btn5", href: ROUTES.home },
+        ];
+
+        btnConfigs.forEach(({ selector, href }) => {
+            const btn = document.querySelector(selector);
+            if (btn) {
+                btn.addEventListener("click", () => {
+                    window.location.href = href;
+                });
+            }
+        });
+    </script>
+</body>
+</html>
