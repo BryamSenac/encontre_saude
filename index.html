@@ -1,48 +1,37 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Encontre Saúde</title>
-    <link rel="stylesheet" href="./index.css">
-    <script type="module" src="index.js" defer></script>
-</head>
-<body>
-    <header>
-        <div class="logos">
-            <img src="./assets/logo.png" alt="logo">
-        </div>
-        <div class="buttons">
-            <button class="btns btn1">Primeiros Socorros</button>
-            <button class="btns btn2">Ações Preventivas</button>
-            <button class="btns btn3">Farmácias</button>
-            <button class="btns btn4">Sintomas</button>
-            <button class="btns btn5">Home</button>
-        </div>
-    </header>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Encontre Saúde</title>
+        <link rel="stylesheet" href="./index.css">
+        <script type="module" src="./index.js" defer></script>
+        <link rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    </head>
+    <body>
+        <img class="logo" src="./assets/logo.png" alt="logo">
+        <header id="header"></header>
+        <nav id="banner"></nav>
 
-    <main></main>
-    <footer></footer>
+        <main></main>
 
-    <script type="module">
-        import { ROUTES } from "./routes/routes.js"; 
-
-        const btnConfigs = [
-            { selector: ".btn1", href: ROUTES.primeirosSocorros },
-            { selector: ".btn2", href: ROUTES.prevensao },
-            { selector: ".btn3", href: ROUTES.farmacia },
-            { selector: ".btn4", href: ROUTES.sintomas },
-            { selector: ".btn5", href: ROUTES.home },
-        ];
-
-        btnConfigs.forEach(({ selector, href }) => {
-            const btn = document.querySelector(selector);
-            if (btn) {
-                btn.addEventListener("click", () => {
-                    window.location.href = href;
-                });
-            }
-        });
-    </script>
-</body>
+        <footer>
+            <div class="footer">
+                <img class="logoTipo" src="./assets/logoTipo.png"
+                    alt="logoTipo">
+                <div class="contacts">
+                    <div class="contact-item" data-tooltip="contato@saude.com">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div class="contact-item" data-tooltip="(99) 9999-9999">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <div class="contact-item" data-tooltip="(99) 98888-8888">
+                        <i class="fab fa-whatsapp"></i>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </body>
 </html>

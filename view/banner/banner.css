@@ -1,0 +1,50 @@
+#banner {
+  position: relative;
+  width: 100%;
+  height: 20vh;     /* Altura do banner */
+  margin: 20px auto;
+  overflow: hidden;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  background-color: #eee;
+}
+
+#banner .slides {
+  display: flex;
+  width: 400%; /* 4 imagens */
+  height: 100%;
+  transition: transform 0.5s ease-in-out;
+}
+
+#banner .slide {
+  width: 100%;
+  flex-shrink: 0;
+  height: 100%;
+  background-position: center;
+  background-size:contain;
+}
+
+#banner .buttons {
+  position: absolute;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+}
+
+#banner .buttons button {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  border: none;
+  background-color: rgba(255,255,255,0.6);
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+#banner .buttons button.active,
+#banner .buttons button:hover {
+  background-color: rgba(255,255,255,1);
+  box-shadow: 0 0 5px rgba(0,0,0,0.3);
+}
