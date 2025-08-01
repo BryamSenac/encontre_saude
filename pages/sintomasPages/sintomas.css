@@ -1,0 +1,96 @@
+body{
+    height: 100vh;
+    width: 100vw;
+    overflow: 0;
+    padding: 0;
+}
+
+header{
+    height: 10vh;
+    width: 100vw;
+}
+
+main{
+    width: 100vw;
+    height: 80vh;
+    display: flex;
+    justify-content: space-around;
+}
+
+footer{
+     width: 100vw;
+    height: 10vh;
+}
+
+#menuSintomas{
+    background-color: red;
+    height: 100%;
+    width: 30%;
+    border-radius: 2vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+
+#chat{
+   background-color: red;
+    height: 80%;
+    width: 30%;
+    border-radius: 2vw;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.feedback{
+    width: 80% ;
+    height: 25%;
+    background-color: blue;
+    border-radius: 2vw;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}
+
+#bola1{
+    background-color: green;
+    width: 17%;
+    height: 40%;
+    border-radius: 25vw;
+}
+
+#bola2{
+    background-color: green;
+    width: 17%;
+    height: 40%;
+    border-radius: 25vw;
+}
+
+#bola3{
+    background-color: green;
+    width: 17%;
+    height: 40%;
+    border-radius: 25vw;
+}
+
+#text_chat{
+   
+    width: 60%;
+    height: 80%;
+    border-radius: 3vw ;
+    display: flex;
+    align-items: start;
+    overflow-x: hidden;
+    resize: none;
+    padding: 2vw;
+}
+
+#btnchat{
+width: 11%;
+height: 10%;
+border-radius: 25vw;
+}
+
