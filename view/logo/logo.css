@@ -1,0 +1,43 @@
+
+.logoType {
+    top: 0%;
+    left: 35%;
+    border-radius: 0 0 20px 20px;
+    position: relative;
+    width: 70vh;
+    height: 10vh;
+    background-color: var(--green-dark);
+    display: flex;
+    justify-content: center;
+}
+
+.logo {
+    position: absolute;
+    margin-top: 0.5vh;
+    width: 15vh;
+    z-index: 999;
+    border-radius: 100%;
+    background-color: var(--green-light);
+    transition: all 2s ease-in-out;
+}
+
+.logo:hover {
+    margin-top: 1vh;
+    transform: scale(1.2);
+    animation: pulse 2s infinite;
+    background-color: var(--green-medium);
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        transform: rotate(0deg);
+    }
+    20%{
+        transform: rotate(10deg);
+    }
+    60% {
+        transform: rotate(-10deg);
+    }
+}

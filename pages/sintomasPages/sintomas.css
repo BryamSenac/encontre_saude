@@ -1,7 +1,13 @@
+@import url(./../../view/header/header.css);
+@import url(./../../config/config.css);
+@import url(./../../view/logo/logo.css);
+@import url(./../../view/footer/footer.css);
+
 body{
     height: 100vh;
     width: 100vw;
-    overflow: hidden;
+    overflow-x: auto;
+    overflow-y: hidden;
     padding: 0;
     margin: 0;
 }

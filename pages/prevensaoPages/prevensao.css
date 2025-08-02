@@ -1,3 +1,8 @@
+@import url(./../../view/header/header.css);
+@import url(./../../config/config.css);
+@import url(./../../view/logo/logo.css);
+@import url(./../../view/footer/footer.css);
+
 body{
     width: 100vw;
     height: 250vh;
@@ -12,12 +17,6 @@ main{
     display: flex;
     flex-direction: column;
     
-}
-
-footer{
-    width: 100vw;
-    height: 30vh;
-    background-color: gray;
 }
 
 #card_prev{

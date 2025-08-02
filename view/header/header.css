@@ -16,29 +16,31 @@
 .menu-wrapper {
   width: 8vh;
   height: 8vh;
-  background-color: var(--secondary-color);
+  background-color: var(--green-dark);
+  color: var(--text-color);
+  font-size: 4vh;
   border-radius: 25px;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background-color 1s;
   z-index: 120;
-  position: relative; /* para referência de alinhamento */
+  position: relative; 
 }
 
 /* Barra vertical atrás do menu */
 .menu-bar {
   position: absolute;
-  top: 8vh; /* exatamente embaixo do botão */
-  left: 0;
-  width: 4vh;
-  height: 500px; /* altura máxima do menu */
-  background-color: var(--secondary-color);
-  border-radius: 0 25px 25px 0;
+  top: 0%;
+  left: 0%;
+  width: 8vh;
+  height: 48vh; /* altura máxima do menu */
+  background-color: var(--green-dark);
+  border-radius: 20px;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.3s ease;
+  transition: opacity 1s ease-in-out;
   z-index: 115;
 }
 
@@ -82,7 +84,7 @@
   background-color: transparent; /* fundo transparente, barra que fica atrás */
   color: var(--text-color);
   text-decoration: none;
-  padding: 2vh 1.5vh;
+  padding: 2vh 0.5vh;
   border-radius: 25px;
   width: 100%;
   white-space: nowrap;
@@ -93,7 +95,7 @@
 
 /* Expande texto no hover */
 .menu a:hover {
-  background-color: var(--secondary-color-ghost);
+  background-color: var(--green-medium);
   width: 100%;
 }
 

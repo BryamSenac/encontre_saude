@@ -1,0 +1,66 @@
+@import url(./../../config/config.css);
+
+/* Footer fixado no fim */
+footer {
+    width: 100%;
+    background: var(--black-dark);
+    color: white;
+    margin-top: auto;
+}
+
+.footerSize{
+    max-width:90%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+/* Logo do footer */
+.footerSize .logoTipo {
+    height: 8vh;
+    /* reduzido para não deformar */
+}
+
+/* Contatos em linha */
+.contacts {
+    display: flex;
+    gap: 1.5rem;
+}
+
+/* Ícones de contato */
+.contact-item {
+    position: relative;
+    cursor: pointer;
+    font-size: 1.5rem;
+    color: white;
+    transition: color 0.3s ease;
+}
+
+.contact-item:hover {
+    color: var(--green-light);
+}
+
+/* Tooltip (balão) */
+.contact-item::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 120%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: transparent;
+    border: 1px solid white;
+    color: white;
+    font-size: 0.85rem;
+    padding: 0.3rem 0.6rem;
+    border-radius: 8px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    white-space: nowrap;
+}
+
+.contact-item:hover::after {
+    opacity: 1;
+}
