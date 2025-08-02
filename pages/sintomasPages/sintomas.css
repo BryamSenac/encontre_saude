@@ -3,187 +3,190 @@
 @import url(./../../view/logo/logo.css);
 @import url(./../../view/footer/footer.css);
 
-body{
-    height: 100vh;
-    width: 100vw;
-    overflow-y: auto;
-    overflow-x: hidden;
-    padding: 0;
-    margin: 0;
+body {
+  height: 100vh;
+  width: 100vw;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0;
+  margin: 0;
+  background-color: #262525;
 }
 
-header{
-    height: 10vh;
-    width: 100vw;
-}
-
-main{
-    width: 100vw;
-    height: 80vh;
-    display: flex;
-    justify-content:center;
-    align-items: center;
-}
-
-footer{
-     width: 100vw;
-    height: 10vh;
-}
-
-#chat{
-   background-color: red;
-    height: 90%;
-    width: 60%;
-    border-radius: 2vw;
-    display: flex;
-    flex-direction: row;
-    align-items: end;
-    justify-content: space-around;
-
-}
-
-
-
-#feedback1{
-    width: 60vw ;
-    height: 10vh;
- background-color: blue;
-    
-    display: flex;
-    flex-direction: row;
-    justify-content: start;
-    align-items: center;
-
-    position: absolute;
-
-    left: 95%;
-    top: 19%;
-}
-#feedback2{
-    width: 60vw ;
-    height: 10vh;
-     background-color: blue;
-
-    
-    display: flex;
-    flex-direction: row;
-    justify-content: start;
-    align-items: center;
-
-    position: absolute;
-
-    left: 95%;
-    top: 31%;
-}
-
-#feedback3{
- width: 60vw ;
-   height: 10vh;
-    background-color: blue;
-    
-    display: flex;
-    flex-direction: row;
-    justify-content: start;
-    align-items: center;
-
-    position: absolute;
-
-    left: 95%;
-    top: 43%;
-}
-
-#feedback4{
- width: 60vw ;
+header {
   height: 10vh;
- background-color: blue;
-    
-    display: flex;
-    flex-direction: row;
-    justify-content: start;
-    align-items: center;
-
-    position: absolute;
-
-    left: 95%;
-    top: 55%;
+  width: 100vw;
 }
 
-#feedback5{
-    width: 60vw ;
-   height: 10vh;
-    background-color: blue;
-  
-    
-    display: flex;
-    flex-direction: row;
-    justify-content: start;
-    align-items: center;
-
-    position: absolute;
-
-    left: 95%;
-    top: 67%;
+main {
+  width: 100vw;
+  height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-#bola1{
-    background-color: green;
-    width: 5%;
-    height: 55%;
-    border-radius: 25vw;
-    margin-left: 1vw;
+footer {
+  width: 100vw;
+  height: 10vh;
 }
 
-#bola2{
-  background-color: green;
-    width: 5%;
-    height: 55%;
-    border-radius: 25vw;
-    margin-left: 1vw;
+#chat {
+  background-color: red;
+  height: 90%;
+  width: 60%;
+  border-radius: 2vw;
+  display: flex;
+  flex-direction: row;
+  align-items: end;
+  justify-content: space-around;
+
 }
 
-#bola3{
-   background-color: green;
-    width: 5%;
-    height: 55%;
-    border-radius: 25vw;
-    margin-left: 1vw;
+
+
+#feedback1 {
+  width: 60vw;
+  height: 10vh;
+  background-color: #FFFFFF;
+  border-radius: 1vw;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
+
+  position: absolute;
+
+  left: 95%;
+  top: 19%;
 }
 
-#bola4{
-   background-color: green;
-    width: 5%;
-    height: 55%;
-    border-radius: 25vw;
-    margin-left: 1vw;
+#feedback2 {
+  width: 60vw;
+  height: 10vh;
+  background-color: #FFFFFF;
+  border-radius: 1vw;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
+
+  position: absolute;
+
+  left: 95%;
+  top: 31%;
 }
 
-#bola5{
-   background-color: green;
-    width: 5%;
-    height: 55%;
-    border-radius: 25vw;
-    margin-left: 1vw;
+#feedback3 {
+  width: 60vw;
+  height: 10vh;
+  background-color: #FFFFFF;
+  border-radius: 1vw;
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
+
+  position: absolute;
+
+  left: 95%;
+  top: 43%;
 }
 
-#text_chat{
-   
-    width: 80%;
-    height: 80%;
-    border-radius: 3vw ;
-    display: flex;
-    align-items: start;
-    overflow-x: hidden;
-    resize: none;
-    padding: 2vw;
-    margin-bottom: 4vw;
-    scrollbar-width: none ;
+#feedback4 {
+  width: 60vw;
+  height: 10vh;
+  background-color: #FFFFFF;
+  border-radius: 1vw;
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
+
+  position: absolute;
+
+  left: 95%;
+  top: 55%;
 }
 
-#btnchat{
-width: 6%;
-height: 10%;
-border-radius: 25vw;
-margin-bottom: 5vw;
+#feedback5 {
+  width: 60vw;
+  height: 10vh;
+  background-color: #FFFFFF;
+  border-radius: 1vw;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
+
+  position: absolute;
+
+  left: 95%;
+  top: 67%;
+}
+
+#bola1 {
+  background-color: #5EA7FF;
+  width: 5%;
+  height: 55%;
+  border-radius: 25vw;
+  margin-left: 1vw;
+}
+
+#bola2 {
+  background-color: #ABFB4F;
+  width: 5%;
+  height: 55%;
+  border-radius: 25vw;
+  margin-left: 1vw;
+}
+
+#bola3 {
+  background-color: #FFEA00;
+  width: 5%;
+  height: 55%;
+  border-radius: 25vw;
+  margin-left: 1vw;
+}
+
+#bola4 {
+  background-color: #FF771C;
+  width: 5%;
+  height: 55%;
+  border-radius: 25vw;
+  margin-left: 1vw;
+}
+
+#bola5 {
+  background-color: #D51717;
+  width: 5%;
+  height: 55%;
+  border-radius: 25vw;
+  margin-left: 1vw;
+}
+
+#text_chat {
+
+  width: 80%;
+  height: 80%;
+  border-radius: 3vw;
+  display: flex;
+  align-items: start;
+  overflow-x: hidden;
+  resize: none;
+  padding: 2vw;
+  margin-bottom: 4vw;
+  scrollbar-width: none;
+}
+
+#btnchat {
+  width: 6%;
+  height: 10%;
+  border-radius: 25vw;
+  margin-bottom: 5vw;
 }
 
 
@@ -192,7 +195,7 @@ margin-bottom: 5vw;
 #feedback3,
 #feedback4,
 #feedback5 {
-    transition: left 0.5s ease;
+  transition: left 0.5s ease;
 }
 
 #feedback1:hover,
@@ -200,7 +203,7 @@ margin-bottom: 5vw;
 #feedback3:hover,
 #feedback4:hover,
 #feedback5:hover {
-    left: 80%;
+  left: 80%;
 }
 
 
@@ -230,19 +233,19 @@ margin-bottom: 5vw;
   justify-content: center;
 }
 
-/* Frente: textarea + botão */
+/* Frente*/
 .card-front {
-  background-color: red;
+  background-color: #F0ECD9;
   flex-direction: row;
   align-items: end;
   justify-content: space-around;
   padding: 2vw;
 }
 
-/* Verso: cartão ativado */
+/* Verso*/
 .card-back {
-  background-color: darkgreen;
-  color: white;
+  background-color: #F0ECD9;
+  color: black;
   font-size: 2rem;
   transform: rotateY(180deg);
 }
@@ -251,10 +254,11 @@ margin-bottom: 5vw;
 #btnchat {
   width: 6%;
   height: 10%;
-  background-color: white;
+  background-color: #797979;
   border-radius: 25vw;
   margin-bottom: 5vw;
   cursor: pointer;
+
 }
 
 /* Estilo do input */
@@ -270,13 +274,6 @@ margin-bottom: 5vw;
 }
 
 /* Quando clicado, gira o chat */
-#flip:checked ~ #chat-container #chat {
+#flip:checked~#chat-container #chat {
   transform: rotateY(180deg);
 }
-
-
-
-
-
-
-

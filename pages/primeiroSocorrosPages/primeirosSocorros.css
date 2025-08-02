@@ -5,7 +5,7 @@
 
 body{
     width: 100vw;
-    height: 200vh;
+    height: 180vh;
     overflow-x: hidden;
     padding: 0%;
     margin: 0%;
@@ -13,7 +13,7 @@ body{
 
 main{
  width: 100vw;
- height: 270vh;
+ height: 150vh;
  display: flex;
  flex-direction: column;
  align-items: center;
@@ -24,18 +24,11 @@ footer{
     height: 20vh;
 }
 
-input{
-    height: 2%;
-    width: 70%;
-    border-radius: 5vw;
-    margin-top: 2vw;
-}
-
 #btns_mae{
     width: 100vw;
-    height: 12%;
-    background-color: greenyellow;
-    margin-top: 1vw;
+    height: 18%;
+    background-color: #A5CBA7;
+    margin-top: 3vw;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -43,26 +36,25 @@ input{
 }
 
 #btns1{
-    background-color: red;
+
     width: 80%;
-    height: 15%;
+    height: 20%;
     display: flex;
     justify-content: center;
 
 }
 
 #btns2{
-    background-color: red;
+
     width: 90%;
-    height: 15%;
+    height: 20%;
    display: flex;
     justify-content: center;
 }
 
 #btns3{
-    background-color: red;
     width: 80%;
-    height: 15%;
+    height: 20%;
     display: flex;
     justify-content: center;
 }
@@ -73,4 +65,30 @@ input{
     border-radius: 5vw;
     margin-left: 2vw;
     margin-right: 2vw;
+    background-color: #D9D9D9;
+    border: solid #171717 0.1vw;
+    box-shadow: inset 0 1px 1px #171717;
+}
+
+#infos_bt{
+    background-color: #C7DAB7;
+    width: 80vw;
+    height: 80vh;
+    margin-top: 8vw;
+    border-radius: 5vw;
+    box-shadow: inset 0 1px 5px #171717;
+}
+
+#card_bt{
+     background-color: #D9D9D9;
+    width: 15vw;
+    height: 10vh;
+    margin-top: 8vw;
+    border-radius: 10vw;
+    position: absolute;
+    top: 38%;
+    left: 20%;
+    border: solid #171717 0.1vw;
+    box-shadow: inset 0 1px 2px #171717;
+     
 }
