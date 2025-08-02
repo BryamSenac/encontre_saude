@@ -1,29 +1,218 @@
-    *{
-        padding: 0;
-        margin: 0;
-        overflow: hidden;
-    }
-    body {
-        width: 100vw;
-        height: 100vh;
-        margin: 0;
-        font-family: Arial, sans-serif;
-        background: #456aa3;
-    }
-    header{
-        width: 100vw;
-        height: 10vh;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 20px;
-        background: #9e0404;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-.logos{
-    width: 80%;
-    height: auto;
-}
-    .btns{
+@import url(./view/header/header.css);
+@import url(./view/banner/banner.css);
+@import url(./config/config.css);
 
-    }
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    height: 100%;
+    width: 100%;
+    background: var(--beige-light);
+    /* cor de fundo geral */
+}
+
+.textCenter {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 0;
+}
+
+.logo {
+    width: 15vh;
+    position: absolute;
+    z-index: 999;
+    top: 0%;
+    left: 45%;
+    border-radius: 100%;
+    background-color: var(--green-light);
+}
+
+main {
+    width: 100%;
+}
+
+/* Textos centrais */
+.textCenter {
+    text-align: center;
+    margin: 2rem 1rem;
+}
+
+.textCenter h1 {
+    font-size: 2rem;
+    color: var(--green-dark);
+}
+
+.textCenter h3 {
+    font-size: 1.5rem;
+    color: var(--green-medium);
+}
+
+.textCenter p {
+    max-width: 700px;
+    margin: 0.5rem auto;
+    font-size: 1rem;
+    color: var(--gray-medium);
+    line-height: 1.5;
+}
+
+.button {
+    margin: 1rem 0;
+    padding: 0.8rem 1.8rem;
+    border: none;
+    border-radius: 25px;
+    background: var(--green-dark);
+    color: var(--black-dark);
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+}
+
+.button:hover {
+    background: var(--green-medium);
+    transform: translateY(-2px);
+}
+
+/* Cards */
+.cards {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 2rem;
+    margin: 2rem auto;
+}
+
+.cards.single {
+    justify-content: center;
+}
+
+.card {
+    background: var(--gray-light);
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    width: 280px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card.large {
+    width: 60%;
+}
+
+.card h2 {
+    margin: 1rem 0 0.5rem 0;
+    font-size: 1.2rem;
+    text-align: center;
+    color: var(--green-dark);
+}
+
+.card-img {
+    width: 100%;
+    height: 200px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 0 0 15px 15px;
+}
+
+.card.large .card-img {
+    height: 300px;
+}
+
+.button {
+    margin: 1rem 0;
+    padding: 0.8rem 1.8rem;
+    border: none;
+    border-radius: 25px;
+    background: var(--green-dark);
+    color: white;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+}
+
+.button:hover {
+    background: var(--green-medium);
+    transform: translateY(-2px);
+}
+
+/* Footer fixado no fim */
+footer {
+    width: 100%;
+    background: var(--black-dark);
+    color: white;
+    margin-top: auto;
+    /* empurra para o fim */
+}
+
+.footer {
+    max-width: 1100px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+/* Logo do footer */
+.footer .logoTipo {
+    height: 8vh;
+    /* reduzido para não deformar */
+}
+
+/* Contatos em linha */
+.contacts {
+    display: flex;
+    gap: 1.5rem;
+}
+
+/* Ícones de contato */
+.contact-item {
+    position: relative;
+    cursor: pointer;
+    font-size: 1.5rem;
+    color: white;
+    transition: color 0.3s ease;
+}
+
+.contact-item:hover {
+    color: var(--green-light);
+}
+
+/* Tooltip (balão) */
+.contact-item::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 120%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: transparent;
+    border: 1px solid white;
+    color: white;
+    font-size: 0.85rem;
+    padding: 0.3rem 0.6rem;
+    border-radius: 8px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    white-space: nowrap;
+}
+
+.contact-item:hover::after {
+    opacity: 1;
+}
