@@ -8,7 +8,7 @@ export function createBanner() {
     "./assets/saude2.jpg",
     "./assets/saude3.png",
     "./assets/saude4.jpg",
-    "./assets/saude.jpg",  // repetida para loop suave
+    "./assets/saude.jpg",
   ];
 
   const slidesCount = images.length;

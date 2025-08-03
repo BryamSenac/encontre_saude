@@ -14,41 +14,23 @@
       <header id="header"></header>
 
       <main>
-
-
-         <div id="btns_mae">
-
-            <div id="btns1">
-               <button class="btns"></button>
-               <button class="btns"></button>
-               <button class="btns"></button>
-               <button class="btns"></button>
-            </div>
-
-            <div id="btns2">
-               <button class="btns"></button>
-               <button class="btns"></button>
-               <button class="btns"></button>
-               <button class="btns"></button>
-               <button class="btns"></button>
-            </div>
-
-            <div id="btns3">
-               <button class="btns"></button>
-               <button class="btns"></button>
-               <button class="btns"></button>
-               <button class="btns"></button>
-            </div>
-
+         <div id="search-container">
+            <input type="text" id="search-input"
+               placeholder="🔍 Procure por um tema..." autofocus>
          </div>
 
-         <div id="card_bt"></div>
+         <div id="btns_mae" role="list"
+            aria-label="Temas de primeiros socorros">
+            <!-- Botões são gerados pelo JS -->
+         </div>
 
-         <div id="infos_bt"></div>
-
+         <div id="infos_bt">
+            <h2 id="info-title" aria-live="polite">Selecione um tema</h2>
+            <div id="info-content"></div>
+         </div>
       </main>
 
-        <footer id="footer"></footer>
+      <footer id="footer"></footer>
 
    </body>
 </html>

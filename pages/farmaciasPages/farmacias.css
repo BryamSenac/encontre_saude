@@ -2,3 +2,145 @@
 @import url(./../../config/config.css);
 @import url(./../../view/logo/logo.css);
 @import url(./../../view/footer/footer.css);
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body,
+html {
+    height: 100%;
+    font-family: Arial, sans-serif;
+    color: var(--black-dark);
+    background-color: var(--beige-light);
+}
+
+main {
+    width: 80vw;
+    height: 80vh;
+    margin: 8vh 0 8vh 0;
+}
+
+#map {
+    margin-left: 10%;
+    height: 100%;
+    width: 100%;
+    border-radius: 20px;
+    box-shadow: 0px 0px 16px 0px rgba(0, 0, 0, 0.75);
+    -webkit-box-shadow: 0px 0px 16px 0px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 0px 0px 16px 0px rgba(0, 0, 0, 0.75);
+}
+
+.menuBtn,
+.loc-btn {
+    position: absolute;
+    top: 10%;
+    background: var(--green-dark);
+    color: var(--text-color);
+    border: none;
+    padding: 10px 15px;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 5px;
+    z-index: 999;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    transition: background-color 0.3s ease;
+}
+
+.menuBtn:hover,
+.loc-btn:hover {
+    background-color: var(--btn-active);
+}
+
+.menuBtn {
+    top: 1%;
+    right: 0.5%;
+}
+
+.loc-btn {
+    left: 10%;
+}
+
+.sideebar {
+    position: fixed;
+    top: 0;
+    right: -40%;
+    width: 40%;
+    height: 100%;
+    background: var(--beige-light);
+    box-shadow: -2px 0 8px rgba(0, 0, 0, 0.3);
+    transition: right 0.4s ease;
+    padding: 20px;
+    overflow-y: auto;
+    z-index: 998;
+    color: var(--black-dark);
+}
+
+.sideebar.active {
+    right: 0;
+}
+
+.sideebar h2 {
+    margin-bottom: 15px;
+    color: var(--green-dark);
+}
+
+.filter {
+    margin-bottom: 20px;
+}
+
+.filter input,
+.filter select {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid var(--gray-light);
+    border-radius: 6px;
+    font-size: 0.95rem;
+    color: var(--black-dark);
+    background-color: white;
+}
+
+.card {
+    background: white;
+    margin-bottom: 15px;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    transition: background 0.3s;
+    color: var(--black-dark);
+}
+
+.card:hover {
+    background: var(--green-light);
+    cursor: pointer;
+}
+
+.card h3 {
+    color: var(--green-dark);
+    margin-bottom: 8px;
+}
+
+.card p {
+    margin: 5px 0;
+    font-size: 0.9rem;
+    color: var(--gray-medium);
+}
+
+.rota-btn {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 8px 12px;
+    background: var(--green-dark);
+    color: var(--text-color);
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+}
+
+.rota-btn:hover {
+    background: var(--btn-active);
+}

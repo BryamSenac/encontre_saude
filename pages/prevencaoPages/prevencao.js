@@ -1,14 +1,12 @@
 import { createFooter } from "../../view/footer/footer.js";
 import { createLogo } from "../../view/logo/logo.js";
-import {createHeader} from "./../../view/header/header.js"
-import { createMap } from "./JS/createMap.js";
-import { carregarBairros } from "./JS/createBairros.js";
+import {createHeader} from "../../view/header/header.js"
+import { infoPrevencao } from "./JS/infoPrevencao.js";
 
 // Aguarda o carregamento completo do DOM
 document.addEventListener("DOMContentLoaded", () => {
     createHeader()
     createLogo()
     createFooter()
-    createMap()
-    carregarBairros()
+    infoPrevencao()
 });
