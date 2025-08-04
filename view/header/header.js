@@ -4,19 +4,10 @@ export function createHeader() {
     const header = document.getElementById("header");
     if (!header) return;
 
-    // Header container
     const headerEl = document.createElement("header");
     headerEl.className = "main-header";
 
-    // Sidebar (menu vertical)
-    const sidebar = document.createElement("div");
-    sidebar.className = "sidebar";
-
     // Botão hamburguer
-    const menuWrapper = document.createElement("div");
-    menuWrapper.className = "menu-wrapper";
-    menuWrapper.id = "menuWrapper";
-
     const menuBtn = document.createElement("div");
     menuBtn.className = "menu-btn";
     menuBtn.id = "menuToggle";
@@ -26,18 +17,16 @@ export function createHeader() {
     menuIcon.id = "menuIcon";
 
     menuBtn.appendChild(menuIcon);
-    menuWrapper.appendChild(menuBtn);
+    headerEl.appendChild(menuBtn);
 
-    // Barra vertical atrás do menu (barra colorida)
-    const menuBar = document.createElement("div");
-    menuBar.className = "menu-bar";
+    // Navbar lateral
+    const sidebar = document.createElement("div");
+    sidebar.className = "sidebar";
+    sidebar.id = "sidebar";
 
-    // Lista do menu
     const menuList = document.createElement("ul");
     menuList.className = "menu";
-    menuList.id = "menuItems";
 
-    // Botões do menu com rotas atuais
     const btnItems = [
         { text: "Home", icon: "fa-house", href: ROUTES.home },
         { text: "Primeiros Socorros", icon: "fa-kit-medical", href: ROUTES.primeirosSocorros },
@@ -63,27 +52,15 @@ export function createHeader() {
         menuList.appendChild(li);
     });
 
-    // Adiciona os elementos na ordem correta
-    sidebar.appendChild(menuWrapper);
-    sidebar.appendChild(menuBar);
     sidebar.appendChild(menuList);
-
-    // Fundo para fechar menu ao clicar fora
-    const menuBackground = document.createElement("div");
-    menuBackground.className = "menu-background";
-    menuBackground.id = "menuBackground";
-
     headerEl.appendChild(sidebar);
-    headerEl.appendChild(menuBackground);
     header.appendChild(headerEl);
 
     // Estado do menu
     let menuOpen = false;
 
     function openMenu() {
-        menuList.classList.add("open");
-        menuBar.classList.add("open");   // mostra a barra
-        menuBackground.classList.add("open");
+        sidebar.classList.add("open");
         menuBtn.classList.add("open");
         menuIcon.classList.remove("fa-bars");
         menuIcon.classList.add("fa-xmark");
@@ -91,23 +68,15 @@ export function createHeader() {
     }
 
     function closeMenu() {
-        menuList.classList.remove("open");
-        menuBar.classList.remove("open");  // esconde a barra
-        menuBackground.classList.remove("open");
+        sidebar.classList.remove("open");
         menuBtn.classList.remove("open");
         menuIcon.classList.remove("fa-xmark");
         menuIcon.classList.add("fa-bars");
         menuOpen = false;
     }
 
-    // Toggle menu ao clicar no botão hamburguer
-    menuWrapper.addEventListener("click", () => {
+    menuBtn.addEventListener("click", () => {
         if (menuOpen) closeMenu();
         else openMenu();
-    });
-
-    // Fecha menu clicando fora
-    menuBackground.addEventListener("click", () => {
-        closeMenu();
     });
 }
