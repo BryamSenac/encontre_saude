@@ -5,84 +5,139 @@
   z-index: 2000;
 }
 
-/* Botão hamburguer */
-.menu-btn {
+/* Barra fixa estreita com ícones e textos (textos inicialmente invisíveis) */
+.fixed-bar {
   position: fixed;
-  top: 1vh;
-  left: 1vh;
-  width: 7vh;
-  height: 7vh;
+  top: 0;
+  left: 0;
+  width: 12vh;
+  height: 100vh;
   background-color: var(--green-dark);
-  color: var(--text-color);
-  font-size: 3.5vh;
-  border-radius: 15px;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  cursor: pointer;
+  padding: 1vh 0;
+  gap: 1vh;
   z-index: 2100;
-  transition: all 1.2s ease;
 }
 
-/* Sidebar (inicialmente fora da tela) */
+/* Botão hamburguer */
+.menu-btn {
+  cursor: pointer;
+  padding: 1vh 0;
+  color: var(--text-color);
+  font-size: 5vh;
+}
+
+/* Ícones do fixed-bar */
+.fixed-bar .menu-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--text-color);
+  cursor: pointer;
+  width: 100%;
+}
+
+/* Ícone */
+.fixed-bar .menu-item i {
+  font-size: 3.5vh;
+  transition: transform 0.3s;
+}
+
+/* Texto com opacity 0 inicialmente */
+.fixed-bar .menu-item span {
+  font-size: 1.8vh;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  user-select: none;
+  margin-top: 0.3vh;
+}
+
+/* Hover para ícone */
+.fixed-bar .menu-item i:hover {
+  transform: scale(1.2);
+}
+
+/* Contatos (últimos 3 itens) */
+.contacts {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1vh;
+  width: 100%;
+  align-items: center;
+}
+
+/* Linha acima dos contatos */
+.contacts::before {
+  content: "";
+  position: absolute;
+  top: 1vh;
+  left: 10%;
+  width: 80%;
+  height: 2px;
+  background-color: white;
+  opacity: 0.8;
+}
+
+/* Sidebar expansível */
 .sidebar {
   position: fixed;
   top: 0;
-  left: -16%; /* escondido */
-  width: 16%;
+  left: -18vw; /* escondido à esquerda */
+  width: 18vw;
+  max-width: 300px;
   height: 100vh;
   background-color: var(--green-dark);
   padding-top: 10vh;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  box-shadow: 2px 0 10px rgba(0,0,0,0.6);
-  transition: left 1.1s ease-out;
-  z-index: 2000;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.6);
+  transition: left 0.4s ease;
+  z-index: 2200;
 }
 
-/* Quando aberto, aparece */
+/* Sidebar aberta */
 .sidebar.open {
   left: 0;
-}
-
-.menu-btn.open {
-  background-color: var(--green-medium);
-  left: 12%;
 }
 
 /* Menu dentro da sidebar */
 .menu {
   list-style: none;
-  width: 100%;
   padding: 0;
   margin: 0;
 }
 
+/* Itens do menu com linha */
 .menu li {
-  width: 100%;
+  border-bottom: 1px solid white;
 }
 
+/* Links do menu */
 .menu a {
   display: flex;
   align-items: center;
   color: var(--text-color);
   text-decoration: none;
-  padding: 2vh;
-  width: 100%;
-  font-size: 2.3vh;
+  padding: 1.5vh 2vh;
+  font-size: 1.8vh;
   transition: background 0.3s;
 }
 
-.menu a:hover {
-  background: var(--green-medium);
-}
-
-.menu i {
-  font-size: 20px;
+/* Ícones no menu da sidebar */
+.menu a i {
+  font-size: 2.5vh;
   min-width: 30px;
 }
 
-.menu span {
+/* Espaço entre ícone e texto no menu da sidebar */
+.menu a span {
   margin-left: 1.5vh;
+}
+
+/* Hover no menu */
+.menu a:hover {
+  background: var(--green-medium);
 }

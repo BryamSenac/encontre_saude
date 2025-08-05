@@ -7,26 +7,18 @@ export function createHeader() {
     const headerEl = document.createElement("header");
     headerEl.className = "main-header";
 
-    // Botão hamburguer
+    // Barra fixa estreita
+    const fixedBar = document.createElement("div");
+    fixedBar.className = "fixed-bar";
+
+    // Botão hamburguer (fixedBar)
     const menuBtn = document.createElement("div");
     menuBtn.className = "menu-btn";
     menuBtn.id = "menuToggle";
+    menuBtn.innerHTML = `<i class="fas fa-bars" id="menuIcon"></i>`;
+    fixedBar.appendChild(menuBtn);
 
-    const menuIcon = document.createElement("i");
-    menuIcon.className = "fas fa-bars";
-    menuIcon.id = "menuIcon";
-
-    menuBtn.appendChild(menuIcon);
-    headerEl.appendChild(menuBtn);
-
-    // Navbar lateral
-    const sidebar = document.createElement("div");
-    sidebar.className = "sidebar";
-    sidebar.id = "sidebar";
-
-    const menuList = document.createElement("ul");
-    menuList.className = "menu";
-
+    // Ícones + textos das páginas (fixedBar)
     const btnItems = [
         { text: "Home", icon: "fa-house", href: ROUTES.home },
         { text: "Primeiros Socorros", icon: "fa-kit-medical", href: ROUTES.primeirosSocorros },
@@ -36,18 +28,48 @@ export function createHeader() {
     ];
 
     btnItems.forEach(({ text, icon, href }) => {
+        const a = document.createElement("a");
+        a.href = href;
+        a.className = "menu-item";
+        a.innerHTML = `<i class="fas ${icon}"></i><span>${text}</span>`;
+        fixedBar.appendChild(a);
+    });
+
+    // Ícones de contato (fixedBar)
+    const contacts = document.createElement("div");
+    contacts.className = "contacts";
+
+    const contactItems = [
+        { icon: "fa-brands fa-whatsapp", href: "https://wa.me/seuNumero" },
+        { icon: "fa-solid fa-phone", href: "tel:+550000000000" },
+        { icon: "fa-solid fa-envelope", href: "mailto:seuemail@dominio.com" }
+    ];
+
+    contactItems.forEach(({ icon, href }) => {
+        const a = document.createElement("a");
+        a.href = href;
+        a.target = "_blank";
+        a.innerHTML = `<i class="${icon}"></i>`;
+        contacts.appendChild(a);
+    });
+
+    fixedBar.appendChild(contacts);
+
+    headerEl.appendChild(fixedBar);
+
+    // Sidebar expansível
+    const sidebar = document.createElement("div");
+    sidebar.className = "sidebar";
+    sidebar.id = "sidebar";
+
+    const menuList = document.createElement("ul");
+    menuList.className = "menu";
+
+    btnItems.forEach(({ text, icon, href }) => {
         const li = document.createElement("li");
         const a = document.createElement("a");
         a.href = href;
-
-        const i = document.createElement("i");
-        i.className = `fas ${icon}`;
-
-        const span = document.createElement("span");
-        span.textContent = text;
-
-        a.appendChild(i);
-        a.appendChild(span);
+        a.innerHTML = `<i class="fas ${icon}"></i><span>${text}</span>`;
         li.appendChild(a);
         menuList.appendChild(li);
     });
@@ -56,22 +78,35 @@ export function createHeader() {
     headerEl.appendChild(sidebar);
     header.appendChild(headerEl);
 
-    // Estado do menu
     let menuOpen = false;
+
+    const menuIcon = document.getElementById("menuIcon");
 
     function openMenu() {
         sidebar.classList.add("open");
-        menuBtn.classList.add("open");
         menuIcon.classList.remove("fa-bars");
         menuIcon.classList.add("fa-xmark");
+
+        // Aparecer textos fixed-bar
+        const spans = fixedBar.querySelectorAll(".menu-item span");
+        spans.forEach(span => {
+            span.style.opacity = "1";
+        });
+
         menuOpen = true;
     }
 
     function closeMenu() {
         sidebar.classList.remove("open");
-        menuBtn.classList.remove("open");
         menuIcon.classList.remove("fa-xmark");
         menuIcon.classList.add("fa-bars");
+
+        // Ocultar textos fixed-bar
+        const spans = fixedBar.querySelectorAll(".menu-item span");
+        spans.forEach(span => {
+            span.style.opacity = "0";
+        });
+
         menuOpen = false;
     }
 
@@ -79,4 +114,7 @@ export function createHeader() {
         if (menuOpen) closeMenu();
         else openMenu();
     });
+
+    // Opcional: inicia ocultando os textos fixed-bar
+    closeMenu();
 }
