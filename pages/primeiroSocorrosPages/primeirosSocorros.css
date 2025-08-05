@@ -17,9 +17,9 @@ body {
 }
 
 main {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+ display: flex;
+ flex-direction: column;
+ align-items: center;
   padding: 2vw 0;
 }
 
@@ -42,7 +42,7 @@ main {
   width: 80vw;
   display: grid;
   justify-content: center;
-  align-items: center;
+    align-items: center;
   grid-template-columns: repeat(4, 18vw);
   gap: 2vh;
   overflow-x: auto;
@@ -85,8 +85,8 @@ main {
   padding: 1.5rem;
   min-height: 60vh;
   position: relative;
-  display: flex;
-  justify-content: center;
+   display: flex;
+    justify-content: center;
   text-align: justify;
 }
 
@@ -101,9 +101,9 @@ main {
   font-weight: bold;
   background-color: var(--green-medium);
   border-radius: 20px;
-  display: flex;
+    display: flex;
   align-items: center;
-  justify-content: center;
+    justify-content: center;
 }
 
 #info-content {

@@ -125,13 +125,13 @@ main {
 
 .inputResp {
   width: 70%;
-  height: 10%;
+  height: 30%;
   position: absolute;
   top: 80%;
   left: 7.5%;
   border: none;
   border-radius: 25px;
-  padding-left: 1vh;
+  padding: 1vh;
 }
 
 .btn {
