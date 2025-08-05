@@ -155,30 +155,6 @@ document.getElementById('btn-avaliar').addEventListener('click', async () => {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //Substituir por uma função que é chamada no botão e analisa a resposta para devolver pro usuario
 /*
 document.getElementById('btn-avaliar').addEventListener('click', async () => {

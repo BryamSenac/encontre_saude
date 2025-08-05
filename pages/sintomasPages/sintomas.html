@@ -18,44 +18,54 @@
         <div class="alinhamentoTexts">
             <section class="info">
                 <div class="infoText">
-                    <h2>Aviso Importante</h2>
+                    <div id="div_aviso">
+                    <h2 id="aviso">Aviso Importante</h2> </div>
                     <p>
-                        Este chat é uma ferramenta de <strong>triagem com
-                            inteligência artificial</strong>
-                        desenvolvida para auxiliar a população a compreender melhor
-                        seus sintomas.
+                        Este chat é uma ferramenta de <strong>triagem com inteligência artificial</strong>
+                        desenvolvida para auxiliar a população a compreender melhor seus sintomas.
                         <br><br>
-                        Ressaltamos que <strong>não substitui uma consulta
-                            médica</strong>.
-                        As informações aqui fornecidas têm caráter exclusivamente
-                        <strong>orientativo</strong>.
+                        Ressaltamos que <strong>não substitui uma consulta médica</strong>.
+                        As informações aqui fornecidas têm caráter exclusivamente <strong>orientativo</strong>.
                         <br><br>
                         Em caso de sintomas graves, persistentes ou emergência,
-                        procure atendimento médico
-                        presencial imediatamente ou acione os serviços de saúde
-                        locais.
+                        procure atendimento médico presencial imediatamente ou acione os serviços de saúde locais.
                     </p>
                 </div>
             </section>
+
             <div class="chat-container">
-                <div class="chat">
-                    <h2>Como você está se sentindo?</h2>
-                    <h6>
-                        Por favor, relate o máximo de informações possíveis,
-                        para um melhor resultado.
-                    </h6>
-                    <p class="exemploText">
-                        <strong>Exemplo:</strong> Onde especificamente dói?
-                        Há quanto tempo? Qual o nível da dor?
-                    </p>
-                </div>
-                <div>
-                    <textarea placeholder="Escreva aqui seus sintomas..." type="text" class="inputResp"></textarea>
-                    <button class="btn"><i class="fa-solid fa-play"></i></button>
+                <input type="checkbox" id="flip" hidden>
+
+                <div class="flip-card">
+                    <div class="card-inner">
+                        <!-- Frente -->
+                        <div class="card-front">
+                            <div class="chat">
+                                <h2>Como você está se sentindo?</h2>
+                                <h6>Por favor, relate o máximo de informações possíveis.</h6>
+                                <p class="exemploText">
+                                    <strong>Exemplo:</strong> Onde dói? Há quanto tempo? Qual a intensidade?
+                                </p>
+                            </div>
+
+                            <textarea id="text_chat" class="inputResp" placeholder="Descreva seus sintomas..."></textarea>
+
+                            <label for="flip" id="btn-avaliar" class="btn flip-btn">
+                                <i class="fa-solid fa-play"></i>
+                            </label>
+                        </div>
+
+                        <!-- Verso -->
+                        <div class="card-back">
+                            <div id="indicador-nivel" class="bolinha-triagem"></div>
+                            <div id="resultado" class="texto-triagem"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </main>
+
     <nav class="feedbacks" id="feedbacks">
         <div class="feedback1" id="feedback1">
             <div class="bola1"></div>
