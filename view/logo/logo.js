@@ -5,7 +5,7 @@ export function createLogo() {
 
     const img = document.createElement("img");
     img.classList.add("logo");
-    img.src = "/assets/logo.png";
+    img.src = "/assets/logoTipo.png";
     img.alt = "logo";
 
     div.appendChild(img);

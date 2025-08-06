@@ -55,6 +55,7 @@ main {
 }
 
 .menuBtn {
+    position: fixed;
     top: 1%;
     right: 0.5%;
 }
@@ -143,4 +144,10 @@ main {
 
 .rota-btn:hover {
     background: var(--btn-active);
+}
+
+.card.active {
+    background-color: #d4f0d4;
+    border: 2px solid #4CAF50;
+    transition: background-color 0.3s ease;
 }

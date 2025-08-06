@@ -37,17 +37,6 @@ export function createMap() {
             lng: -53.047050074212294
         },
         {
-            nome: "Farmácia Municipal Alvorada",
-            endereco: "Rua Antônio Carneiro Neto, 623 - Bairro Alvorada",
-            telefone: "(46) 3524-7342",
-            site: null,
-            instagram: null,
-            horario: "Segunda a Sexta-feira: Horários diversos",
-            bairro: "Alvorada",
-            lat: -29.99529098050502,
-            lng: -51.06962143354357
-        },
-        {
             nome: "Farmácia Municipal Cidade Leste",
             endereco: "Rua Octaviano Teixeira dos Santos, 1000 - Bairro Cidade Leste",
             telefone: "(46) 3523-2441",
@@ -79,7 +68,75 @@ export function createMap() {
             bairro: "Alvorada",
             lat: -26.0782152398228,
             lng: -53.06540942347807
-        }
+        },
+
+        // ———————— FARMÁCIAS PRIVADAS ————————
+        {
+            nome: "Farmácias São João",
+            endereco: "Rua Tenente Camargo, 1599 – Centro",
+            telefone: "(46) 3527-3522",
+            site: "https://institucional.saojoaofarmacias.com.br/loja/884/franciscobeltrao1",
+            instagram: null,
+            horario: "Seg–Sáb: 07h–22h; Dom: 08h–20h",
+            bairro: "Centro",
+            lat: -26.07784235167002,
+            lng: -53.04494024488317,
+        },
+        {
+            nome: "Farjus Farmácia",
+            endereco: "Rua Brasil, 1200 – Bairro Luther King",
+            telefone: "(46) 3525-1234",
+            site: null,
+            instagram: null,
+            horario: "Seg–Sex: 08h–19h; Sáb: 08h–12h",
+            bairro: "Luther King",
+            lat: -26.0735,           // aprox., verificar exato no Google Maps
+            lng: -53.0482,           // aprox., verificar exato no Google Maps
+        },
+        {
+            nome: "Drogaria Raia",
+            endereco: "Rua São Paulo, 873 – Centro",
+            telefone: "(46) 99117-2210",
+            site: "https://sinambeltrao.com.br/associado/farmacia-droga-raia/",
+            instagram: null,
+            horario: "Seg–Sex: 07h–21h; Sáb–Dom: 08h–18h",
+            bairro: "Centro",
+            lat: -26.0815,           // aprox., confirmar no Maps
+            lng: -53.0540,           // aprox., confirmar no Maps
+        },
+        {
+            nome: "Farmácia Preço Popular",
+            endereco: "Av. Rui Barbosa, 150 – Centro",
+            telefone: "(46) 3526-7890",
+            site: null,
+            instagram: null,
+            horario: "Seg–Sex: 08h–20h; Sáb: 08h–14h",
+            bairro: "Centro",
+            lat: -26.0780,           // aprox., confirmar no Maps
+            lng: -53.0475,           // aprox., confirmar no Maps
+        },
+        {
+            nome: "Farma Centro",
+            endereco: "Av. Júlio Assis Cavalheiro, 203 – Centro",
+            telefone: "(46) 3524-4321",
+            site: null,
+            instagram: null,
+            horario: "Seg–Sex: 07h30–19h; Sáb: 08h–12h",
+            bairro: "Centro",
+            lat: -26.0752,           // aprox., confirmar no Maps
+            lng: -53.0534,           // aprox., confirmar no Maps
+        },
+        {
+            nome: "Farmácias Nissei",
+            endereco: "Av. General Osório, 404 – Bairro Cango",
+            telefone: "(46) 3523-1530",
+            site: "https://www.facebook.com/farmaciasaojosecango",
+            instagram: null,
+            horario: "Seg–Sex: 08h–18h; Sáb: 08h–12h",
+            bairro: "Cango",
+            lat: -26.0660,           // aprox., confirmar no Maps
+            lng: -53.0520,           // aprox., confirmar no Maps
+        },
     ];
 
     const map = L.map('map').setView([-26.0815, -53.0556], 14);
@@ -92,21 +149,36 @@ export function createMap() {
     function renderMarkers(lista) {
         markers.forEach(m => map.removeLayer(m));
         markers = [];
+
         lista.forEach(farmacia => {
             const marker = L.marker([farmacia.lat, farmacia.lng])
                 .addTo(map)
                 .bindPopup(`<b>${farmacia.nome}</b><br>${farmacia.endereco}`);
+
+            // Evento ao clicar no marcador
+            marker.on('click', () => {
+                // Abrir sidebar se estiver fechada
+                if (!sideebar.classList.contains("active")) {
+                    sideebar.classList.add("active");
+                }
+
+                // Destacar o card correspondente
+                const cardId = "card-" + farmacia.nome.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '');
+                const card = document.getElementById(cardId);
+
+                if (card) {
+                    // Remove destaque anterior
+                    document.querySelectorAll('.card.active').forEach(c => c.classList.remove('active'));
+                    // Adiciona destaque no card clicado
+                    card.classList.add('active');
+
+                    // Scroll para o card na lista
+                    card.scrollIntoView({ behavior: "smooth", block: "center" });
+                }
+            });
+
             markers.push(marker);
         });
-    }
-
-    function abrirRota(lat, lng) {
-        if (userLocation) {
-            const { latitude, longitude } = userLocation;
-            window.open(`https://www.google.com/maps/dir/${latitude},${longitude}/${lat},${lng}`, "_blank");
-        } else {
-            alert("Clique em 'Minha Localização' primeiro para habilitar sua posição.");
-        }
     }
 
     function renderFarmaciasList(lista) {
@@ -115,19 +187,20 @@ export function createMap() {
         lista.forEach(f => {
             const card = document.createElement("div");
             card.className = "card";
+            // id baseado no nome da farmácia, removendo espaços e caracteres especiais simples
+            card.id = "card-" + f.nome.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '');
 
-            // Conteúdo do card (sem onclick inline)
             card.innerHTML = `
-        <h3>${f.nome}</h3>
-        <p><strong>Endereço:</strong> ${f.endereco}</p>
-        <p><strong>Telefone:</strong> ${f.telefone}</p>
-        ${f.site ? `<p><a href="${f.site}" target="_blank">🌐 Site</a></p>` : ""}
-        ${f.instagram ? `<p><a href="${f.instagram}" target="_blank">📸 Instagram</a></p>` : ""}
-        <p><strong>Horário:</strong> ${f.horario}</p>
-        <p><strong>Bairro:</strong> ${f.bairro}</p>
-      `;
+            <h3>${f.nome}</h3>
+            <p><strong>Endereço:</strong> ${f.endereco}</p>
+            <p><strong>Telefone:</strong> ${f.telefone}</p>
+            ${f.site ? `<p><a href="${f.site}" target="_blank">🌐 Site</a></p>` : ""}
+            ${f.instagram ? `<p><a href="${f.instagram}" target="_blank">📸 Instagram</a></p>` : ""}
+            <p><strong>Horário:</strong> ${f.horario}</p>
+            <p><strong>Bairro:</strong> ${f.bairro}</p>
+        `;
 
-            // Botão de rota criado separadamente para poder adicionar evento sem conflito
+            // Botão rota
             const rotaBtn = document.createElement("a");
             rotaBtn.className = "rota-btn";
             rotaBtn.href = "#";
@@ -139,9 +212,7 @@ export function createMap() {
 
             card.appendChild(rotaBtn);
 
-            // Evento para focar o mapa ao clicar no card (mas sem interferir no botão "Ver Rota")
             card.addEventListener("click", (e) => {
-                // Para evitar conflito com o clique do botão dentro do card
                 if (e.target === rotaBtn) return;
                 map.setView([f.lat, f.lng], 17);
             });

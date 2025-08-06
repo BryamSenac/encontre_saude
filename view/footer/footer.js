@@ -8,7 +8,7 @@ export function createFooter() {
 
     const img = document.createElement("img");
     img.classList.add("logoTipo");
-    img.src = "/assets/logoTipo.png";
+    img.src = "/assets/logo.png";
     img.alt = "logoTipo";
 
     const contacts = document.createElement("div");

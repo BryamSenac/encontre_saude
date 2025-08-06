@@ -149,7 +149,7 @@ export function initPrimeirosSocorros() {
       `
     },
     {
-      title: 'Ferimentos',
+      title: 'Fratura',
       content: `
       <b> Para realizar os primeiros socorros para ferimentos, deve-se:</b>
       <p><b>-</b> Manter o membro afetado em repouso, numa posição natural e confortável;
@@ -162,11 +162,24 @@ export function initPrimeirosSocorros() {
       <p><b>-</b> Aguardar o auxílio médico. Caso não seja possível, recomenda-se levar a vítima para o pronto-socorro mais próximo.</p>`
     }
   ];
-
+  const videos = {
+    Engasgo: "https://www.youtube.com/embed/C2c0BIJygYI",
+    "Massagem Cardíaca": "https://www.youtube.com/embed/sKtHkqUWNgE",
+    Desmaio: "https://www.youtube.com/embed/VxJNguOcYgo",
+    Convulsão: "https://www.youtube.com/embed/sVZaYNL2Vkk",
+    Intoxicação: "https://www.youtube.com/embed/Pm3Iw3pxaS4",
+    Afogamento: "https://www.youtube.com/embed/CiBaKoPl4IM",
+    Queimadura: "https://www.youtube.com/embed/Klcs7ZmMOlE",
+    "Transporte de vítimas": "https://www.youtube.com/embed/JttAYDeuSyg",
+    Fratura: "https://www.youtube.com/embed/RT6th-_fbOo"
+  };
   const btnsMae = document.getElementById('btns_mae');
   const infoTitle = document.getElementById('info-title');
   const infoContent = document.getElementById('info-content');
   const searchInput = document.getElementById('search-input');
+
+  // Estado inicial -> nenhum botão selecionado
+  let temaSelecionado = false;
 
   function renderButtons(list) {
     btnsMae.innerHTML = '';
@@ -177,6 +190,7 @@ export function initPrimeirosSocorros() {
       btn.onclick = () => {
         document.querySelectorAll('.btns').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
+        temaSelecionado = true;
         showInfo(item);
       };
       btn.setAttribute('role', 'listitem');
@@ -185,8 +199,23 @@ export function initPrimeirosSocorros() {
   }
 
   function showInfo(item) {
+    const videoUrl = videos[item.title];
+    const embed = videoUrl
+      ? `<iframe width="100%" height="200" src="${videoUrl.replace("watch?v=", "embed/")}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`
+      : '';
+
+    // Atualiza título e garante cor preta
     infoTitle.textContent = item.title;
-    infoContent.innerHTML = item.content;
+    infoTitle.style.color = "black";
+
+    infoContent.innerHTML = `
+    <div class="info-left">
+      ${embed}
+    </div>
+    <div class="info-right">
+      ${item.content}
+    </div>
+  `;
   }
 
   searchInput.addEventListener('input', () => {
@@ -195,12 +224,20 @@ export function initPrimeirosSocorros() {
       ? data.filter(d => d.title.toLowerCase().includes(q))
       : data;
     renderButtons(filtered);
-    // Limpa o quadro se for filtrado para zero resultados
+
+    // Reset título se não tiver resultados
     if (!filtered.length) {
+      temaSelecionado = false;
       infoTitle.textContent = 'Nenhum tema encontrado';
+      infoTitle.style.color = "black";
       infoContent.innerHTML = '';
     }
   });
+
+  // Mensagem inicial padrão
+  infoTitle.textContent = "Selecione um tema";
+  infoTitle.style.color = "black";
+  infoContent.innerHTML = "";
 
   renderButtons(data);
 }
