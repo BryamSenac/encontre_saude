@@ -24,7 +24,7 @@ export function createHeader() {
         { text: "Home", icon: "fa-house", href: ROUTES.home },
         { text: "Primeiros Socorros", icon: "fa-kit-medical", href: ROUTES.primeirosSocorros },
         { text: "Ações Preventivas", icon: "fa-shield-heart", href: ROUTES.prevensao },
-        { text: "Farmácias", icon: "fa-prescription-bottle-medical", href: ROUTES.farmacia },
+        { text: "Farmácias", icon: "fa-prescription-bottle-medical iconFarmacia", href: ROUTES.farmacia },
         { text: "Sintomas", icon: "fa-heart-pulse", href: ROUTES.sintomas },
     ];
 

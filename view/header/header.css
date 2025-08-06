@@ -62,7 +62,9 @@
   /* tamanho do ícone */
   transition: transform 0.2s;
 }
-
+.iconFarmacia{
+  margin-left: 0.5vh;
+}
 .menu-item:hover i {
   transform: scale(1.2);
 }

@@ -1,99 +1,85 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sintomas</title>
-    <link rel="stylesheet" href="./sintomas.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script type="module" src="./sintomas.js"></script>
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Sintomas</title>
+        <link rel="stylesheet" href="./sintomas.css">
+        <link rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <script type="module" src="./sintomas.js"></script>
+    </head>
 
-<body>
-    <div id="logo"></div>
-    <header id="header"></header>
+    <body>
+        <div id="logo"></div>
+        <header id="header"></header>
 
-    <main>
-        <div class="alinhamentoTexts">
-            <section class="info">
-                <div class="infoText">
-                    <div id="div_aviso">
-                    <h2 id="aviso">Aviso Importante</h2> </div>
-                    <p>
-                        Este chat é uma ferramenta de <strong>triagem com inteligência artificial</strong>
-                        desenvolvida para auxiliar a população a compreender melhor seus sintomas.
-                        <br><br>
-                        Ressaltamos que <strong>não substitui uma consulta médica</strong>.
-                        As informações aqui fornecidas têm caráter exclusivamente <strong>orientativo</strong>.
-                        <br><br>
-                        Em caso de sintomas graves, persistentes ou emergência,
-                        procure atendimento médico presencial imediatamente ou acione os serviços de saúde locais.
-                    </p>
-                </div>
-            </section>
+        <main>
+            <div class="alinhamentoTexts">
+                <section class="info">
+                    <div class="infoText">
+                        <div id="div_aviso">
+                            <h2 id="aviso">Aviso Importante</h2> </div>
+                        <p>
+                            Este chat é uma ferramenta de <strong>triagem com
+                                inteligência artificial</strong>
+                            desenvolvida para auxiliar a população a compreender
+                            melhor seus sintomas.
+                            <br><br>
+                            Ressaltamos que <strong>não substitui uma consulta
+                                médica</strong>.
+                            As informações aqui fornecidas têm caráter
+                            exclusivamente <strong>orientativo</strong>.
+                            <br><br>
+                            Em caso de sintomas graves, persistentes ou
+                            emergência,
+                            procure atendimento médico presencial imediatamente
+                            ou acione os serviços de saúde locais.
+                        </p>
+                    </div>
+                </section>
 
-            <div class="chat-container">
-                <input type="checkbox" id="flip" hidden>
+                <div class="chat-container">
+                    <input type="checkbox" id="flip" hidden>
 
-                <div class="flip-card">
-                    <div class="card-inner">
-                        <!-- Frente -->
-                        <div class="card-front">
-                            <div class="chat">
-                                <h2>Como você está se sentindo?</h2>
-                                <h6>Por favor, relate o máximo de informações possíveis.</h6>
-                                <p class="exemploText">
-                                    <strong>Exemplo:</strong> Onde dói? Há quanto tempo? Qual a intensidade?
-                                </p>
+                    <div class="flip-card">
+                        <div class="card-inner">
+                            <!-- Frente -->
+                            <div class="card-front">
+                                <div class="chat">
+                                    <h2>Como você está se sentindo?</h2>
+                                    <h6>Por favor, relate o máximo de
+                                        informações possíveis.</h6>
+                                    <p class="exemploText">
+                                        <strong>Exemplo:</strong> Onde dói? Há
+                                        quanto tempo? Qual a intensidade?
+                                    </p>
+                                </div>
+
+                                <textarea id="text_chat" class="inputResp"
+                                    placeholder="Descreva seus sintomas..."></textarea>
+
+                                <label for="flip" id="btn-avaliar"
+                                    class="btn flip-btn">
+                                    <i class="fa-solid fa-play"></i>
+                                </label>
                             </div>
 
-                            <textarea id="text_chat" class="inputResp" placeholder="Descreva seus sintomas..."></textarea>
-
-                            <label for="flip" id="btn-avaliar" class="btn flip-btn">
-                                <i class="fa-solid fa-play"></i>
-                            </label>
-                        </div>
-
-                        <!-- Verso -->
-                        <div class="card-back">
-                            <div id="indicador-nivel" class="bolinha-triagem"></div>
-                            <div id="resultado" class="texto-triagem"></div>
+                            <!-- Verso -->
+                            <div class="card-back">
+                                <div id="indicador-nivel"
+                                    class="bolinha-triagem"></div>
+                                <div id="resultado" class="texto-triagem"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </main>
-
-    <nav class="feedbacks" id="feedbacks">
-        <div class="feedback1" id="feedback1">
-            <div class="bola1"></div>
-            <h1 class="triagem">Não Urgente: Caso para atendimento na unidade de saúde mais próxima da residência.</h1>
-        </div>
-
-        <div class="feedback2" id="feedback2">
-            <div class="bola2"></div>
-            <h1 class="triagem">Pouco Urgente: Caso para atendimento preferencial nas unidades de atenção básica.</h1>
-        </div>
-
-        <div class="feedback3" id="feedback3">
-            <div class="bola3"></div>
-            <h1 class="triagem">Urgente: Caso de gravidade moderada, necessidade de atendimento médico, sem risco imediato.</h1>
-        </div>
-
-        <div class="feedback4" id="feedback4">
-            <div class="bola4"></div>
-            <h1 class="triagem">Muito urgente: Caso grave e risco significativo de evoluir para morte. Atendimento urgente.</h1>
-        </div>
-
-        <div class="feedback5" id="feedback5">
-            <div class="bola5"></div>
-            <h1 class="triagem">Emergência: Caso gravíssimo, com necessidade de atendimento imediato e risco de morte.</h1>
-        </div>
-    </nav>
-
-    <footer id="footer"></footer>
-</body>
+        </main>
+        <div id="feedbacks"></div>
+        
+        <footer id="footer"></footer>
+    </body>
 
 </html>

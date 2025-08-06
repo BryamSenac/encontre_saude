@@ -19,7 +19,7 @@ export function createMain() {
   const cardsData = [
     {
       title: "Sintomas",
-      icon: "fa-solid fa-circle-plus iconSintomas",
+      icon: "fa-solid fa-stethoscope iconSintomas",
       text: "Saiba onde ir de acordo com seus sintomas",
       route: ROUTES.sintomas
     },
