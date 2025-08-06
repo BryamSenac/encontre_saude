@@ -8,9 +8,9 @@ const genAI = new GoogleGenerativeAI(API_KEY);
 
 // Aguarda o carregamento completo do DOM
 document.addEventListener("DOMContentLoaded", () => {
-    createHeader()
-    createLogo()
-    createFooter()
+  createHeader()
+  createLogo()
+  createFooter()
 });
 
 
@@ -58,7 +58,7 @@ Pode haver indícios de agravamento que não devem ser ignorados. Vá para um ho
   5: {
     cor: '#D51717',
     texto: 'Emergência',
-    recomendacao: `⚠️ Atenção: seus sintomas indicam uma situação potencialmente grave. 
+    recomendacao: `⚠️ Atenção seus sintomas indicam uma situação potencialmente grave. 
 Pode haver risco à sua saúde e você deve procurar atendimento emergencial imediatamente.
 
 ❗ Sinais como dor no peito, falta de ar, desmaio, confusão ou febre alta persistente não devem ser ignorados.
@@ -102,48 +102,51 @@ Texto do Usuário:
  */
 
 async function avaliarSintomasDireto(textoUsuario) {
-    try {
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
-        const promptFinal = promptMestre.replace("[AQUI_VOCE_INSERE_O_TEXTO_DO_USUARIO]", textoUsuario);
+  try {
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
+    const promptFinal = promptMestre.replace("[AQUI_VOCE_INSERE_O_TEXTO_DO_USUARIO]", textoUsuario);
 
-        const result = await model.generateContent(promptFinal);
-        const response = await result.response;
-        const avaliacaoTexto = response.text().trim();
+    const result = await model.generateContent(promptFinal);
+    const response = await result.response;
+    const avaliacaoTexto = response.text().trim();
 
-        const nivel = parseInt(avaliacaoTexto, 10);
-        // Validar se número está dentro do esperado
-        if (nivel >= 1 && nivel <= 5) {
-            return nivel;
-        } else {
-            console.warn("Resposta da IA fora do esperado:", avaliacaoTexto);
-            return 0;
-        }
-    } catch (error) {
-        console.error("Erro ao chamar a API Gemini:", error);
-        return 0;
+    const nivel = parseInt(avaliacaoTexto, 10);
+    // Validar se número está dentro do esperado
+    if (nivel >= 1 && nivel <= 5) {
+      return nivel;
+    } else {
+      console.warn("Resposta da IA fora do esperado:", avaliacaoTexto);
+      return 0;
     }
+  } catch (error) {
+    console.error("Erro ao chamar a API Gemini:", error);
+    return 0;
+  }
 }
 
 // Configura o botão para capturar texto
 document.getElementById('btn-avaliar').addEventListener('click', async () => {
   const texto = document.getElementById('text_chat').value;
+  const input = document.getElementById('flip');
   if (!texto.trim()) {
+    input.checked = true
     alert('Por favor, descreva seus sintomas.');
-    return;
-  }
-
-  const nivel = await avaliarSintomasDireto(texto);
-  const resultadoDiv = document.getElementById('resultado');
-  const indicadorNivel = document.getElementById('indicador-nivel');
-
-  if (nivel > 0 && niveis[nivel]) {
-    resultadoDiv.textContent = `- ${niveis[nivel].texto}\nRecomendação: ${niveis[nivel].recomendacao}`;
-    resultadoDiv.style.color = "black";
-    indicadorNivel.style.backgroundColor = niveis[nivel].cor;
   } else {
-    resultadoDiv.textContent = "Não foi possível avaliar seus sintomas. Tente novamente.";
-    resultadoDiv.style.color = "black";
-    indicadorNivel.style.backgroundColor = "transparent";
+    input.checked = false
+    const nivel = await avaliarSintomasDireto(texto);
+    const resultadoDiv = document.getElementById('resultado');
+    const indicadorNivel = document.getElementById('indicador-nivel');
+    alert(nivel)
+
+    if (nivel > 0 && niveis[nivel]) {
+      resultadoDiv.textContent = `- ${niveis[nivel].texto}\nRecomendação: ${niveis[nivel].recomendacao}`;
+      resultadoDiv.style.color = "black";
+      indicadorNivel.style.backgroundColor = niveis[nivel].cor;
+    } else {
+      resultadoDiv.textContent = "Não foi possível avaliar seus sintomas. Tente novamente.";
+      resultadoDiv.style.color = "black";
+      indicadorNivel.style.backgroundColor = "transparent";
+    }
   }
 });
 

@@ -253,11 +253,15 @@ main {
   border-radius: 10px;
 }
 
+.triagem{
+  color: white;
+}
+
 /* Feedbacks laterais */
 .feedbacks {
   position: absolute;
   top: 20%;
-  right: -56%;
+  right: -55%;
   display: flex;
   flex-direction: column;
   gap: 1.5vh;
@@ -308,3 +312,20 @@ main {
 .bola5 {
   background-color: #D51717;
 }
+
+#indicador-nivel{
+  width: 5vw;
+  height: 10vh;
+}
+
+
+.feedbacks .feedback1:hover,
+.feedbacks .feedback2:hover,
+.feedbacks .feedback3:hover,
+.feedbacks .feedback4:hover,
+.feedbacks .feedback5:hover {
+  transform: translateX(-88%);
+  transition: transform 0.6s ease-in-out;
+  z-index: 10;
+}
+
