@@ -1,4 +1,4 @@
-import { GoogleGenerativeAI } from "https://esm.sh/@google/generative-ai";
+import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
 
 // 🚨 SUA CHAVE DE API FICA EXPOSTA AQUI! NÃO FAÇA ISSO EM PRODUÇÃO!
 const API_KEY = "AIzaSyAeJFC98RQ4ra2bWGoKMgw4VasvTRqniM4";
