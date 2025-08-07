@@ -1,4 +1,4 @@
-import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
+import { GoogleGenerativeAI } from "https://unpkg.com/@google/generative-ai?module";
 
 export function createApi() {
     const API_KEY = "AIzaSyBFuf8rcqo8_YchNIpYYxWHtfHM1Q2-duI";
