@@ -3,7 +3,7 @@ import { createLogo } from "./../../view/logo/logo.js";
 import { createHeader } from "./../../view/header/header.js"
 import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
 
-const API_KEY = "AIzaSyAeJFC98RQ4ra2bWGoKMgw4VasvTRqniM4";
+const API_KEY = "AIzaSyBFuf8rcqo8_YchNIpYYxWHtfHM1Q2-duI";
 const genAI = new GoogleGenerativeAI(API_KEY);
 
 // Aguarda o carregamento completo do DOM
