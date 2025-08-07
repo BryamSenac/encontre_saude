@@ -20,7 +20,7 @@ export function createFarmacias() {
             site: null,
             instagram: null,
             tipo:"Municipal",
-            horario: "Segunda a Sexta-feira: 09h às 11h30 / 13h às 17h / 18h às 21h",
+            horario: "Segunda a Sexta-feira: 7h30 às 11h / 13h às 17h / 18h às 22h",
             bairro: "Cango",
             lat: -26.066262398082966,
             lng: -53.05257026742899
