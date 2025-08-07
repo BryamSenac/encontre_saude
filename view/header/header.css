@@ -5,7 +5,11 @@
   z-index: 2000;
 }
 
-/* Barra fixa estreita com ícones e textos (textos inicialmente invisíveis) */
+#menuToggle {
+  padding-right: 4vh;
+}
+
+/* Barra fixa estreita */
 .fixed-bar {
   position: fixed;
   top: 0;
@@ -16,128 +20,112 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 1vh 0;
-  gap: 1vh;
+  padding: 1vh 0 0 4vh;
+  gap: 2vh;
+  /* espaçamento maior entre ícones */
+  transition: width 0.3s ease;
   z-index: 2100;
+}
+
+/* Largura quando expandida */
+.fixed-bar.expanded {
+  width: 35vh;
+  /* abre espaço para o texto */
+}
+
+.fixed-bar.expanded .menu-btn {
+  margin:2vh 0 0 25vh;
+  font-size: 5vh;
+}
+.fixed-bar.expanded .menu-btn:hover {
+  transform: scale(1.1);
 }
 
 /* Botão hamburguer */
 .menu-btn {
   cursor: pointer;
-  padding: 1vh 0;
   color: var(--text-color);
   font-size: 5vh;
 }
 
-/* Ícones do fixed-bar */
-.fixed-bar .menu-item {
+/* Itens de navegação */
+.menu-item {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  color: var(--text-color);
-  cursor: pointer;
   width: 100%;
+  text-decoration: none;
+  color: var(--text-color);
+  padding: 1vh 0;
+  gap: 2vh;
+}
+#textHeader{
+  font-size: 2.5vh;
 }
 
-/* Ícone */
-.fixed-bar .menu-item i {
+.menu-item i {
   font-size: 3.5vh;
-  transition: transform 0.3s;
+  /* tamanho do ícone */
+  transition: transform 0.2s;
 }
-
-/* Texto com opacity 0 inicialmente */
-.fixed-bar .menu-item span {
-  font-size: 1.8vh;
-  opacity: 0;
-  transition: opacity 0.5s ease;
-  user-select: none;
-  margin-top: 0.3vh;
+.iconFarmacia{
+  margin-left: 0.5vh;
 }
-
-/* Hover para ícone */
-.fixed-bar .menu-item i:hover {
+.menu-item:hover i {
   transform: scale(1.2);
 }
 
-/* Contatos (últimos 3 itens) */
-.contacts {
-  margin-top: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 1vh;
-  width: 100%;
-  align-items: center;
+.menu-item span {
+  font-size: 1.8vh;
+  white-space: nowrap;
+  opacity: 0;
+  /* começa oculto */
+  transition: opacity 0.3s ease;
+  pointer-events: none;
 }
 
-/* Linha acima dos contatos */
-.contacts::before {
+/* Ao expandir, exibe os textos */
+.fixed-bar.expanded .menu-item span {
+  opacity: 1;
+}
+
+/* Contatos */
+.contactsHeader {
+  position: absolute;
+  /* sai do fluxo normal */
+  bottom: 2vh;
+  /* distancia do rodapé da fixed-bar */
+  left: 4vh;
+  /* distancia da borda esquerda da fixed-bar */
+  display: flex;
+  flex-direction: column;
+  gap: 1.5vh;
+  /* remova padding-top e margin-top que vc tinha antes */
+  padding-top: 0;
+  margin-top: 0;
+}
+
+/* mantendo a linha acima do primeiro ícone */
+.contactsHeader::before {
   content: "";
   position: absolute;
-  top: 1vh;
-  left: 10%;
-  width: 80%;
+  top: 0;
+  width: 8vh;
   height: 2px;
-  background-color: white;
   opacity: 0.8;
 }
 
-/* Sidebar expansível */
-.sidebar {
-  position: fixed;
-  top: 0;
-  left: -18vw; /* escondido à esquerda */
-  width: 18vw;
-  max-width: 300px;
-  height: 100vh;
-  background-color: var(--green-dark);
-  padding-top: 10vh;
-  display: flex;
-  flex-direction: column;
-  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.6);
-  transition: left 0.4s ease;
-  z-index: 2200;
-}
-
-/* Sidebar aberta */
-.sidebar.open {
-  left: 0;
-}
-
-/* Menu dentro da sidebar */
-.menu {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-/* Itens do menu com linha */
-.menu li {
-  border-bottom: 1px solid white;
-}
-
-/* Links do menu */
-.menu a {
-  display: flex;
-  align-items: center;
+.contactsHeader a {
   color: var(--text-color);
+  font-size: 3.5vh;
   text-decoration: none;
-  padding: 1.5vh 2vh;
-  font-size: 1.8vh;
-  transition: background 0.3s;
+  transition: transform 0.2s;
 }
 
-/* Ícones no menu da sidebar */
-.menu a i {
-  font-size: 2.5vh;
-  min-width: 30px;
+.contactsHeader a:hover {
+  transform: scale(1.2);
 }
 
-/* Espaço entre ícone e texto no menu da sidebar */
-.menu a span {
-  margin-left: 1.5vh;
-}
-
-/* Hover no menu */
-.menu a:hover {
-  background: var(--green-medium);
+/* Remove qualquer sidebar extra */
+.sidebar {
+  display: none;
 }

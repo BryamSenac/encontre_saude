@@ -1,0 +1,105 @@
+.chat-container {
+  position: relative;
+  width: 50%;
+  height: 100%;
+  background-color: var(--green-dark);
+  text-align: justify;
+  border-radius: 20px;
+  perspective: 1500px;
+  /* necessário para efeito 3D */
+}
+
+.flip-card {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transition: transform 0.8s ease;
+  transform-style: preserve-3d;
+}
+
+#flip:checked+.flip-card {
+  transform: rotateY(180deg);
+}
+
+.card-inner {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+}
+
+.card-front,
+.card-back {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  backface-visibility: hidden;
+  border-radius: 20px;
+  box-sizing: border-box;
+}
+
+.card-front {
+  background-color: var(--beige-light);
+  padding: 2vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.card-front .chat {
+  width: 100%;
+  flex-grow: 1;
+}
+
+.card-front h2 {
+  font-size: 4vh;
+  text-align: center;
+}
+
+.card-front h6 {
+  font-size: 2.5vh;
+  text-align: center;
+  margin-bottom: 1vh;
+}
+
+.exemploText {
+  font-size: 2vh;
+  font-style: italic;
+  margin-top: 2vh;
+  text-align: center;
+}
+
+.inputResp {
+  width: 90%;
+  height: 100px;
+  margin-top: 1.5vh;
+  border: none;
+  border-radius: 15px;
+  padding: 2vh;
+  resize: none;
+  font-size: 1.6vh;
+}
+
+.btn.flip-btn {
+  width: 8vh;
+  height: 8vh;
+  margin-top: 2vh;
+  border: none;
+  border-radius: 50%;
+  background-color: var(--black-dark);
+  color: var(--gray-light);
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.3s ease;
+}
+
+.btn.flip-btn:hover {
+  transform: scale(1.1);
+  background-color: var(--gray-light);
+  color: var(--black-dark);
+}

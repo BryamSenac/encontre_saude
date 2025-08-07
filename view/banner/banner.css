@@ -2,18 +2,16 @@
   top: 5%;
   position: relative;
   width: 80%;
-  height: 35vh;
+  height: 50vh;
   /* Altura do banner */
   margin: 20px auto;
   overflow: hidden;
   border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  background-color: var(--text-color);
 }
 
 #banner .slides {
   display: flex;
-  width: 400%;     /* 4 imagens */
+
   height: 100%;
   transition: transform 0.5s ease-in-out;
 }
@@ -22,11 +20,9 @@
   width: 100%;
   flex-shrink: 0;
   height: 100%;
-  background-position: center;
   background-size: contain;
-  box-shadow: -3px -3px 45px 1px rgba(0, 0, 0, 0.75);
-  -webkit-box-shadow: -3px -3px 45px 1px rgba(0, 0, 0, 0.75);
-  -moz-box-shadow: -3px -3px 45px 1px rgba(0, 0, 0, 0.75);
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 #banner .buttons {

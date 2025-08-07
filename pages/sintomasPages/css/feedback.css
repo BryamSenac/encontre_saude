@@ -1,0 +1,128 @@
+/* ================== Feedbacks ================== */
+.feedbacks {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  gap: 2vw;
+  margin-bottom: 5vh;
+  flex-wrap: wrap;
+}
+
+.feedback {
+  width: 12vh;
+  height: 12vh;
+  border-radius: 20px;
+  background-color: var(--black-dark);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.feedback:hover {
+  transform: scale(1.1);
+}
+
+.feedback .bola {
+  width: 7vh;
+  height: 7vh;
+  border-radius: 50%;
+}
+
+/* ================== Cores das bolinhas ================== */
+.feedback:nth-child(1) .bola {
+  background-color: #5EA7FF;
+}
+
+.feedback:nth-child(2) .bola {
+  background-color: #ABFB4F;
+}
+
+.feedback:nth-child(3) .bola {
+  background-color: #FFEA00;
+}
+
+.feedback:nth-child(4) .bola {
+  background-color: #FF771C;
+}
+
+.feedback:nth-child(5) .bola {
+  background-color: #D51717;
+}
+
+/* Fundo escuro translúcido e centralização do modal */
+.modal {
+  display: none; /* fica oculto por padrão */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+
+  /* centraliza conteúdo no eixo X e Y */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  z-index: 1000;
+}
+
+/* Janela do modal */
+.modal-content {
+  background: var(--black-dark);
+  padding: 1.5rem 2rem;
+  border-radius: 15px;
+  max-width: 350px;
+  width: 90%;
+  color: white;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
+}
+
+/* Cabeçalho do modal com conteúdo centralizado verticalmente */
+.modal-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+/* Bolinha colorida */
+.modal-bola {
+  width: 7vh;
+  height: 7vh;
+  border-radius: 50%;
+  /* cor será alterada dinamicamente via JS */
+}
+
+/* Título */
+.modal-title {
+  font-size: 1.5rem;
+  margin: 0;
+}
+
+/* Texto */
+.modal-text {
+  font-size: 1rem;
+  line-height: 1.3;
+  white-space: pre-line; /* respeita quebras de linha */
+}
+
+/* Botão fechar (X) no canto superior direito */
+.modal-content .close {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 2rem;
+  cursor: pointer;
+  color: white;
+  transition: transform 0.2s ease;
+}
+
+.modal-content .close:hover {
+  transform: scale(1.2);
+}

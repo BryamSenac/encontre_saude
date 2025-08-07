@@ -1,0 +1,54 @@
+/* Verso */
+.card-back {
+  background-color: var(--beige-light);
+  color: black;
+  transform: rotateY(180deg);
+  padding: 2vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5vh;
+  text-align: center;
+}
+
+.bolinha-triagem {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-bottom: 1vh;
+}
+
+/* Classes de cor para a bolinha, use conforme o nível */
+.nivel-1 { background-color: #5EA7FF; }
+.nivel-2 { background-color: #ABFB4F; }
+.nivel-3 { background-color: #FFEA00; }
+.nivel-4 { background-color: #FF771C; }
+.nivel-5 { background-color: #D51717; }
+
+.texto-triagem {
+  white-space: pre-line;
+  font-size: 1.8vh;
+  max-height: 60%;
+  overflow-y: auto;
+  padding: 0 1vh;
+}
+
+/* Scroll estilo para o texto no verso */
+.texto-triagem::-webkit-scrollbar {
+  width: 6px;
+}
+
+.texto-triagem::-webkit-scrollbar-track {
+  background: #ddd;
+  border-radius: 10px;
+}
+
+.texto-triagem::-webkit-scrollbar-thumb {
+  background-color: #bbb;
+  border-radius: 10px;
+}
+
+.triagem{
+  color: white;
+}

@@ -4,47 +4,47 @@ export function createHeader() {
     const header = document.getElementById("header");
     if (!header) return;
 
+    // Cria o elemento <header>
     const headerEl = document.createElement("header");
     headerEl.className = "main-header";
 
-    // Barra fixa estreita
+    // ====== Barra fixa estreita ======
     const fixedBar = document.createElement("div");
     fixedBar.className = "fixed-bar";
 
-    // Botão hamburguer (fixedBar)
+    // 1) Botão hambúrguer
     const menuBtn = document.createElement("div");
     menuBtn.className = "menu-btn";
     menuBtn.id = "menuToggle";
     menuBtn.innerHTML = `<i class="fas fa-bars" id="menuIcon"></i>`;
     fixedBar.appendChild(menuBtn);
 
-    // Ícones + textos das páginas (fixedBar)
-    const btnItems = [
+    // 2) Ícones de navegação (sempre visíveis)
+    const navItems = [
         { text: "Home", icon: "fa-house", href: ROUTES.home },
         { text: "Primeiros Socorros", icon: "fa-kit-medical", href: ROUTES.primeirosSocorros },
         { text: "Ações Preventivas", icon: "fa-shield-heart", href: ROUTES.prevensao },
-        { text: "Farmácias", icon: "fa-prescription-bottle-medical", href: ROUTES.farmacia },
-        { text: "Sintomas", icon: "fa-heart-pulse", href: ROUTES.sintomas }
+        { text: "Farmácias", icon: "fa-prescription-bottle-medical iconFarmacia", href: ROUTES.farmacia },
+        { text: "Sintomas", icon: "fa-heart-pulse", href: ROUTES.sintomas },
     ];
 
-    btnItems.forEach(({ text, icon, href }) => {
+    navItems.forEach(({ text, icon, href }) => {
         const a = document.createElement("a");
         a.href = href;
         a.className = "menu-item";
-        a.innerHTML = `<i class="fas ${icon}"></i><span>${text}</span>`;
+        a.innerHTML = `<i class="fas ${icon}"></i><span id="textHeader">${text}</span>`;
         fixedBar.appendChild(a);
     });
 
-    // Ícones de contato (fixedBar)
+    // 3) Ícones de contato no final
     const contacts = document.createElement("div");
-    contacts.className = "contacts";
-
+    contacts.id = "iconsContato";
+    contacts.className = "contactsHeader";
     const contactItems = [
-        { icon: "fa-brands fa-whatsapp", href: "https://wa.me/seuNumero" },
-        { icon: "fa-solid fa-phone", href: "tel:+550000000000" },
-        { icon: "fa-solid fa-envelope", href: "mailto:seuemail@dominio.com" }
+        { icon: "fa-brands fa-whatsapp", href: "https://wa.me/46991213122" },
+        { icon: "fa-solid fa-phone", href: "tel:+5546991213122" },
+        { icon: "fa-solid fa-envelope", href: "mailto:seuemail@gabrielwag971@gmail.com" },
     ];
-
     contactItems.forEach(({ icon, href }) => {
         const a = document.createElement("a");
         a.href = href;
@@ -52,69 +52,35 @@ export function createHeader() {
         a.innerHTML = `<i class="${icon}"></i>`;
         contacts.appendChild(a);
     });
-
     fixedBar.appendChild(contacts);
 
     headerEl.appendChild(fixedBar);
-
-    // Sidebar expansível
-    const sidebar = document.createElement("div");
-    sidebar.className = "sidebar";
-    sidebar.id = "sidebar";
-
-    const menuList = document.createElement("ul");
-    menuList.className = "menu";
-
-    btnItems.forEach(({ text, icon, href }) => {
-        const li = document.createElement("li");
-        const a = document.createElement("a");
-        a.href = href;
-        a.innerHTML = `<i class="fas ${icon}"></i><span>${text}</span>`;
-        li.appendChild(a);
-        menuList.appendChild(li);
-    });
-
-    sidebar.appendChild(menuList);
-    headerEl.appendChild(sidebar);
     header.appendChild(headerEl);
 
+    // ====== Lógica de Expansão ======
     let menuOpen = false;
-
     const menuIcon = document.getElementById("menuIcon");
+    const spans = fixedBar.querySelectorAll(".menu-item span");
 
     function openMenu() {
-        sidebar.classList.add("open");
-        menuIcon.classList.remove("fa-bars");
-        menuIcon.classList.add("fa-xmark");
-
-        // Aparecer textos fixed-bar
-        const spans = fixedBar.querySelectorAll(".menu-item span");
-        spans.forEach(span => {
-            span.style.opacity = "1";
-        });
-
+        fixedBar.classList.add("expanded");
+        menuIcon.classList.replace("fa-bars", "fa-xmark");
+        spans.forEach(s => s.style.opacity = "1");
         menuOpen = true;
     }
 
     function closeMenu() {
-        sidebar.classList.remove("open");
-        menuIcon.classList.remove("fa-xmark");
-        menuIcon.classList.add("fa-bars");
-
-        // Ocultar textos fixed-bar
-        const spans = fixedBar.querySelectorAll(".menu-item span");
-        spans.forEach(span => {
-            span.style.opacity = "0";
-        });
-
+        fixedBar.classList.remove("expanded");
+        menuIcon.classList.replace("fa-xmark", "fa-bars");
+        spans.forEach(s => s.style.opacity = "0");
         menuOpen = false;
     }
 
+    // Toggle ao clicar no hambúrguer
     menuBtn.addEventListener("click", () => {
-        if (menuOpen) closeMenu();
-        else openMenu();
+        menuOpen ? closeMenu() : openMenu();
     });
 
-    // Opcional: inicia ocultando os textos fixed-bar
+    // Inicializa com textos ocultos
     closeMenu();
 }

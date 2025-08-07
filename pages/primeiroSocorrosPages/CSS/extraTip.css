@@ -1,0 +1,35 @@
+#extra-tip {
+  max-width: 600px;
+  /* Limita a largura para não ficar muito esticado */
+  margin: 40px auto;
+  /* Espaço em cima/baixo e centraliza horizontalmente */
+  padding: 20px 30px;
+  /* Espaçamento interno para “respirar” */
+  background: #f0f8ff;
+  /* Fundo suave, tipo azul clarinho */
+  border-radius: 12px;
+  /* Bordas arredondadas para suavizar */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  /* Sombra leve para destacar */
+  text-align: center;
+  /* Centraliza o texto */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+  /* Cor do texto escura mas suave */
+}
+
+#extra-tip h3 {
+  font-size: 1.8rem;
+  margin:0 0 5vh 0;
+  color: #2c7a7b;
+  font-weight: 700;
+
+}
+
+#extra-tip p {
+  font-size: 1.1rem;
+  /* Texto com tamanho confortável para leitura */
+  line-height: 1.5;
+  /* Espaçamento entre linhas para facilitar */
+  margin: 0;
+}

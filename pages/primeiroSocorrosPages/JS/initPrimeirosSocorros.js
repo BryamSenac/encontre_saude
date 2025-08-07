@@ -149,7 +149,7 @@ export function initPrimeirosSocorros() {
       `
     },
     {
-      title: 'Ferimentos',
+      title: 'Fratura',
       content: `
       <b> Para realizar os primeiros socorros para ferimentos, deve-se:</b>
       <p><b>-</b> Manter o membro afetado em repouso, numa posição natural e confortável;
@@ -162,11 +162,26 @@ export function initPrimeirosSocorros() {
       <p><b>-</b> Aguardar o auxílio médico. Caso não seja possível, recomenda-se levar a vítima para o pronto-socorro mais próximo.</p>`
     }
   ];
+  const videos = {
+    Engasgo: "https://www.youtube.com/embed/C2c0BIJygYI",
+    "Massagem Cardíaca": "https://www.youtube.com/embed/sKtHkqUWNgE",
+    Desmaio: "https://www.youtube.com/embed/VxJNguOcYgo",
+    Convulsão: "https://www.youtube.com/embed/sVZaYNL2Vkk",
+    Intoxicação: "https://www.youtube.com/embed/Pm3Iw3pxaS4",
+    Afogamento: "https://www.youtube.com/embed/CiBaKoPl4IM",
+    Queimadura: "https://www.youtube.com/embed/Klcs7ZmMOlE",
+    "Transporte de vítimas": "https://www.youtube.com/embed/JttAYDeuSyg",
+    Fratura: "https://www.youtube.com/embed/RT6th-_fbOo"
+  };
 
   const btnsMae = document.getElementById('btns_mae');
   const infoTitle = document.getElementById('info-title');
   const infoContent = document.getElementById('info-content');
   const searchInput = document.getElementById('search-input');
+  const infosBt = document.getElementById('infos_bt');
+  const placeholderInfo = document.getElementById('placeholder-info');
+
+  let temaSelecionado = false;
 
   function renderButtons(list) {
     btnsMae.innerHTML = '';
@@ -175,9 +190,24 @@ export function initPrimeirosSocorros() {
       btn.className = 'btns';
       btn.textContent = item.title;
       btn.onclick = () => {
+        const isActive = btn.classList.contains('active');
+
+        // Remove 'active' de todos os botões
         document.querySelectorAll('.btns').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        showInfo(item);
+
+        if (isActive) {
+          // Desseleciona tema
+          temaSelecionado = false;
+          infoTitle.textContent = '';
+          infoContent.innerHTML = '';
+          infosBt.style.display = 'none';
+          placeholderInfo.style.display = 'block';
+        } else {
+          // Seleciona novo tema
+          btn.classList.add('active');
+          temaSelecionado = true;
+          showInfo(item);
+        }
       };
       btn.setAttribute('role', 'listitem');
       btnsMae.appendChild(btn);
@@ -185,22 +215,46 @@ export function initPrimeirosSocorros() {
   }
 
   function showInfo(item) {
+    const videoUrl = videos[item.title];
+    const embed = videoUrl
+      ? `<iframe width="100%" height="200" src="${videoUrl.replace("watch?v=", "embed/")}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`
+      : '';
+
+    // Atualiza o conteúdo
     infoTitle.textContent = item.title;
-    infoContent.innerHTML = item.content;
+    infoTitle.style.color = "black";
+    infoContent.innerHTML = `
+    <div class="info-left">
+      ${embed}
+    </div>
+    <div class="info-right">
+      ${item.content}
+    </div>
+  `;
+
+    // Mostra conteúdo e esconde placeholder
+    infosBt.style.display = 'block';
+    placeholderInfo.style.display = 'none';
   }
 
   searchInput.addEventListener('input', () => {
     const q = searchInput.value.trim().toLowerCase();
-    const filtered = q
-      ? data.filter(d => d.title.toLowerCase().includes(q))
-      : data;
+    const filtered = q ? data.filter(d => d.title.toLowerCase().includes(q)) : data;
     renderButtons(filtered);
-    // Limpa o quadro se for filtrado para zero resultados
+
     if (!filtered.length) {
-      infoTitle.textContent = 'Nenhum tema encontrado';
+      temaSelecionado = false;
+      infoTitle.textContent = '';
       infoContent.innerHTML = '';
+      infosBt.style.display = 'none';
+      placeholderInfo.style.display = 'block';
     }
   });
+
+  // Estado inicial
+  temaSelecionado = false;
+  infosBt.style.display = 'none';
+  placeholderInfo.style.display = 'block';
 
   renderButtons(data);
 }

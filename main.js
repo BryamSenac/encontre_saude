@@ -9,7 +9,7 @@ export function createMain() {
   textCenter1.className = "textCenter";
 
   const h1 = document.createElement("h1");
-  h1.textContent = "Nosso Conteúdo";
+  h1.textContent = "Sua saúde em primeiro lugar";
   textCenter1.appendChild(h1);
 
   // 🔹 Cards principais
@@ -17,22 +17,43 @@ export function createMain() {
   cardsContainer.className = "cards";
 
   const cardsData = [
-    { title: "Sintomas", img: "./assets/sintomas.jpg", route: ROUTES.sintomas },
-    { title: "Farmácias", img: "./assets/farmacia.jpg", route: ROUTES.farmacia },
-    { title: "Primeiros Socorros", img: "./assets/primeiros-socorros.jpg", route: ROUTES.primeirosSocorros },
+    {
+      title: "Sintomas",
+      icon: "fa-solid fa-stethoscope iconSaude",
+      text: "Saiba onde ir de acordo com seus sintomas",
+      route: ROUTES.sintomas
+    },
+    {
+      title: "Farmácias",
+      icon: "fa-solid fa-prescription-bottle-medical iconSaude",
+      text: "Veja Onde se Cuidar: Farmácias e Informações de Saúde",
+      route: ROUTES.farmacia
+    },
+    {
+      title: "Primeiros Socorros",
+      icon: "fa-solid fa-briefcase-medical iconSaude",
+      text: "O que fazer enquanto o resgate não chega",
+      route: ROUTES.primeirosSocorros
+    },
   ];
 
-  cardsData.forEach(({ title, img, route }) => {
+  cardsData.forEach(({ title, icon, text, route }) => {
     const card = document.createElement("div");
     card.className = "card";
 
+    // Título
     const h2 = document.createElement("h2");
     h2.textContent = title;
 
-    const cardImg = document.createElement("div");
-    cardImg.className = "card-img";
-    cardImg.style.backgroundImage = `url(${img})`;
+    // Ícone
+    const cardIcon = document.createElement("i");
+    cardIcon.className = icon;
 
+    // Texto
+    const p = document.createElement("p");
+    p.textContent = text;
+
+    // Botão
     const button = document.createElement("button");
     button.className = "button";
     button.textContent = "Ver Mais";
@@ -41,7 +62,8 @@ export function createMain() {
     });
 
     card.appendChild(h2);
-    card.appendChild(cardImg);
+    card.appendChild(cardIcon);
+    card.appendChild(p);
     card.appendChild(button);
     cardsContainer.appendChild(card);
   });

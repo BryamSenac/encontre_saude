@@ -19,7 +19,11 @@ footer {
 
 /* Logo do footer */
 .footerSize .logoTipo {
-    height: 8vh;
+    margin-left: 10vh;
+    height: 15vh;
+    border-radius: 100%;
+    background-color: rgba(255, 255, 255, 0.123);
+    padding: 0.5vh;
     /* reduzido para não deformar */
 }
 
