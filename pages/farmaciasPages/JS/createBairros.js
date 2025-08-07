@@ -1,36 +1,38 @@
 export function carregarBairros() {
   const bairros = [
-    "Todos os Bairros",
-    "Aeroporto",
-    "Água Branca",
     "Alvorada",
-    "Antônio de Paiva Cantelmo",
     "Cango",
     "Centro",
     "Cristo Rei",
+    "Jardim Floresta",
+    "Luther King",
+    "Marrecas",
+    "Nossa Senhora Aparecida",
+    "Pinheirinho",
+    "São Cristóvão",
+    "São Miguel",
+    "Vila Nova"
+  ];
+
+  /*Bairros sem Farmacia*/
+    /*"Aeroporto",
+    "Água Branca",
+    "Antônio de Paiva Cantelmo",
     "Guanabara",
     "Industrial",
-    "Jardim Floresta",
     "Jardim Itália",
     "Jardim Virgínia",
     "Júpiter",
-    "Luther King",
-    "Marrecas",
     "Miniguaçu",
-    "Nossa Senhora Aparecida",
     "Nova Petrópolis",
     "Novo Mundo",
     "Padre Ulrico",
     "Pinheirão",
-    "Pinheirinho",
     "Presidente Kennedy",
     "Sadia",
-    "São Cristóvão",
     "São Francisco",
-    "São Miguel",
     "Seminário",
-    "Vila Nova"
-  ];
+    */
 
   const select = document.getElementById("bairro");
   if (!select) return;

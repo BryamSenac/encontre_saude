@@ -29,13 +29,16 @@
 
 /* Largura quando expandida */
 .fixed-bar.expanded {
-  width: 30vh;
+  width: 35vh;
   /* abre espaço para o texto */
 }
 
 .fixed-bar.expanded .menu-btn {
-  /* exemplo: empurra 1vh para a direita */
-  margin-left: 23vh;
+  margin:2vh 0 0 25vh;
+  font-size: 5vh;
+}
+.fixed-bar.expanded .menu-btn:hover {
+  transform: scale(1.1);
 }
 
 /* Botão hamburguer */
@@ -53,8 +56,10 @@
   text-decoration: none;
   color: var(--text-color);
   padding: 1vh 0;
-  gap: 1vh;
-  /* distância entre ícone e texto */
+  gap: 2vh;
+}
+#textHeader{
+  font-size: 2.5vh;
 }
 
 .menu-item i {

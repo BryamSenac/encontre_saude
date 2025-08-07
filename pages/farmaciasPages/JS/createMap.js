@@ -65,7 +65,10 @@ export function createMap() {
             <p><strong>Horário:</strong> ${f.horario}</p>
             <p><strong>Bairro:</strong> ${f.bairro}</p>
         `;
-
+            function abrirRota(lat, lng) {
+                const url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+                window.open(url, '_blank');
+            }
             // Botão rota
             const rotaBtn = document.createElement("a");
             rotaBtn.className = "rota-btn";
@@ -88,14 +91,23 @@ export function createMap() {
     }
 
     // Filtragem
+    let tipoFiltro = {
+        municipal: true,
+        privada: true,
+    };
+
     function filtrar() {
         const termo = document.getElementById("search").value.toLowerCase();
         const bairro = document.getElementById("bairro").value;
+
         const filtrados = farmacias.filter(f => {
             const matchNome = f.nome.toLowerCase().includes(termo);
             const matchBairro = bairro ? f.bairro === bairro : true;
-            return matchNome && matchBairro;
+            const matchTipo = tipoFiltro[f.tipo?.toLowerCase()]; // ← safe
+
+            return matchNome && matchBairro && matchTipo;
         });
+
         renderMarkers(filtrados);
         renderFarmaciasList(filtrados);
     }
@@ -103,6 +115,17 @@ export function createMap() {
     document.getElementById("search").addEventListener("input", filtrar);
     document.getElementById("bairro").addEventListener("change", filtrar);
 
+    document.getElementById("btnMunicipal").addEventListener("click", () => {
+        tipoFiltro.municipal = !tipoFiltro.municipal;
+        document.getElementById("btnMunicipal").classList.toggle("active", tipoFiltro.municipal);
+        filtrar();
+    });
+
+    document.getElementById("btnPrivada").addEventListener("click", () => {
+        tipoFiltro.privada = !tipoFiltro.privada;
+        document.getElementById("btnPrivada").classList.toggle("active", tipoFiltro.privada);
+        filtrar();
+    });
     // Sidebar toggle
     const sideebar = document.getElementById("sideebar");
     document.getElementById("menuBtn").addEventListener("click", () => {

@@ -16,9 +16,9 @@ export function createFooter() {
 
     // contatos
     const contactItems = [
-        { icon: "fas fa-envelope", tooltip: "contato@saude.com" },
-        { icon: "fas fa-phone", tooltip: "(99) 9999-9999" },
-        { icon: "fab fa-whatsapp", tooltip: "(99) 98888-8888" }
+        { icon: "fas fa-envelope", tooltip: "gabrielwag971@gmail.com" },
+        { icon: "fas fa-phone", tooltip: "(46) 99121-3122" },
+        { icon: "fab fa-whatsapp", tooltip: "(46) 99121-3122" }
     ];
 
     contactItems.forEach(item => {

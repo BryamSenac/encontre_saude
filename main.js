@@ -19,19 +19,19 @@ export function createMain() {
   const cardsData = [
     {
       title: "Sintomas",
-      icon: "fa-solid fa-stethoscope iconSintomas",
+      icon: "fa-solid fa-stethoscope iconSaude",
       text: "Saiba onde ir de acordo com seus sintomas",
       route: ROUTES.sintomas
     },
     {
       title: "Farmácias",
-      icon: "fa-solid fa-prescription-bottle-medical iconFarmacia",
-      text: "Informações de Saúde relevantes",
+      icon: "fa-solid fa-prescription-bottle-medical iconSaude",
+      text: "Veja Onde se Cuidar: Farmácias e Informações de Saúde",
       route: ROUTES.farmacia
     },
     {
       title: "Primeiros Socorros",
-      icon: "fa-solid fa-briefcase-medical iconSocorros",
+      icon: "fa-solid fa-briefcase-medical iconSaude",
       text: "O que fazer enquanto o resgate não chega",
       route: ROUTES.primeirosSocorros
     },

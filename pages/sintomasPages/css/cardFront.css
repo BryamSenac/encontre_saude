@@ -1,4 +1,3 @@
-
 .chat-container {
   position: relative;
   width: 50%;
@@ -6,10 +5,9 @@
   background-color: var(--green-dark);
   text-align: justify;
   border-radius: 20px;
-  perspective: 1500px; /* necessário para efeito 3D */
+  perspective: 1500px;
+  /* necessário para efeito 3D */
 }
-
-
 
 .flip-card {
   width: 100%;
@@ -19,7 +17,7 @@
   transform-style: preserve-3d;
 }
 
-#flip:checked + .flip-card {
+#flip:checked+.flip-card {
   transform: rotateY(180deg);
 }
 
@@ -35,7 +33,8 @@
   width: 100%;
   height: 100%;
   position: absolute;
-  top: 0; left: 0;
+  top: 0;
+  left: 0;
   backface-visibility: hidden;
   border-radius: 20px;
   box-sizing: border-box;
@@ -79,7 +78,7 @@
   margin-top: 1.5vh;
   border: none;
   border-radius: 15px;
-  padding: 1vh;
+  padding: 2vh;
   resize: none;
   font-size: 1.6vh;
 }

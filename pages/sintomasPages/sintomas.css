@@ -16,3 +16,7 @@ main {
 .fixed-bar{
   width: 8vh;
 }
+.fixed-bar.expanded {
+  width: 32vh;
+  /* abre espaço para o texto */
+}

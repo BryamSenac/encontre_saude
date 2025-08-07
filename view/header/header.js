@@ -32,7 +32,7 @@ export function createHeader() {
         const a = document.createElement("a");
         a.href = href;
         a.className = "menu-item";
-        a.innerHTML = `<i class="fas ${icon}"></i><span>${text}</span>`;
+        a.innerHTML = `<i class="fas ${icon}"></i><span id="textHeader">${text}</span>`;
         fixedBar.appendChild(a);
     });
 
@@ -41,9 +41,9 @@ export function createHeader() {
     contacts.id = "iconsContato";
     contacts.className = "contactsHeader";
     const contactItems = [
-        { icon: "fa-brands fa-whatsapp", href: "https://wa.me/seuNumero" },
-        { icon: "fa-solid fa-phone", href: "tel:+550000000000" },
-        { icon: "fa-solid fa-envelope", href: "mailto:seuemail@dominio.com" },
+        { icon: "fa-brands fa-whatsapp", href: "https://wa.me/46991213122" },
+        { icon: "fa-solid fa-phone", href: "tel:+5546991213122" },
+        { icon: "fa-solid fa-envelope", href: "mailto:seuemail@gabrielwag971@gmail.com" },
     ];
     contactItems.forEach(({ icon, href }) => {
         const a = document.createElement("a");

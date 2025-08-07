@@ -1,36 +1,41 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-   <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Primeiros Socorros</title>
-      <link rel="stylesheet" href="./primeirosSocorros.css">
-      <link rel="stylesheet"
-         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-      <script type="module" src="./primeirosSocorros.js"></script>
-   </head>
-   <body>
-      <div id="logo"></div>
-      <header id="header"></header>
 
-      <main>
-         <div id="search-container">
-            <input type="text" id="search-input" class="search-input"
-               placeholder="Procure por um tema..." autofocus>
-         </div>
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Primeiros Socorros</title>
+   <link rel="stylesheet" href="./primeirosSocorros.css">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+   <script type="module" src="./primeirosSocorros.js"></script>
+</head>
 
-         <div id="btns_mae" role="list"
-            aria-label="Temas de primeiros socorros">
-            <!-- Botões são gerados pelo JS -->
-         </div>
+<body>
+   <div id="logo"></div>
+   <header id="header"></header>
 
-         <div id="infos_bt">
-            <h2 id="info-title" aria-live="polite">Selecione um tema</h2>
-            <div id="info-content"></div>
-         </div>
-      </main>
+   <main>
+      <div id="search-container">
+         <input type="text" id="search-input" class="search-input" placeholder="Procure por um tema..." autofocus>
+      </div>
 
-      <footer id="footer"></footer>
+      <div id="btns_mae" role="list" aria-label="Temas de primeiros socorros">
+         <!-- Botões são gerados pelo JS -->
+      </div>
 
-   </body>
+      <div id="infos_bt">
+         <h2 id="info-title" aria-live="polite">Selecione um tema</h2>
+         <div id="info-content"></div>
+      </div>
+      <div id="placeholder-info">
+         <h2>Selecione um tema</h2>
+         <img src="./../../assets/primeirosSocorros.jpg" alt="Imagem ilustrativa" id="placeholder-img">
+      </div>
+      <section id="extra-tip"></section>
+   </main>
+
+   <footer id="footer"></footer>
+
+</body>
+
 </html>

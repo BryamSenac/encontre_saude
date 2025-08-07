@@ -99,7 +99,7 @@ body {
 
 /* Card grande */
 .card.large {
-    width: 35%;
+    width: 30%;
 }
 
 /* Título */
@@ -144,4 +144,31 @@ body {
 
 .card.large .card-img {
     height: 50vh;
+}
+
+.iconSaude {
+    transition: transform 0.3s ease, filter 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.iconSaude:hover {
+    animation: pulsoVida 1s ease-in-out forwards;
+}
+
+@keyframes pulsoVida {
+    0% {
+        transform: translateY(0) scale(1);
+        filter: drop-shadow(0 0 0px #2fb45100);
+    }
+
+    50% {
+        transform: translateY(-6px) scale(1.1);
+        filter: drop-shadow(0 0 12px #2fb451c7);
+    }
+
+    100% {
+        transform: translateY(0) scale(1);
+        filter: drop-shadow(0 0 12px #2fb451c7);
+    }
 }

@@ -1,0 +1,11 @@
+#placeholder-info {
+    text-align: center;
+    font-size: 4vh;
+    margin-top: 4vh;
+}
+
+#placeholder-img {
+    width: 50vh;
+    height: auto;
+    margin: 1vh 0 10vh 0;
+}

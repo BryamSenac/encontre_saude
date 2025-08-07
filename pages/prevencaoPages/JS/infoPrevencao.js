@@ -3,57 +3,29 @@ export function infoPrevencao() {
     {
       title: 'Como saber se já está na hora de fazer uma consulta de rotina?',
       text: `
-       Consultas de rotina são essenciais para detectar problemas de saúde precocemente, mesmo que você não apresente sintomas.
- Alguns sinais de que é hora de marcar uma consulta:
-Já faz mais de 1 ano desde sua última consulta (ou 6 meses, no caso de doenças crônicas).
-
-
-Você tem histórico familiar de doenças como diabetes, hipertensão, câncer ou colesterol alto.
-
-
-Está sentindo cansaço frequente, alterações no sono, no apetite ou no humor.
-
-
-Está passando por fases de transição, como adolescência, menopausa ou envelhecimento.
-
-
-Deseja iniciar uma atividade física ou mudar hábitos alimentares.
-
-
- A prevenção é o melhor caminho. Marcar uma consulta regular com um clínico geral ou médico da família é um bom começo.
+      Consultas de rotina são essenciais para detectar problemas de saúde precocemente, mesmo que você não apresente sintomas.
+      Alguns sinais de que é hora de marcar uma consulta:
+      Já faz mais de 1 ano desde sua última consulta (ou 6 meses, no caso de doenças crônicas).
+      Você tem histórico familiar de doenças como diabetes, hipertensão, câncer ou colesterol alto.
+      Está sentindo cansaço frequente, alterações no sono, no apetite ou no humor.
+      Está passando por fases de transição, como adolescência, menopausa ou envelhecimento.
+      Deseja iniciar uma atividade física ou mudar hábitos alimentares.
+      A prevenção é o melhor caminho. Marcar uma consulta regular com um clínico geral ou médico da família é um bom começo.
       `,
       img: 'https://clinicagobbo.med.br/wp-content/uploads/2018/03/consulta-m%C3%A9dica.jpg'
     },
     {
       title: 'Quais sinais e sintomas indicam uma pré-diabetes?',
       text: `
-A pré-diabetes geralmente não apresenta sintomas claros, mas fique atento a possíveis sinais como:
-Sede excessiva e boca seca
-
-
-Urinar com frequência, especialmente à noite
-
-
-Cansaço constante
-
-
-Visão embaçada ocasional
-
-
-Fome excessiva, mesmo após refeições
-
-
-Pequenas feridas que demoram a cicatrizar
-
-
- Se você tem histórico familiar de diabetes, está com sobrepeso ou tem estilo de vida sedentário, vale a pena realizar exames de sangue regularmente, como:
-Glicemia em jejum
-
-
-Hemoglobina glicada
-
-
-  
+      A pré-diabetes geralmente não apresenta sintomas claros, mas fique atento a possíveis sinais como:
+      Sede excessiva e boca seca
+      Urinar com frequência, especialmente à noite
+      Cansaço constante Visão embaçada ocasional
+      Fome excessiva, mesmo após refeições
+      Pequenas feridas que demoram a cicatrizar
+      Se você tem histórico familiar de diabetes, está com sobrepeso ou tem estilo de vida sedentário, 
+      vale a pena realizar exames de sangue regularmente, como: Glicemia em jejum
+      Hemoglobina glicada
       `,
       img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQZ3SdQbFbb8XbzxpB03taS929YTL-g9jZ1BA&s'
     },
@@ -74,32 +46,18 @@ Hemoglobina glicada
         Planejar refeições evita escolhas impulsivas e mantém a variedade. Comer de forma consciente, mastigando devagar e prestando atenção 
         aos sinais de saciedade, transforma a alimentação em um ato de cuidado com o próprio corpo.
       `,
-      img: 'https://i0.wp.com/spdm.org.br/wp-content/uploads/2015/02/k2_items_src_ed75fe6580bca12eb76431640a45783c.jpg?fit=960%2C960&ssl=1'
+      img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQbLbJv5MgAmjynfP3YspVt8STxdHSnmUbOGA&s'
     },
 
     {
       title: ' Quais sinais e sintomas indicam a pressão alta (hipertensão)?',
       text: `
-        A hipertensão é conhecida como o "assassino silencioso", pois muitas vezes não causa sintomas. Quando aparecem, podem incluir:
-Dor de cabeça persistente (especialmente na nuca)
-
-
-Tonturas ou sensação de peso na cabeça
-
-
-Zumbido nos ouvidos
-
-
-Visão turva ou embaçada
-
-
-Falta de ar ou palpitações
-
-
-Sangramento nasal (em casos mais graves)
-
-
- A única forma confiável de saber se você tem pressão alta é medindo regularmente — em casa ou em unidades de saúde. Mesmo sem sintomas, é essencial manter acompanhamento médico.
+        A hipertensão é conhecida como o "assassino silencioso", pois muitas vezes não causa sintomas. 
+        Quando aparecem, podem incluir:Dor de cabeça persistente (especialmente na nuca)
+        Tonturas ou sensação de peso na cabeça Zumbido nos ouvidos Visão turva ou embaçada
+        Falta de ar ou palpitações Sangramento nasal (em casos mais graves)
+        A única forma confiável de saber se você tem pressão alta é medindo regularmente — em casa ou em unidades de saúde. 
+        Mesmo sem sintomas, é essencial manter acompanhamento médico.
 
       `,
       img: 'https://tse2.mm.bing.net/th/id/OIP.iTQ0-GhfFZgO3V19Q70K2QHaE8?r=0&rs=1&pid=ImgDetMain&o=7&rm=3'
@@ -127,35 +85,17 @@ Sangramento nasal (em casos mais graves)
       title: ' Como proceder diante de uma mordida de animal?',
       text: `
         Em caso de mordida, siga os seguintes passos:
-Lave imediatamente o local com água e sabão por pelo menos 5 minutos.
-
-
-Não tampe totalmente a ferida — cubra com um pano limpo, se necessário.
-
-
-Procure uma unidade de saúde o quanto antes, mesmo que a mordida pareça leve.
-
-
-Informe o tipo de animal, se é conhecido e se tem vacinação em dia (especialmente contra raiva).
-
-
-Siga as orientações médicas — pode ser necessário tomar:
-
-
-Vacina antirrábica
-
-
-Vacina antitetânica
-
-
-Antibióticos
-
-
- Mordidas de cães, gatos, morcegos e animais silvestres nunca devem ser ignoradas. A raiva é uma doença grave e fatal, mas pode ser evitada com o tratamento correto.
+        Lave imediatamente o local com água e sabão por pelo menos 5 minutos.
+        Não tampe totalmente a ferida — cubra com um pano limpo, se necessário.
+        Procure uma unidade de saúde o quanto antes, mesmo que a mordida pareça leve.
+        Informe o tipo de animal, se é conhecido e se tem vacinação em dia (especialmente contra raiva).
+        Siga as orientações médicas — pode ser necessário tomar:
+        Vacina antirrábica Vacina antitetânica Antibióticos
+        Mordidas de cães, gatos, morcegos e animais silvestres nunca devem ser ignoradas. 
+        A raiva é uma doença grave e fatal, mas pode ser evitada com o tratamento correto.
       `,
       img: 'https://www.patasdacasa.com.br/sites/default/files/noticias/2022/01/mordida-de-cachorro-o-que-fazer-ao-ser-atacado-por-um-cao.jpg'
     },
-
   ];
 
 

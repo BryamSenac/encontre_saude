@@ -173,12 +173,14 @@ export function initPrimeirosSocorros() {
     "Transporte de vítimas": "https://www.youtube.com/embed/JttAYDeuSyg",
     Fratura: "https://www.youtube.com/embed/RT6th-_fbOo"
   };
+
   const btnsMae = document.getElementById('btns_mae');
   const infoTitle = document.getElementById('info-title');
   const infoContent = document.getElementById('info-content');
   const searchInput = document.getElementById('search-input');
+  const infosBt = document.getElementById('infos_bt');
+  const placeholderInfo = document.getElementById('placeholder-info');
 
-  // Estado inicial -> nenhum botão selecionado
   let temaSelecionado = false;
 
   function renderButtons(list) {
@@ -188,10 +190,24 @@ export function initPrimeirosSocorros() {
       btn.className = 'btns';
       btn.textContent = item.title;
       btn.onclick = () => {
+        const isActive = btn.classList.contains('active');
+
+        // Remove 'active' de todos os botões
         document.querySelectorAll('.btns').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        temaSelecionado = true;
-        showInfo(item);
+
+        if (isActive) {
+          // Desseleciona tema
+          temaSelecionado = false;
+          infoTitle.textContent = '';
+          infoContent.innerHTML = '';
+          infosBt.style.display = 'none';
+          placeholderInfo.style.display = 'block';
+        } else {
+          // Seleciona novo tema
+          btn.classList.add('active');
+          temaSelecionado = true;
+          showInfo(item);
+        }
       };
       btn.setAttribute('role', 'listitem');
       btnsMae.appendChild(btn);
@@ -204,10 +220,9 @@ export function initPrimeirosSocorros() {
       ? `<iframe width="100%" height="200" src="${videoUrl.replace("watch?v=", "embed/")}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`
       : '';
 
-    // Atualiza título e garante cor preta
+    // Atualiza o conteúdo
     infoTitle.textContent = item.title;
     infoTitle.style.color = "black";
-
     infoContent.innerHTML = `
     <div class="info-left">
       ${embed}
@@ -216,28 +231,30 @@ export function initPrimeirosSocorros() {
       ${item.content}
     </div>
   `;
+
+    // Mostra conteúdo e esconde placeholder
+    infosBt.style.display = 'block';
+    placeholderInfo.style.display = 'none';
   }
 
   searchInput.addEventListener('input', () => {
     const q = searchInput.value.trim().toLowerCase();
-    const filtered = q
-      ? data.filter(d => d.title.toLowerCase().includes(q))
-      : data;
+    const filtered = q ? data.filter(d => d.title.toLowerCase().includes(q)) : data;
     renderButtons(filtered);
 
-    // Reset título se não tiver resultados
     if (!filtered.length) {
       temaSelecionado = false;
-      infoTitle.textContent = 'Nenhum tema encontrado';
-      infoTitle.style.color = "black";
+      infoTitle.textContent = '';
       infoContent.innerHTML = '';
+      infosBt.style.display = 'none';
+      placeholderInfo.style.display = 'block';
     }
   });
 
-  // Mensagem inicial padrão
-  infoTitle.textContent = "Selecione um tema";
-  infoTitle.style.color = "black";
-  infoContent.innerHTML = "";
+  // Estado inicial
+  temaSelecionado = false;
+  infosBt.style.display = 'none';
+  placeholderInfo.style.display = 'block';
 
   renderButtons(data);
 }

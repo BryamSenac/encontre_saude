@@ -1,0 +1,38 @@
+
+#btns_mae {
+  width: 80vw;
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  grid-template-columns: repeat(4, 18vw);
+  gap: 2vh;
+  overflow-x: auto;
+  padding: 1rem;
+  background: var(--green-medium);
+  border-radius: 1rem;
+}
+
+.btns {
+  background: var(--green-dark);
+  color: var(--text-color);
+  border: none;
+  padding: 0.75rem 1.25rem;
+  font-size: 1rem;
+  border-radius: 1rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.btns:focus {
+  outline: none;
+  transform: skew(2deg) scale(1.05);
+  -webkit-transform: skew(2deg) scale(1.05);
+  -moz-transform: skew(2deg) scale(1.05);
+}
+
+.btns.active {
+  background: var(--btn-active);
+  text-shadow: 1px 4px 2px rgba(83, 43, 43, 0.54);
+  /* cor mais forte */
+}
