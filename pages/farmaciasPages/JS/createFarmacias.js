@@ -8,14 +8,14 @@ export function createFarmacias() {
             site: null,
             instagram: null,
             tipo:"Municipal",
-            horario: "Segunda a Sexta-feira: 08h às 12h / 13h30 às 16h",
+            horario: "Segunda a Sexta-feira: 7h30 às 11h / 13h às 17h/ 18h às 22h <p> Sábado: 7h30 às 11h30/13h às 17h / 13h às 17h",
             bairro: "Pinheirinho",
             lat: -26.04550868764767,
             lng: -53.06116912377435
         },
         {
             nome: "Farmácia Municipal da Cango",
-            endereco: "Rua Governador Parigot de Souza, 455 - Bairro Cango",
+            endereco: "Av Governador Parigot de Souza, 455 - Bairro Cango",
             telefone: "(46) 3523-6640",
             site: null,
             instagram: null,
@@ -32,7 +32,7 @@ export function createFarmacias() {
             site: null,
             instagram: null,
             tipo:"Municipal",
-            horario: "Segunda a Sexta-feira: Turnos da manhã, tarde e noite",
+            horario: "Segunda a Sexta-feira: 7h30 às 11h / 13h às 17h",
             bairro: "São Cristóvão",
             lat: -26.088817577255902,
             lng: -53.047050074212294
@@ -44,7 +44,7 @@ export function createFarmacias() {
             site: null,
             instagram: null,
             tipo:"Municipal",
-            horario: "Segunda a Sexta-feira: Horários diversos",
+            horario: "Segunda a Sexta-feira: 7h30 às 11h / 13h às 17h",
             bairro: "Cidade Leste",
             lat: -26.0810,
             lng: -53.0605
@@ -56,7 +56,7 @@ export function createFarmacias() {
             site: null,
             instagram: null,
             tipo:"Municipal",
-            horario: "Segunda a Sexta-feira: Horários diversos",
+            horario: "Segunda a Sexta-feira: 7h30 às 11h / 13h às 17h",
             bairro: "São Miguel",
             lat: -26.0679,
             lng: -53.0739
@@ -68,7 +68,7 @@ export function createFarmacias() {
             site: null,
             instagram: null,
             tipo:"Municipal",
-            horario: "Segunda a Sexta-feira: Horários diversos",
+            horario: "Segunda a Sexta-feira: 7h30 às 11h / 13h às 17h",
             bairro: "Alvorada",
             lat: -26.0782152398228,
             lng: -53.06540942347807
@@ -82,7 +82,7 @@ export function createFarmacias() {
             site: "https://institucional.saojoaofarmacias.com.br/loja/884/franciscobeltrao1",
             instagram: null,
             tipo:"Privada",
-            horario: "Seg–Sáb: 07h–22h; Dom: 08h–20h",
+            horario: "Seg–Dom: 07h30–23h",
             bairro: "Centro",
             lat: -26.07784235167002,
             lng: -53.04494024488317,
