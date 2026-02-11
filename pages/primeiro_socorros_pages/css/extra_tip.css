@@ -1,0 +1,25 @@
+#extra-tip {
+  flex: 1;
+  min-width: 300px;
+  margin: 0;
+  padding: 1rem;
+  background: #f0f8ff;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+}
+
+#extra-tip h3 {
+  font-size: 1.2rem;
+  margin: 0 0 1rem 0;
+  color: #2c7a7b;
+  font-weight: 700;
+}
+
+#extra-tip p {
+  font-size: 0.9rem;
+  line-height: 1.4;
+  margin: 0;
+}

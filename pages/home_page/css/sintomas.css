@@ -1,0 +1,9 @@
+/* Imports managed by index.css */
+
+@import url(./sintomas/sintomas_layout.css);
+
+main {
+  position: relative;
+  /* width auto to respect padding */
+  min-height: 80vh;
+}

@@ -1,0 +1,37 @@
+@import url(./../../config/config.css);
+@import url(./../../shared/sidebar.css);
+@import url(./css/search.css);
+@import url(./css/btns_theme.css);
+@import url(./css/infos_btn.css);
+@import url(./css/placeholder.css);
+@import url(./css/extra_tip.css);
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: sans-serif;
+  color: var(--black-dark);
+  background: var(--beige-light);
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2vw 5vw;
+}
+
+.top-section {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 2vh;
+  gap: 2rem;
+}

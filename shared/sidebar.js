@@ -1,0 +1,59 @@
+import { ROUTES } from "../config/routes/routes.js";
+
+export function createSidebar() {
+    const header = document.getElementById("header");
+    if (!header) return;
+
+    const sidebar = document.createElement("nav");
+    sidebar.className = "sidebar";
+
+    const logoContainer = document.createElement("div");
+    logoContainer.className = "sidebar-logo";
+    const logoImg = document.createElement("img");
+    logoImg.src = "/assets/logoTipo.png";
+    logoImg.alt = "Encontre Saúde Logo";
+    logoContainer.appendChild(logoImg);
+    sidebar.appendChild(logoContainer);
+
+    const navList = document.createElement("div");
+    navList.className = "sidebar-nav";
+
+    const navItems = [
+        { text: "Home", icon: "fa-house", href: ROUTES.home },
+        { text: "Primeiros Socorros", icon: "fa-kit-medical", href: ROUTES.primeirosSocorros },
+        { text: "Ações Preventivas", icon: "fa-shield-heart", href: ROUTES.prevensao },
+        { text: "Farmácias", icon: "fa-prescription-bottle-medical", href: ROUTES.farmacia },
+    ];
+
+    navItems.forEach(({ text, icon, href }) => {
+        const a = document.createElement("a");
+        a.href = href;
+        a.className = "nav-item";
+        a.innerHTML = `
+            <i class="fas ${icon} nav-icon"></i>
+            <span class="nav-text">${text}</span>
+        `;
+        navList.appendChild(a);
+    });
+    sidebar.appendChild(navList);
+
+    const footerContacts = document.createElement("div");
+    footerContacts.className = "sidebar-footer";
+
+    const contactItems = [
+        { icon: "fa-brands fa-whatsapp", href: "https://wa.me/46991213122" },
+        { icon: "fa-solid fa-phone", href: "tel:+5546991213122" },
+        { icon: "fa-solid fa-envelope", href: "mailto:seuemail@gabrielwag971@gmail.com" },
+    ];
+
+    contactItems.forEach(({ icon, href }) => {
+        const a = document.createElement("a");
+        a.href = href;
+        a.target = "_blank";
+        a.className = "contact-icon";
+        a.innerHTML = `<i class="${icon}"></i>`;
+        footerContacts.appendChild(a);
+    });
+    sidebar.appendChild(footerContacts);
+    header.appendChild(sidebar);
+}

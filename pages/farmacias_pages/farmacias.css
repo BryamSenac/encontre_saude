@@ -1,0 +1,198 @@
+@import url(./../../config/config.css);
+@import url(./../../shared/sidebar.css);
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body,
+html {
+    height: 100%;
+    font-family: Arial, sans-serif;
+    color: var(--black-dark);
+    background-color: var(--beige-light);
+}
+
+main {
+    width: 100%;
+    height: 100vh;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Container for buttons */
+.map-controls {
+    padding: 15px 20px;
+    display: flex;
+    justify-content: flex-start;
+    /* items on left/right or grouped */
+    gap: 15px;
+    align-items: center;
+    background-color: var(--beige-light);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    flex-shrink: 0;
+    /* Prevention shrinking */
+}
+
+#map {
+    position: relative;
+    width: 100%;
+    flex: 1;
+    /* Fills remaining height */
+    z-index: 1;
+    border-radius: 0;
+    box-shadow: none;
+    margin: 0;
+    left: auto;
+    right: auto;
+    top: auto;
+}
+
+.menuBtn,
+.loc-btn {
+    position: static;
+    /* Natural flow in flex container */
+    pointer-events: auto;
+    background: var(--green-dark);
+    color: var(--text-color);
+    border: none;
+    padding: 10px 15px;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 5px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    transition: background-color 0.3s ease;
+    /* Reset fixed positioning props */
+    top: auto;
+    left: auto;
+    right: auto;
+    z-index: auto;
+}
+
+.menuBtn:hover,
+.loc-btn:hover {
+    background-color: var(--btn-active);
+}
+
+/* specific style if we want to push one button to the right, e.g. menuBtn */
+.menuBtn {
+    margin-left: auto;
+}
+
+.sideebar {
+    position: fixed;
+    top: 0;
+    right: -400px;
+    width: 350px;
+    max-width: 80%;
+    height: 100%;
+    background: var(--beige-light);
+    box-shadow: -2px 0 8px rgba(0, 0, 0, 0.3);
+    transition: right 0.4s ease;
+    padding: 20px;
+    overflow-y: auto;
+    z-index: 2000;
+    /* Highest priority to overlap everything */
+    color: var(--black-dark);
+    pointer-events: auto;
+}
+
+.sideebar.active {
+    right: 0;
+}
+
+.sideebar h2 {
+    margin-bottom: 15px;
+    color: var(--green-dark);
+}
+
+.filter {
+    margin-bottom: 20px;
+}
+
+.filter input,
+.filter select {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid var(--gray-light);
+    border-radius: 6px;
+    font-size: 0.95rem;
+    color: var(--black-dark);
+    background-color: white;
+}
+
+.card {
+    background: white;
+    margin-bottom: 15px;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    transition: background 0.3s;
+    color: var(--black-dark);
+}
+
+.card:hover {
+    background: var(--green-light);
+    cursor: pointer;
+}
+
+.card h3 {
+    color: var(--green-dark);
+    margin-bottom: 8px;
+}
+
+.card p {
+    margin: 5px 0;
+    font-size: 0.9rem;
+    color: var(--gray-medium);
+}
+
+.rota-btn {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 8px 12px;
+    background: var(--green-dark);
+    color: var(--text-color);
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+}
+
+.rota-btn:hover {
+    background: var(--btn-active);
+}
+
+.card.active {
+    background-color: #d4f0d4;
+    border: 2px solid #4CAF50;
+    transition: background-color 0.3s ease;
+}
+
+.tipo-filtros {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.tipo-btn {
+    flex: 1;
+    padding: 8px;
+    border: none;
+    border-radius: 4px;
+    background: #ccc;
+    color: #333;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.tipo-btn.active {
+    background: #4caf50;
+    color: #fff;
+}
