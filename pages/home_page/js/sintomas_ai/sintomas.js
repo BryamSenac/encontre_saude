@@ -9,14 +9,13 @@ export function createSintomasSection() {
     if (!header || !main) return;
 
     const sintomasContainer = document.createElement("section");
-    sintomasContainer.id = "sintomas-section";
-    sintomasContainer.style.width = "100%";
-    sintomasContainer.style.minHeight = "60vh";
-    sintomasContainer.style.position = "relative";
+    sintomasContainer.id = "sintomas"; // Fixed ID to match CSS
+    sintomasContainer.style.position = "relative"; // Keep position relative
 
     sintomasContainer.innerHTML = `
+        <h2>Triagem de Sintomas com IA</h2>
         <div class="sintomas-container">
-            <!-- Left Panel -->
+            <!-- Left Panel (Legend) -->
             <div class="sintomas-left">
                 <div class="aviso-box">
                     <h3><i class="fa-solid fa-triangle-exclamation"></i> Aviso Importante</h3>
@@ -27,7 +26,7 @@ export function createSintomasSection() {
                 </div>
 
                 <div class="legend-container">
-                    <span class="legend-title">Níveis de Urgência</span>
+                    <span class="legend-title" style="font-weight:bold; display:block; margin-bottom:1rem;">Níveis de Urgência</span>
                     <div class="legend-items">
                         <div class="legend-item">
                             <div class="legend-dot" style="background:#5EA7FF"></div>
@@ -68,26 +67,21 @@ export function createSintomasSection() {
                 </div>
             </div>
 
-            <!-- Right Panel -->
+            <!-- Right Panel (Chat Interface) -->
             <div class="sintomas-right">
-                <div class="right-content">
-                    <h2>Como você se sente?</h2>
-                    <p class="subtitle">Descreva seus sintomas com detalhes (onde dói, há quanto tempo, intensidade).</p>
-                    
-                    <div class="input-area">
-                        <textarea id="text_chat" placeholder="Ex: Estou com dor de cabeça forte há 2 dias e febre leve..."></textarea>
-                    </div>
-
-                    <button id="btn-avaliar">
-                        <i class="fa-solid fa-stethoscope"></i> Analisar Sintomas
-                    </button>
-
-                    <div id="result-container">
-                        <div class="result-header">
-                            <div id="indicador-nivel"></div>
-                            <strong>Avaliação da IA:</strong>
+                <div id="chat-container">
+                    <div id="chat-messages">
+                        <!-- Initial AI Message -->
+                        <div class="message ai">
+                            <p>Olá! Sou seu assistente de saúde virtual. Por favor, descreva o que você está sentindo com o máximo de detalhes (onde dói, há quanto tempo, intensidade).</p>
                         </div>
-                        <div id="resultado"></div>
+                    </div>
+                    
+                    <div id="input-area">
+                        <input type="text" id="user-input" placeholder="Digite seus sintomas aqui..." autocomplete="off">
+                        <button id="send-btn">
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </button>
                     </div>
                 </div>
             </div>

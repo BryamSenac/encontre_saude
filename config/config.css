@@ -1,19 +1,50 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
 :root {
-  --green-dark: #64AC7D;
-  --green-medium: #A5CBA7;
+  /* Cores Principais */
+  --green-dark: #2A5C43; /* Mais profundo e elegante */
+  --green-medium: #4A8B68; /* Mais vibrante */
   --green-light: #C7DAB7;
-  --beige-light: #F0ECD9;
+  --green-accent: #E8F5E9; /* Para fundos muito claros/hovers */
+  
+  /* Cores de Fundo e Texto */
+  --beige-light: #F8F9FA; /* Quase branco, mais limpo que o bege anterior */
+  --white: #FFFFFF;
   --gray-medium: #797979;
   --gray-light: #EBEBEB;
-  --black-dark: #262525;
-  --text-color: rgb(255, 241, 241);
-  --btn-active: #3e7c51;
+  --black-dark: #1A1A1A;
+  --text-color: #2D3436;
+  --text-light: #636E72;
+  
+  /* Estados */
+  --btn-active: #1E4230;
+  --error: #FF6B6B;
+  --success: #2ECC71;
+  
+  /* Sombras Modernas (Soft Shadows) */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 16px 32px rgba(0, 0, 0, 0.12);
+  
+  /* Bordas */
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-xl: 32px;
+  
+  /* Transições */
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 html,
 body {
   margin: 0;
-  /* padding handled by specific layouts */
+  padding: 0;
   min-height: 100vh;
-  /* overflow handled by browser default */
+  font-family: 'Outfit', sans-serif;
+  background-color: var(--beige-light);
+  color: var(--text-color);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }

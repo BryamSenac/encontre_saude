@@ -91,20 +91,29 @@ export function createMap() {
 
     // Filtragem
     let tipoFiltro = {
-        municipal: true,
-        privada: true,
+        municipal: false, // Default: Desativado
+        privada: false,   // Default: Desativado
     };
 
     function filtrar() {
-        const termo = document.getElementById("search").value.toLowerCase();
-        const bairro = document.getElementById("bairro").value;
+        // Safe search term
+        const searchInput = document.getElementById("search");
+        const termo = searchInput ? searchInput.value.toLowerCase().trim() : "";
 
         const filtrados = farmacias.filter(f => {
-            const matchNome = f.nome.toLowerCase().includes(termo);
-            const matchBairro = bairro ? f.bairro === bairro : true;
-            const matchTipo = tipoFiltro[f.tipo?.toLowerCase()]; // ← safe
+            // Safe property access
+            const nome = f.nome ? f.nome.toLowerCase() : "";
+            const bairro = f.bairro ? f.bairro.toLowerCase() : "";
+            const tipo = f.tipo ? f.tipo.toLowerCase().trim() : "";
 
-            return matchNome && matchBairro && matchTipo;
+            // Search in both name and neighborhood
+            const matchTexto = nome.includes(termo) || bairro.includes(termo);
+
+            // Strict Filter: Only show if the specific type is enabled
+            // If both are false, nothing is shown.
+            const matchTipo = tipoFiltro[tipo] === true;
+
+            return matchTexto && matchTipo;
         });
 
         renderMarkers(filtrados);
@@ -112,7 +121,7 @@ export function createMap() {
     }
 
     document.getElementById("search").addEventListener("input", filtrar);
-    document.getElementById("bairro").addEventListener("change", filtrar);
+    // Removed 'bairro' listener as the element does not exist
 
     document.getElementById("btnMunicipal").addEventListener("click", () => {
         tipoFiltro.municipal = !tipoFiltro.municipal;
@@ -126,29 +135,25 @@ export function createMap() {
         filtrar();
     });
     // Sidebar toggle
-    const sideebar = document.getElementById("sideebar");
-    document.getElementById("menuBtn").addEventListener("click", () => {
-        sideebar.classList.toggle("active");
-    });
+    const sideebar = document.getElementById("map-overlay");
+    if (sideebar) {
+        document.getElementById("menuBtn").addEventListener("click", () => {
+            sideebar.classList.toggle("active");
+        });
+    }
 
-    // Localização do usuário
-    document.getElementById("locBtn").addEventListener("click", () => {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(pos => {
-                userLocation = pos.coords;
-                map.setView([pos.coords.latitude, pos.coords.longitude], 16);
-                L.marker([pos.coords.latitude, pos.coords.longitude])
-                    .addTo(map)
-                    .bindPopup("<b>Você está aqui!</b>").openPopup();
-            }, () => {
-                alert("Não foi possível acessar sua localização. Verifique as permissões do navegador.");
-            });
-        } else {
-            alert("Seu navegador não suporta Geolocalização.");
-        }
-    });
+    // Inicialização Controlada
+    console.log("Iniciando renderização: Lista -> Mapa");
 
-    // Inicialização
-    renderMarkers(farmacias);
-    renderFarmaciasList(farmacias);
+    // 1. Renderiza filtrado (inicialmente mostra tudo pois filtros estão off)
+    filtrar();
+
+    // 2. Aguarda um ciclo de renderização para garantir que o layout estabilizou
+    setTimeout(() => {
+        // Força o Leaflet a recalcular o tamanho do container (fix para mapa cinza/vazio)
+        map.invalidateSize();
+
+        // 3. Renderiza os marcadores (já tratados pelo filtrar, mas reforçando visualmente se necessário)
+        console.log("Mapa renderizado com sucesso.");
+    }, 300);
 }

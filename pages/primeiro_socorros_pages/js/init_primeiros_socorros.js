@@ -252,9 +252,17 @@ export function initPrimeirosSocorros() {
   });
 
   // Estado inicial
-  temaSelecionado = false;
-  infosBt.style.display = 'none';
-  placeholderInfo.style.display = 'block';
-
+  // Estado inicial
   renderButtons(data);
+
+  // Selecionar "Engasgo" por padrão
+  setTimeout(() => {
+    const buttons = btnsMae.querySelectorAll('.btns');
+    for (const btn of buttons) {
+      if (btn.textContent === 'Engasgo') {
+        btn.click();
+        break;
+      }
+    }
+  }, 0);
 }

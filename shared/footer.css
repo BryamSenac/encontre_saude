@@ -1,0 +1,90 @@
+@import url(./../config/config.css);
+
+.main-footer {
+    width: 100%;
+    background-color: var(--white);
+    padding: 3rem 1.5rem;
+    margin-top: 4rem;
+    border-top: 4px solid var(--green-medium);
+    /* "barra divisória parecida com a usada no menu" - assuming green border */
+    font-family: 'Outfit', sans-serif;
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    gap: 4rem;
+    flex-wrap: wrap;
+}
+
+.footer-left,
+.footer-right {
+    flex: 1;
+    min-width: 300px;
+}
+
+/* Titles */
+.main-footer h3 {
+    color: var(--green-dark);
+    font-size: 1.4rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+    padding-bottom: 0.5rem;
+}
+
+.main-footer h3::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 50px;
+    height: 3px;
+    background: var(--green-accent);
+    border-radius: 2px;
+}
+
+/* Developers List */
+.footer-left ul {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 1.5rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.5rem;
+}
+
+.footer-left li {
+    font-size: 0.9rem;
+    color: var(--text-light);
+    font-weight: 500;
+}
+
+.professor-name {
+    font-size: 1rem;
+    color: var(--green-medium);
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Project Info */
+.footer-right p {
+    color: var(--text-light);
+    line-height: 1.6;
+    font-size: 1rem;
+    text-align: justify;
+}
+
+/* Responsiveness */
+@media (max-width: 768px) {
+    .footer-container {
+        flex-direction: column;
+        gap: 2.5rem;
+    }
+
+    .main-footer {
+        padding: 2rem 1.5rem;
+    }
+}

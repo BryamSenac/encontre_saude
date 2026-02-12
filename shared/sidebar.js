@@ -55,5 +55,10 @@ export function createSidebar() {
         footerContacts.appendChild(a);
     });
     sidebar.appendChild(footerContacts);
-    header.appendChild(sidebar);
+
+    // Append to body to avoid positioning issues with transformed parents (like animated headers)
+    document.body.prepend(sidebar);
+
+    // Add class to body to adjust layout
+    document.body.classList.add("with-sidebar");
 }

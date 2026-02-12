@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 
 <head>
     <meta charset="UTF-8">
@@ -17,28 +17,31 @@
 
 <body>
     <header id="header"></header>
-    <main>
-        <div class="map-controls">
-            <button class="loc-btn" id="locBtn">📍 Minha Localização</button>
-            <button class="menuBtn" id="menuBtn">☰ Farmácias</button>
+
+    <!-- Mapa ocupa o fundo -->
+    <div id="map"></div>
+
+    <!-- Overlay Flutuante -->
+    <div id="map-overlay" class="map-overlay">
+        <div class="search-container">
+            <h2>Farmácias Próximas</h2>
+            <div class="search-box">
+                <input type="text" id="search" placeholder="Buscar farmácia ou bairro...">
+                <button class="search-btn"><i class="fas fa-search"></i></button>
+            </div>
+
+            <div class="tipo-filtros" style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
+                <button id="btnMunicipal" class="tipo-btn">Municipais</button>
+                <button id="btnPrivada" class="tipo-btn">Privadas</button>
+            </div>
         </div>
 
-        <div id="map"></div>
+        <div id="farmacias-list" class="pharmacy-list-container">
+            <!-- Lista será injetada aqui -->
+        </div>
+    </div>
 
-        <aside class="sideebar" id="sideebar">
-            <h2>Farmácias em Francisco Beltrão</h2>
-            <div class="filter">
-                <input type="text" id="search" placeholder="Pesquisar farmácia...">
-                <select id="bairro"></select>
-                <div class="tipo-filtros">
-                    <button id="btnMunicipal" class="tipo-btn active">Municipais</button>
-                    <button id="btnPrivada" class="tipo-btn active">Privadas</button>
-                </div>
-            </div>
-            <div id="farmacias-list"></div>
-        </aside>
-    </main>
-
+    <!-- Botão de localização removido por solicitação -->
 </body>
 
 </html>

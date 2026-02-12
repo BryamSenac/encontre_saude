@@ -5,8 +5,8 @@ import { carregarBairros } from "./js/create_bairros.js";
 
 // Aguarda o carregamento completo do DOM
 document.addEventListener("DOMContentLoaded", () => {
-    createSidebar()
 
-    createMap()
+    createSidebar();
+    createMap();
     carregarBairros()
 });

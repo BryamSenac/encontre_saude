@@ -1,5 +1,6 @@
 @import url(./../../../config/config.css);
 @import url(./../../../shared/sidebar.css);
+@import url(./../../../shared/footer.css);
 @import url(./sintomas.css);
 
 
@@ -7,9 +8,8 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: 'Outfit', sans-serif;
 }
-
-
 
 html,
 body {
@@ -19,52 +19,85 @@ body {
     margin: 0;
 }
 
-/* Textos centrais */
+/* Header */
+#header {
+    margin-bottom: 2rem;
+}
+
+/* Textos centrais - Hero Section */
 .textCenter {
     text-align: center;
-    margin: 2rem 1rem;
+    padding: 4rem 1.5rem 2rem;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    animation: fadeIn 0.8s ease-out;
 }
 
 .textCenter h1 {
-    padding-top: 3vh;
-    font-size: 2rem;
+    font-size: 3rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
     color: var(--green-dark);
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, var(--green-dark) 0%, var(--green-medium) 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .textCenter h3 {
     font-size: 1.5rem;
+    font-weight: 500;
     color: var(--green-medium);
+    margin-bottom: 1.5rem;
 }
 
 .textCenter p {
     max-width: 700px;
-    margin: 0.5rem auto;
-    font-size: 1rem;
-    color: var(--gray-medium);
-    line-height: 1.5;
+    margin: 0 auto;
+    font-size: 1.1rem;
+    color: var(--text-light);
+    line-height: 1.6;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* Botão padrão */
 .button {
-    margin: 1.5rem 0;
-    padding: 0.8rem 1.8rem;
+    margin: 2rem 0;
+    padding: 1rem 2.5rem;
     border: none;
-    border-radius: 25px;
-    background: var(--green-dark);
+    border-radius: var(--radius-xl);
+    background: linear-gradient(135deg, var(--green-dark) 0%, var(--green-medium) 100%);
     color: white;
-    font-weight: bold;
-    font-size: 1rem;
+    font-weight: 600;
+    font-size: 1.1rem;
     cursor: pointer;
-    transition: background 0.3s, transform 0.2s;
+    transition: all var(--transition-normal);
+    box-shadow: var(--shadow-md);
+    letter-spacing: 0.5px;
 }
 
 .button:hover {
-    background: var(--green-medium);
-    transform: translateY(-2px);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(42, 92, 67, 0.3);
+    background: linear-gradient(135deg, var(--green-medium) 0%, var(--green-dark) 100%);
+}
+
+.button:active {
+    transform: translateY(-1px);
 }
 
 /* Cards container */
@@ -72,8 +105,10 @@ body {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    gap: 2.5rem;
-    margin: 2rem auto;
+    gap: 2rem;
+    margin: 2rem auto 4rem;
+    padding: 0 1rem;
+    max-width: 1400px;
 }
 
 .cards.single {
@@ -82,94 +117,155 @@ body {
 
 /* Card padrão */
 .card {
-    background: var(--gray-light);
-    border-radius: 15px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
     overflow: hidden;
-    width: 280px;
+    width: 300px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 1.5rem 1rem;
-    transition: transform 0.3s;
+    padding: 2.5rem 1.5rem;
+    transition: all var(--transition-normal);
+    border: 1px solid rgba(0, 0, 0, 0.03);
+    position: relative;
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--green-medium), var(--green-light));
+    opacity: 0;
+    transition: opacity var(--transition-normal);
 }
 
 .card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-lg);
+}
+
+.card:hover::before {
+    opacity: 1;
 }
 
 /* Card grande */
 .card.large {
-    width: 30%;
+    width: 100%;
+    max-width: 900px;
+    flex-direction: row;
+    padding: 0;
+    min-height: 400px;
+}
+
+.card.large .card-content {
+    padding: 3rem;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 /* Título */
 .card h2 {
     margin: 0 0 1rem 0;
-    font-size: 1.4rem;
+    font-size: 1.5rem;
+    font-weight: 600;
     text-align: center;
     color: var(--green-dark);
 }
 
 /* Ícone dos cards */
+/* Ícone dos cards */
 .card i {
-    font-size: 8vh;
+    font-size: 3.5rem;
+    width: 100px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     border-radius: 50%;
-    padding: 1rem;
-    margin-bottom: 1rem;
-    transition: transform 0.3s, background 0.3s;
+    margin-bottom: 1.5rem;
+    background: var(--green-accent);
+    color: var(--green-dark);
+    transition: all var(--transition-normal);
 }
 
-.card i:hover {
-    transform: scale(1.1);
+.card:hover i {
+    transform: scale(1.1) rotate(5deg);
+    background: var(--green-light);
+    color: var(--green-dark);
 }
 
 /* Texto dos cards */
 .card p {
     font-size: 1rem;
-    color: var(--green-dark);
+    color: var(--text-light);
     text-align: center;
-    margin-bottom: 1.5rem;
-    /* espaçamento maior antes do botão */
-    line-height: 1.4;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+/* Container do botão no card para garantir alinhamento no final */
+.card-actions {
+    margin-top: auto;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.card .button {
+    margin: 0;
+    padding: 0.8rem 2rem;
+    width: 80%;
+    font-size: 1rem;
 }
 
 /* Imagem do card grande */
 .card-img {
-    width: 100%;
-    height: 100%;
-    background-size: contain;
+    width: 50%;
+    height: auto;
+    background-size: cover;
     background-position: center;
-    border-radius: 10px;
-}
-
-.card.large .card-img {
-    height: 50vh;
+    min-height: 100%;
 }
 
 .iconSaude {
-    transition: transform 0.3s ease, filter 0.3s ease, box-shadow 0.3s ease;
-    cursor: pointer;
     display: inline-block;
+    transition: transform var(--transition-normal);
 }
 
-.iconSaude:hover {
-    animation: pulsoVida 1s ease-in-out forwards;
+/* Responsive */
+@media (max-width: 900px) {
+    .card.large {
+        flex-direction: column;
+        max-width: 500px;
+    }
+
+    .card.large .card-img {
+        width: 100%;
+        height: 250px;
+    }
+
+    .card.large .card-content {
+        width: 100%;
+        padding: 2rem;
+    }
 }
 
-@keyframes pulsoVida {
-    0% {
-        transform: translateY(0) scale(1);
-        filter: drop-shadow(0 0 0px #2fb45100);
+@media (max-width: 768px) {
+    .textCenter h1 {
+        font-size: 2.2rem;
     }
 
-    50% {
-        transform: translateY(-6px) scale(1.1);
-        filter: drop-shadow(0 0 12px #2fb451c7);
+    .cards {
+        gap: 1.5rem;
     }
 
-    100% {
-        transform: translateY(0) scale(1);
-        filter: drop-shadow(0 0 12px #2fb451c7);
+    .card {
+        width: 100%;
     }
 }

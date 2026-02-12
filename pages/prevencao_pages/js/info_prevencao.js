@@ -101,29 +101,90 @@ export function infoPrevencao() {
 
   const container = document.getElementById('prevencao-container');
   container.innerHTML = ''; // limpa antes de renderizar
+  container.className = 'prevention-container'; // Garante a classe do grid
+
+  // Modal Elements
+  const modalOverlay = document.getElementById("prevencao-modal");
+  const modalImg = document.getElementById("modal-img");
+  const modalTitle = document.getElementById("modal-title");
+  const modalText = document.getElementById("modal-text");
+  const closeModal = document.querySelector(".close-modal-btn");
+
+  function openModal(item) {
+    if (!modalOverlay) return;
+
+    modalImg.src = item.img;
+    modalTitle.textContent = item.title;
+    modalText.textContent = item.text; // TextContent preserves whitespace if CSS white-space is pre-line
+
+    modalOverlay.style.display = "flex";
+    // Small delay to allow display flex to apply before adding opacity class for transition
+    setTimeout(() => {
+      modalOverlay.classList.add("show");
+    }, 10);
+  }
+
+  function closeModalFunc() {
+    if (!modalOverlay) return;
+    modalOverlay.classList.remove("show");
+    setTimeout(() => {
+      modalOverlay.style.display = "none";
+    }, 300); // Wait for transition
+  }
+
+  // Close Logic
+  if (closeModal) {
+    closeModal.addEventListener("click", closeModalFunc);
+  }
+
+  if (modalOverlay) {
+    modalOverlay.addEventListener("click", (e) => {
+      if (e.target === modalOverlay) {
+        closeModalFunc();
+      }
+    });
+  }
 
   data.forEach((item, index) => {
     const card = document.createElement('div');
-    card.className = 'card_prev';
+    card.className = 'prevention-card';
 
+    // Imagem
+    const imgContainer = document.createElement('div');
+    imgContainer.className = 'card-image';
     const img = document.createElement('img');
     img.src = item.img;
     img.alt = item.title;
+    imgContainer.appendChild(img);
 
-    const textDiv = document.createElement('div');
-    textDiv.className = 'text-prev';
+    // Conteúdo
+    const contentDiv = document.createElement('div');
+    contentDiv.className = 'card-content';
 
-    const title = document.createElement('h1');
+    const title = document.createElement('h2');
     title.textContent = item.title;
 
-    const desc = document.createElement('h2');
-    desc.textContent = item.text;
+    const desc = document.createElement('p');
+    // Show a cleaner excerpt
+    const cleanText = item.text.replace(/\s+/g, ' ').trim();
+    desc.textContent = cleanText.substring(0, 150) + '...';
 
-    textDiv.appendChild(title);
-    textDiv.appendChild(desc);
+    // Botão ler mais
+    const readMore = document.createElement('a');
+    readMore.href = '#';
+    readMore.className = 'read-more';
+    readMore.innerHTML = 'Ler mais <i class="fas fa-arrow-right"></i>';
+    readMore.onclick = (e) => {
+      e.preventDefault();
+      openModal(item);
+    };
 
-    card.appendChild(img);
-    card.appendChild(textDiv);
+    contentDiv.appendChild(title);
+    contentDiv.appendChild(desc);
+    contentDiv.appendChild(readMore);
+
+    card.appendChild(imgContainer);
+    card.appendChild(contentDiv);
 
     container.appendChild(card);
   });

@@ -68,22 +68,8 @@ export function createMain() {
     cardsContainer.appendChild(card);
   });
 
-  // 🔹 Texto sobre saúde
-  const textCenter2 = document.createElement("div");
-  textCenter2.className = "textCenter";
-
-  const h3 = document.createElement("h3");
-  h3.textContent = "Sobre a Saúde";
-
-  const p = document.createElement("p");
-  p.textContent =
-    "Cuidar da saúde é essencial para uma vida equilibrada. Aqui você encontra dicas e informações para manter-se sempre bem e prevenir problemas futuros.";
-
-  textCenter2.appendChild(h3);
-  textCenter2.appendChild(p);
-
   // 🔹 Monta no <main>
   main.appendChild(textCenter1);
   main.appendChild(cardsContainer);
-  main.appendChild(textCenter2);
+  // textCenter2 removed in favor of shared footer
 }

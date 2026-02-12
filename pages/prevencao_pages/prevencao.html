@@ -1,23 +1,37 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Prevenções</title>
-        <link rel="stylesheet" href="./prevencao.css">
-        <script type="module" src="./prevencao.js"></script>
-        <link rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    </head>
-    <body>
 
-        <header id="header"></header>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prevenções</title>
+    <link rel="stylesheet" href="./prevencao.css">
+    <script type="module" src="./prevencao.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
 
-        <main id="prevencao-container">
-            <!-- Os cards serão injetados pelo JS -->
-        </main>
+<body>
+
+    <header id="header"></header>
+
+    <main id="prevencao-container">
+        <!-- Os cards serão injetados pelo JS -->
+    </main>
+
+    <!-- Modal de Detalhes -->
+    <div id="prevencao-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-body">
+                <img id="modal-img" src="" alt="Detalhe">
+                <h2 id="modal-title">Título</h2>
+                <div id="modal-text">Texto completo...</div>
+            </div>
+            <button class="close-modal-btn">Fechar</button>
+        </div>
+    </div>
 
 
 
-    </body>
+</body>
+
 </html>
