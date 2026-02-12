@@ -56,6 +56,37 @@ export function createSidebar() {
     });
     sidebar.appendChild(footerContacts);
 
+    // Mobile Toggle Button
+    const mobileToggle = document.createElement("button");
+    mobileToggle.className = "mobile-menu-toggle";
+    mobileToggle.innerHTML = '<i class="fas fa-bars"></i>';
+    document.body.appendChild(mobileToggle);
+
+    // Overlay for closing on click outside
+    const overlay = document.createElement("div");
+    overlay.className = "sidebar-overlay";
+    document.body.appendChild(overlay);
+
+    function toggleSidebar() {
+        sidebar.classList.toggle("active");
+        overlay.classList.toggle("active");
+        mobileToggle.innerHTML = sidebar.classList.contains("active")
+            ? '<i class="fas fa-times"></i>'
+            : '<i class="fas fa-bars"></i>';
+    }
+
+    mobileToggle.addEventListener("click", toggleSidebar);
+    overlay.addEventListener("click", toggleSidebar);
+
+    // Close on navigation
+    sidebar.querySelectorAll(".nav-item").forEach(item => {
+        item.addEventListener("click", () => {
+            if (window.innerWidth <= 768) {
+                toggleSidebar();
+            }
+        });
+    });
+
     // Append to body to avoid positioning issues with transformed parents (like animated headers)
     document.body.prepend(sidebar);
 

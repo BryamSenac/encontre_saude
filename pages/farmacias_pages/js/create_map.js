@@ -134,13 +134,24 @@ export function createMap() {
         document.getElementById("btnPrivada").classList.toggle("active", tipoFiltro.privada);
         filtrar();
     });
-    // Sidebar toggle
-    const sideebar = document.getElementById("map-overlay");
-    if (sideebar) {
-        document.getElementById("menuBtn").addEventListener("click", () => {
-            sideebar.classList.toggle("active");
-        });
-    }
+    // Mobile Map Toggle Button (Show/Hide List)
+    const mapToggleBtn = document.createElement("button");
+    mapToggleBtn.className = "map-toggle-btn";
+    mapToggleBtn.innerHTML = '<i class="fas fa-map"></i>';
+    document.body.appendChild(mapToggleBtn);
+
+    const overlay = document.getElementById("map-overlay");
+
+    mapToggleBtn.addEventListener("click", () => {
+        overlay.classList.toggle("hidden-mobile");
+
+        // Update icon based on state
+        if (overlay.classList.contains("hidden-mobile")) {
+            mapToggleBtn.innerHTML = '<i class="fas fa-list"></i>'; // Icon to show list
+        } else {
+            mapToggleBtn.innerHTML = '<i class="fas fa-map"></i>'; // Icon to show map (hide list)
+        }
+    });
 
     // Inicialização Controlada
     console.log("Iniciando renderização: Lista -> Mapa");
