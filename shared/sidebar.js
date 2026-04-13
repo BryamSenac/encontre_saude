@@ -23,6 +23,7 @@ export function createSidebar() {
         { text: "Primeiros Socorros", icon: "fa-kit-medical", href: ROUTES.primeirosSocorros },
         { text: "Ações Preventivas", icon: "fa-shield-heart", href: ROUTES.prevensao },
         { text: "Farmácias", icon: "fa-prescription-bottle-medical", href: ROUTES.farmacia },
+        { text: "Login / Cadastro", icon: "fa-arrow-right-to-bracket", href: ROUTES.login },
     ];
 
     navItems.forEach(({ text, icon, href }) => {
