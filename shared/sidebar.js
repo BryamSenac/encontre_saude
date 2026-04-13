@@ -1,4 +1,5 @@
 import { ROUTES } from "../config/routes/routes.js";
+import { createTelegramWidget } from "./telegram_widget.js";
 
 export function createSidebar() {
     const header = document.getElementById("header");
@@ -94,4 +95,7 @@ export function createSidebar() {
 
     // Add class to body to adjust layout
     document.body.classList.add("with-sidebar");
+    
+    // Injeta Botão Flutuante Global do Telegram
+    createTelegramWidget();
 }
