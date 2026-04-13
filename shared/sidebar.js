@@ -24,6 +24,7 @@ export function createSidebar() {
         { text: "Ações Preventivas", icon: "fa-shield-heart", href: ROUTES.prevensao },
         { text: "Farmácias", icon: "fa-prescription-bottle-medical", href: ROUTES.farmacia },
         { text: "Login / Cadastro", icon: "fa-arrow-right-to-bracket", href: ROUTES.login },
+        { text: "Meu Perfil", icon: "fa-user", href: ROUTES.perfil },
     ];
 
     navItems.forEach(({ text, icon, href }) => {

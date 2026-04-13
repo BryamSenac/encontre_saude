@@ -32,7 +32,8 @@ document.addEventListener("DOMContentLoaded", () => {
     loginForm.addEventListener("submit", (e) => {
         e.preventDefault();
         // Lógica de integração Backend entraria aqui
-        alert("Simulação: Login realizado com sucesso!");
+        localStorage.setItem("isLoggedIn", "true");
+        window.location.href = ROUTES.perfil;
     });
 
     registerForm.addEventListener("submit", (e) => {
