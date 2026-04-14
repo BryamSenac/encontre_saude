@@ -9,6 +9,13 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    const btnForgotPassword = document.querySelector(".btn-forgot-password");
+    if (btnForgotPassword) {
+        btnForgotPassword.addEventListener("click", () => {
+            window.location.href = ROUTES.recuperarSenha;
+        });
+    }
+
     // 2. Referências aos formulários
     const btnGoToRegister = document.getElementById("btnGoToRegister");
     const btnGoToLogin = document.getElementById("btnGoToLogin");

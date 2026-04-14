@@ -1,3 +1,6 @@
+@import url(./../../shared/sidebar.css);
+@import url(./../../shared/footer.css);
+
 * {
     box-sizing: border-box;
     margin: 0;
