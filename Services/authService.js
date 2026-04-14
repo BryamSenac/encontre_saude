@@ -69,5 +69,34 @@ export const authService = {
             console.error("Erro no login Google:", error.message);
             return { data: null, error };
         }
+    },
+
+    // Passo 1 da recuperação: envia e-mail com o link de redefinição.
+    // O Supabase dispara um link que redireciona o usuário de volta para a URL
+    // definida em redirectTo já com um token de sessão temporário na URL.
+    async resetPassword(email) {
+        try {
+            const redirectTo = window.location.origin + '/pages/recuperar_senha_pages/recuperar_senha.html';
+            const { data, error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo });
+            if (error) throw error;
+            return { data, error: null };
+        } catch (error) {
+            console.error("Erro no resetPassword:", error.message);
+            return { data: null, error };
+        }
+    },
+
+    // Passo 2 da recuperação: atualiza de fato a senha do usuário.
+    // Só funciona depois que o Supabase estabeleceu uma sessão via o link do e-mail
+    // (o evento PASSWORD_RECOVERY em onAuthStateChange confirma isso).
+    async updatePassword(newPassword) {
+        try {
+            const { data, error } = await supabase.auth.updateUser({ password: newPassword });
+            if (error) throw error;
+            return { data, error: null };
+        } catch (error) {
+            console.error("Erro no updatePassword:", error.message);
+            return { data: null, error };
+        }
     }
 };

@@ -18,15 +18,45 @@ Esse arquivo `env.js` foi explicitamente isolado através do arquivo `.gitignore
 Através deste arquivo importamos ativamente toda a robusta lógica do banco de dados (da CDN oficial do site JSDelivr `https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm`) pra dentro do front-end.
 Ele serve para gerar uma conexão única (Chamada de ***Singleton*** na programação) e disponibilizar a variável de client `supabase` onde precisarmos, poupando a memória e a rede dos dispositivos móveis do usuário final.
 
-### 3. As Interfaces Lógicas (`/shared`)
+### 3. As Interfaces Lógicas (`/Services`)
 
 Essas APIs servem para processar e blindar (com funções Try/Catch do JS) o que as suas telas e inputs HTML entregam, enviando para o banco os dados de forma correta e mastigadas:
 
-- **`shared/authService.js`**: Única responsável pela Autenticação do sistema. Em uma tela de Login ela pode ser chamada por: `authService.signUp()`, `authService.signIn()` ou `authService.signOut()`. Há também a fundamental função de `getUserSession()` para ser validada durante as transições de rota (Toda nova tela no projeto deve confirmar `getUserSession()` antes de liberar conteúdo sigiloso).
-- **`shared/profileService.js`**: Essa API atinge uma tabela sua customizada no painel do Supabase com o nome `perfis_saude`. Essa tabela guarda a sua ficha médica privada contendo os campos cruciais solicitados nos seus relatórios de métrica. Através da função `profileService.saveProfile()` os dados chegam e usam a dinâmica **Upsert** (Atualiza algo que o sistema entende já existir para aquele usuário, ou cria do absoluto zero se o banco achar que aquele ID era novo, diminuindo 50% dos códigos repetidos de lógicas backend).
+- **`Services/authService.js`**: Única responsável pela Autenticação do sistema. Métodos disponíveis:
+  - `signUp(email, password)` — cadastro de novo usuário
+  - `signIn(email, password)` — login com e-mail/senha
+  - `signOut()` — encerra a sessão
+  - `getUserSession()` — retorna a sessão ativa (use em toda tela que exige login antes de exibir conteúdo)
+  - `signInWithGoogle()` — login via OAuth Google
+  - `resetPassword(email)` — dispara o e-mail de recuperação de senha
+  - `updatePassword(newPassword)` — salva a nova senha (só funciona após o link do e-mail ser aberto)
+- **`Services/profileService.js`**: Atinge a tabela `perfis_saude` no Supabase. Guarda a ficha médica do usuário. Usa **Upsert**: atualiza se o registro existe, cria se não existe.
 
-## Como rodar o sistema localmente (Avisos Finais)
+## Recuperação de Senha
+
+O fluxo usa dois métodos do Supabase Auth e ocorre em duas visitas separadas à mesma página:
+
+**Visita 1 — Usuário solicita o reset:**
+1. Usuário digita o e-mail em `/pages/recuperar_senha_pages/recuperar_senha.html`
+2. O front-end chama `authService.resetPassword(email)`
+3. Supabase envia um e-mail com um link apontando de volta para essa mesma página
+4. A tela exibe apenas "verifique seu e-mail" — o trabalho passa a ser do link
+
+**Visita 2 — Usuário volta pelo link do e-mail:**
+1. O Supabase processa o token da URL e cria uma sessão temporária
+2. `supabase.auth.onAuthStateChange` detecta o evento `PASSWORD_RECOVERY`
+3. Só então o formulário de nova senha é exibido (sem o evento, o form permanece oculto)
+4. Usuário digita e confirma a nova senha; o front-end chama `authService.updatePassword(senha)`
+5. Redireciona para o perfil já autenticado
+
+> ⚠ **Configuração necessária no Dashboard do Supabase:**  
+> Em *Authentication → URL Configuration → Redirect URLs*, adicione:  
+> - `http://localhost:PORTA/pages/recuperar_senha_pages/recuperar_senha.html` (desenvolvimento)  
+> - URL equivalente em produção  
+> Sem isso, o Supabase bloqueia o redirecionamento do link do e-mail.
+
+## Como rodar o sistema localmente
 Se clonou este repositório, atente-se aos próximos passos:
-1. Abra ou crie seu arquivo `/config/env.js`, que devido à privacidade ignorada no Git, não desceu do repositório.
-2. Formate-o listando os placeholders para as strings `SUPABASE_URL` e `SUPABASE_ANON_KEY`.
-3. Garanta que o Dashboard do Supabase conta com uma tabela (Table) nomeada exatamente: `perfis_saude` em formato Postgres, contendo os schemas de saúde listados pela UI.
+1. Crie o arquivo `/config/env.js` (ele não sobe pro Git por segurança) com as variáveis `SUPABASE_URL` e `SUPABASE_ANON_KEY`.
+2. No Dashboard do Supabase, crie a tabela `perfis_saude` em Postgres com os campos de saúde usados pela UI.
+3. Configure o **Redirect URL** de recuperação de senha conforme descrito na seção acima.
