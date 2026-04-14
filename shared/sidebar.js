@@ -1,4 +1,5 @@
 import { ROUTES } from "../config/routes/routes.js";
+import { createTelegramWidget } from "./telegram_widget.js";
 
 export function createSidebar() {
     const header = document.getElementById("header");
@@ -23,6 +24,8 @@ export function createSidebar() {
         { text: "Primeiros Socorros", icon: "fa-kit-medical", href: ROUTES.primeirosSocorros },
         { text: "Ações Preventivas", icon: "fa-shield-heart", href: ROUTES.prevensao },
         { text: "Farmácias", icon: "fa-prescription-bottle-medical", href: ROUTES.farmacia },
+        { text: "Login / Cadastro", icon: "fa-arrow-right-to-bracket", href: ROUTES.login },
+        { text: "Meu Perfil", icon: "fa-user", href: ROUTES.perfil },
     ];
 
     navItems.forEach(({ text, icon, href }) => {
@@ -92,4 +95,7 @@ export function createSidebar() {
 
     // Add class to body to adjust layout
     document.body.classList.add("with-sidebar");
+    
+    // Injeta Botão Flutuante Global do Telegram
+    createTelegramWidget();
 }
