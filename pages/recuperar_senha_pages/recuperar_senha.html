@@ -51,12 +51,18 @@
 
                     <form id="novaSenhaForm" class="g-form">
                         <div class="input-group">
-                            <input type="password" id="newPassword" required placeholder=" ">
+                            <input type="password" id="newPassword" required placeholder=" " class="input-com-toggle">
                             <label for="newPassword">Criar nova senha</label>
+                            <button type="button" class="btn-toggle-senha" data-target="newPassword" title="Mostrar senha">
+                                <i class="fas fa-eye"></i>
+                            </button>
                         </div>
                         <div class="input-group">
-                            <input type="password" id="confirmNewPassword" required placeholder=" ">
+                            <input type="password" id="confirmNewPassword" required placeholder=" " class="input-com-toggle">
                             <label for="confirmNewPassword">Confirme a senha</label>
+                            <button type="button" class="btn-toggle-senha" data-target="confirmNewPassword" title="Mostrar senha">
+                                <i class="fas fa-eye"></i>
+                            </button>
                         </div>
 
                         <div class="actions center-actions">

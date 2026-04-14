@@ -1,7 +1,10 @@
 import { ROUTES } from "../../config/routes/routes.js";
 import { authService } from "../../Services/authService.js";
+import { setupToggleSenha } from "../../shared/toggle_senha.js";
 
 document.addEventListener("DOMContentLoaded", () => {
+    setupToggleSenha();
+
     // 1. Lógica do botão de voltar
     const btnBackHome = document.getElementById("btnBackHome");
     if (btnBackHome) {

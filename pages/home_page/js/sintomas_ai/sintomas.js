@@ -1,6 +1,8 @@
 
-import { createApi } from "./api.js";
+import { createApi, carregarHistorico } from "./api.js";
 import { createFeedbacks } from "./create_feedback.js";
+
+const isLoggedIn = !!localStorage.getItem("isLoggedIn");
 
 export function createSintomasSection() {
     const header = document.getElementById("header");
@@ -9,11 +11,19 @@ export function createSintomasSection() {
     if (!header || !main) return;
 
     const sintomasContainer = document.createElement("section");
-    sintomasContainer.id = "sintomas"; // Fixed ID to match CSS
-    sintomasContainer.style.position = "relative"; // Keep position relative
+    sintomasContainer.id = "sintomas";
+    sintomasContainer.style.position = "relative";
 
     sintomasContainer.innerHTML = `
-        <h2>Triagem de Sintomas com IA</h2>
+        <div class="sintomas-title-row">
+            <h2>Triagem de Sintomas com IA</h2>
+            ${isLoggedIn ? `
+            <button id="btn-historico-chat" class="btn-historico" title="Ver histórico de conversas">
+                <i class="fas fa-clock-rotate-left"></i>
+                <span>Histórico</span>
+            </button>` : ''}
+        </div>
+
         <div class="sintomas-container">
             <!-- Left Panel (Legend) -->
             <div class="sintomas-left">
@@ -87,10 +97,85 @@ export function createSintomasSection() {
             </div>
         </div>
         <div id="feedbacks"></div>
+
+        <!-- Painel de Histórico (só renderizado se logado) -->
+        ${isLoggedIn ? `
+        <div id="painel-historico" class="painel-historico painel-historico--fechado">
+            <div class="painel-historico__header">
+                <h3><i class="fas fa-clock-rotate-left"></i> Histórico de Conversas</h3>
+                <button id="btn-fechar-historico" class="btn-fechar-historico" title="Fechar histórico">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="historico-lista" class="historico-lista">
+                <!-- Preenchido via JS -->
+            </div>
+        </div>` : ''}
     `;
 
     header.insertAdjacentElement("afterend", sintomasContainer);
 
     createApi();
     createFeedbacks();
+
+    // =============================================
+    // Lógica do painel de histórico (só se logado)
+    // =============================================
+    if (isLoggedIn) {
+        const btnHistorico = document.getElementById("btn-historico-chat");
+        const painelHistorico = document.getElementById("painel-historico");
+        const btnFechar = document.getElementById("btn-fechar-historico");
+        const historicoLista = document.getElementById("historico-lista");
+
+        function renderizarHistorico() {
+            const historico = carregarHistorico();
+            historicoLista.innerHTML = "";
+
+            if (historico.length === 0) {
+                historicoLista.innerHTML = `
+                    <div class="historico-vazio">
+                        <i class="fas fa-comment-medical"></i>
+                        <p>Nenhuma conversa salva ainda.</p>
+                        <small>Suas consultas com a IA aparecerão aqui.</small>
+                    </div>
+                `;
+                return;
+            }
+
+            historico.forEach((sessao) => {
+                const item = document.createElement("div");
+                item.className = "historico-item";
+
+                const userMsg = sessao.mensagens.find(m => m.tipo === "user");
+                const aiMsg = sessao.mensagens.find(m => m.tipo === "ai");
+
+                item.innerHTML = `
+                    <div class="historico-item__data">
+                        <i class="fas fa-calendar-alt"></i> ${sessao.data}
+                    </div>
+                    ${userMsg ? `
+                    <div class="historico-item__user">
+                        <span class="historico-badge historico-badge--user">Você</span>
+                        <p>${userMsg.texto}</p>
+                    </div>` : ''}
+                    ${aiMsg ? `
+                    <div class="historico-item__ai">
+                        <span class="historico-badge historico-badge--ai">IA</span>
+                        <p>${aiMsg.texto}</p>
+                    </div>` : ''}
+                `;
+
+                historicoLista.appendChild(item);
+            });
+        }
+
+        btnHistorico.addEventListener("click", () => {
+            renderizarHistorico();
+            painelHistorico.classList.toggle("painel-historico--fechado");
+        });
+
+        btnFechar.addEventListener("click", () => {
+            painelHistorico.classList.add("painel-historico--fechado");
+        });
+    }
 }
