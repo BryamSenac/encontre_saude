@@ -1,3 +1,4 @@
+@import url(./../../config/config.css);
 @import url(./../../shared/sidebar.css);
 @import url(./../../shared/footer.css);
 
@@ -8,8 +9,8 @@
 }
 
 body {
-    font-family: 'Roboto', sans-serif;
-    background-color: #f0f4f9;
+    font-family: 'Outfit', sans-serif;
+    background-color: var(--beige-light);
     overflow-x: hidden;
 }
 
@@ -17,7 +18,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    min-height: calc(100vh - 80px); 
+    min-height: calc(100vh - 80px);
     padding: 60px 20px;
 }
 
@@ -27,10 +28,10 @@ body {
 }
 
 .perfil-card {
-    background-color: #ffffff;
-    border-radius: 24px;
+    background-color: var(--white);
+    border-radius: var(--radius-lg);
     padding: 40px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    box-shadow: var(--shadow-md);
 }
 
 .perfil-header {
@@ -40,23 +41,23 @@ body {
 
 .avatar i {
     font-size: 80px;
-    color: #0b57d0;
+    color: var(--green-medium);
     margin-bottom: 16px;
 }
 
 .perfil-header h2 {
     font-size: 24px;
-    color: #1f1f1f;
+    color: var(--black-dark);
     margin-bottom: 8px;
-    font-weight: 500;
+    font-weight: 600;
 }
 
 .status-badge {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    background-color: #e8f0fe;
-    color: #0b57d0;
+    background-color: var(--green-accent);
+    color: var(--green-dark);
     padding: 4px 12px;
     border-radius: 12px;
     font-size: 14px;
@@ -64,21 +65,153 @@ body {
 }
 
 .account-info {
-    background-color: #f8f9fa;
-    border-radius: 12px;
+    background-color: var(--beige-light);
+    border-radius: var(--radius-sm);
     padding: 16px;
     margin-bottom: 32px;
-    color: #444746;
+    color: var(--text-light);
     font-size: 14px;
     line-height: 1.6;
 }
 
 .section-title {
     font-size: 16px;
-    color: #0b57d0;
+    color: var(--green-medium);
     margin-bottom: 16px;
     padding-bottom: 8px;
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: 1px solid var(--gray-light);
+    font-weight: 500;
+}
+
+/* ===========================
+   MODO VISUALIZAÇÃO (padrão)
+   =========================== */
+
+.view-section {
+    margin-bottom: 28px;
+}
+
+/* Header da seção com título + botão de edição alinhados */
+.view-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--gray-light);
+}
+
+.view-section-header .section-title {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+/* Botão circular verde com ícone de lápis */
+.btn-edit-round {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--green-medium);
+    color: var(--white);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    box-shadow: var(--shadow-sm);
+    transition: background-color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+    flex-shrink: 0;
+}
+
+.btn-edit-round:hover {
+    background-color: var(--green-dark);
+    transform: scale(1.08);
+    box-shadow: var(--shadow-md);
+}
+
+.btn-edit-round:active {
+    transform: scale(0.96);
+}
+
+/* Grid de informações no modo texto */
+.info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+.info-grid-full {
+    grid-template-columns: 1fr;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    background-color: var(--beige-light);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    border-left: 3px solid var(--green-light);
+}
+
+.info-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.info-value {
+    font-size: 15px;
+    color: var(--black-dark);
+    font-weight: 500;
+}
+
+@media (max-width: 500px) {
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ===========================
+   MODO EDIÇÃO (formulário)
+   =========================== */
+
+/* Header do formulário de edição com título e botão cancelar */
+.edit-form-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    padding: 12px 16px;
+    background-color: var(--green-accent);
+    border-radius: var(--radius-sm);
+    border-left: 4px solid var(--green-medium);
+}
+
+.btn-cancel-edit {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background-color: transparent;
+    color: var(--text-light);
+    border: 1px solid var(--gray-light);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    transition: background-color var(--transition-fast), color var(--transition-fast);
+    flex-shrink: 0;
+}
+
+.btn-cancel-edit:hover {
+    background-color: var(--error);
+    color: var(--white);
+    border-color: var(--error);
 }
 
 /* Formulário Inteligente em Grid (Responsivo) */
@@ -97,7 +230,9 @@ body {
 }
 
 @media (max-width: 500px) {
-    .form-grid, .form-grid-2 {
+
+    .form-grid,
+    .form-grid-2 {
         grid-template-columns: 1fr;
     }
 }
@@ -105,54 +240,58 @@ body {
 /* Material Design de Input reaproveitado do Login Global */
 .g-form .input-group {
     position: relative;
-    margin-bottom: 0px; 
+    margin-bottom: 0px;
 }
 
-.g-form input[type="number"], .g-form input[type="text"], .g-form select {
+.g-form input[type="number"],
+.g-form input[type="text"],
+.g-form select {
     width: 100%;
     padding: 16px 14px;
     font-size: 16px;
-    color: #1f1f1f;
-    border: 1px solid #747775;
+    color: var(--black-dark);
+    border: 1px solid var(--gray-medium);
     border-radius: 4px;
     background-color: transparent;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
     font-family: inherit;
 }
 
-.g-form input:focus, .g-form select:focus {
+.g-form input:focus,
+.g-form select:focus {
     outline: none;
-    border-color: #0b57d0;
-    box-shadow: inset 0 0 0 1px #0b57d0;
+    border-color: var(--green-medium);
+    box-shadow: inset 0 0 0 1px var(--green-medium);
 }
 
-.g-form label {
+.g-form .input-group label,
+.g-form .select-group label {
     position: absolute;
     left: 14px;
     top: 50%;
     transform: translateY(-50%);
-    background-color: #ffffff;
+    background-color: var(--white);
     padding: 0 4px;
-    color: #444746;
+    color: var(--text-light);
     font-size: 16px;
     pointer-events: none;
-    transition: top 0.2s ease, font-size 0.2s ease, color 0.2s ease;
+    transition: top var(--transition-fast), font-size var(--transition-fast), color var(--transition-fast);
 }
 
-.g-form input:focus ~ label,
-.g-form input:not(:placeholder-shown) ~ label,
-.g-form select:focus ~ label,
-.g-form select:valid ~ label,
+.g-form .input-group input:focus~label,
+.g-form .input-group input:not(:placeholder-shown)~label,
+.g-form .select-group select:focus~label,
+.g-form .select-group select:valid~label,
 .g-form .active-label {
     top: 0;
     font-size: 12px;
-    color: #0b57d0;
+    color: var(--text-color);
 }
 
-.g-form input:not(:placeholder-shown):not(:focus) ~ label,
-.g-form select:not(:focus):valid ~ label,
+.g-form .input-group input:not(:placeholder-shown):not(:focus)~label,
+.g-form .select-group select:not(:focus):valid~label,
 .g-form .active-label:not(:focus) {
-    color: #444746;
+    color: var(--text-light);
 }
 
 .g-form select {
@@ -164,8 +303,8 @@ body {
 
 /* Radio Cards Objetivos */
 .radio-card {
-    background: #ffffff;
-    border: 1px solid #747775;
+    background: var(--white);
+    border: 1px solid var(--gray-medium);
     border-radius: 4px;
     padding: 12px 14px;
     display: flex;
@@ -175,7 +314,7 @@ body {
 
 .radio-title {
     font-size: 12px;
-    color: #0b57d0;
+    color: var(--text-light);
     margin-bottom: 8px;
     font-weight: 400;
 }
@@ -191,16 +330,15 @@ body {
     gap: 6px;
     cursor: pointer;
     font-size: 15px;
-    color: #1f1f1f;
+    color: var(--black-dark);
 }
 
 .custom-radio input[type="radio"] {
     cursor: pointer;
-    accent-color: #0b57d0;
+    accent-color: var(--green-dark);
     width: 16px;
     height: 16px;
 }
-
 
 /* Actions finais na barra do cartão de formulário */
 .perfil-actions {
@@ -210,15 +348,15 @@ body {
 }
 
 .btn-primary {
-    background-color: #0b57d0;
-    color: #ffffff;
+    background-color: var(--green-medium);
+    color: var(--white);
     border: none;
     font-size: 15px;
     font-weight: 500;
     padding: 14px 24px;
     cursor: pointer;
     font-family: inherit;
-    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    transition: background-color var(--transition-fast), box-shadow var(--transition-fast);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -226,8 +364,8 @@ body {
 }
 
 .btn-primary:hover {
-    background-color: #0842a0;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    background-color: var(--green-dark);
+    box-shadow: var(--shadow-md);
 }
 
 .btn-logout {
@@ -236,17 +374,153 @@ body {
     justify-content: center;
     gap: 8px;
     background-color: transparent;
-    color: #c5221f;
-    border: 1px solid #c5221f;
+    color: var(--error);
+    border: 1px solid var(--error);
     padding: 12px 24px;
     border-radius: 8px;
     font-size: 15px;
     font-weight: 500;
     cursor: pointer;
-    transition: background-color 0.2s ease;
+    transition: background-color var(--transition-fast);
     font-family: inherit;
 }
 
 .btn-logout:hover {
     background-color: #fce8e6;
+}
+
+/* =============================================
+   HISTÓRICO DE CONVERSAS (Perfil)
+   ============================================= */
+
+.perfil-historico-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 320px;
+    overflow-y: auto;
+    padding-right: 4px;
+    overflow: hidden;
+    transition: max-height 0.35s ease, opacity 0.25s ease;
+    opacity: 1;
+}
+
+.perfil-historico-lista--oculto {
+    max-height: 0 !important;
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Botão Ver mais / Ocultar */
+.btn-ver-historico {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 12px;
+    border-radius: 50px;
+    border: 1.5px solid var(--green-medium);
+    background-color: transparent;
+    color: var(--green-medium);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color var(--transition-fast), color var(--transition-fast);
+    font-family: inherit;
+    white-space: nowrap;
+}
+
+.btn-ver-historico i {
+    transition: transform var(--transition-fast);
+}
+
+.btn-ver-historico:hover {
+    background-color: var(--green-medium);
+    color: var(--white);
+}
+
+
+.perfil-historico-lista::-webkit-scrollbar {
+    width: 4px;
+}
+
+.perfil-historico-lista::-webkit-scrollbar-thumb {
+    background: var(--gray-light);
+    border-radius: 2px;
+}
+
+.perfil-historico-item {
+    background-color: var(--beige-light);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    border-left: 3px solid var(--green-light);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.perfil-historico-item__data {
+    font-size: 11px;
+    color: var(--text-light);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.perfil-historico-item__row {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.perfil-historico-item__row p {
+    font-size: 13px;
+    color: var(--text-color);
+    margin: 0;
+    line-height: 1.5;
+}
+
+.perfil-historico-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 50px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    width: fit-content;
+}
+
+.perfil-historico-badge--user {
+    background-color: var(--green-accent);
+    color: var(--green-dark);
+}
+
+.perfil-historico-badge--ai {
+    background-color: #e8f4fd;
+    color: #2471a3;
+}
+
+/* Estado vazio dentro do perfil */
+.perfil-historico-vazio {
+    text-align: center;
+    padding: 2rem 1rem;
+    color: var(--text-light);
+}
+
+.perfil-historico-vazio i {
+    font-size: 2.2rem;
+    color: var(--gray-light);
+    margin-bottom: 0.75rem;
+    display: block;
+}
+
+.perfil-historico-vazio p {
+    font-size: 0.95rem;
+    margin-bottom: 0.2rem;
+    color: var(--text-light);
+}
+
+.perfil-historico-vazio small {
+    font-size: 0.8rem;
+    color: var(--gray-medium);
 }

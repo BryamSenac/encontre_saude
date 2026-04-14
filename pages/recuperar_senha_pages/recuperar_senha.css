@@ -6,7 +6,7 @@
 
 body {
     font-family: 'Roboto', sans-serif;
-    background-color: #f0f4f9; 
+    background-color: #f0f4f9;
     overflow-x: hidden;
 }
 
@@ -51,7 +51,7 @@ body {
 
 .login-card {
     background-color: #ffffff;
-    border-radius: 30px; 
+    border-radius: 30px;
     padding: 40px 36px;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     position: relative;
@@ -102,8 +102,8 @@ body {
 
 .g-form input:focus {
     outline: none;
-    border-color: #0b57d0;
-    box-shadow: inset 0 0 0 1px #0b57d0;
+    border-color: #4A8B68;
+    box-shadow: inset 0 0 0 1px #4A8B68;
 }
 
 .g-form label {
@@ -119,13 +119,14 @@ body {
     transition: top 0.2s ease, font-size 0.2s ease, color 0.2s ease;
 }
 
-.g-form input:focus ~ label,
-.g-form input:not(:placeholder-shown) ~ label {
+.g-form input:focus~label,
+.g-form input:not(:placeholder-shown)~label {
     top: 0;
     font-size: 12px;
-    color: #0b57d0;
+    color: #1A1A1A;
 }
-.g-form input:not(:placeholder-shown):not(:focus) ~ label {
+
+.g-form input:not(:placeholder-shown):not(:focus)~label {
     color: #444746;
 }
 
@@ -146,7 +147,7 @@ body {
 }
 
 .btn-primary {
-    background-color: #0b57d0;
+    background-color: #4A8B68;
     color: #ffffff;
     border: none;
     font-size: 14px;
@@ -159,8 +160,8 @@ body {
 }
 
 .btn-primary:hover {
-    background-color: #0842a0;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    background-color: #4A8B68;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
 }
 
 .btn-text {
