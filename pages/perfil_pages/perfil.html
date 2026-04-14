@@ -21,26 +21,101 @@
                     <div class="avatar">
                         <i class="fas fa-user-circle"></i>
                     </div>
-                    <h2>Perfil do Usuário</h2>
-                    <p class="status-badge"><i class="fas fa-check-circle"></i> Conta Verificada</p>
+                    <h2>Ficha de Paciente</h2>
+                    <p class="status-badge"><i class="fas fa-edit"></i> Modo Formulário</p>
                 </div>
                 
-                <div class="perfil-info">
-                    <div class="info-group">
-                        <label>Nome Completo</label>
-                        <p id="userName">Usuário Teste</p>
+                <form id="perfilForm" class="g-form">
+                    
+                    <!-- Dados de Visualização da Sessão Restrita -->
+                    <div class="account-info">
+                        <strong>Logado como:</strong> <span id="displayNome">Usuário Teste (Auth Simulado)</span>
                     </div>
-                    <div class="info-group">
-                        <label>E-mail</label>
-                        <p id="userEmail">usuario@teste.com</p>
-                    </div>
-                </div>
 
-                <div class="perfil-actions">
-                    <button class="btn-logout" id="btnLogout">
-                        <i class="fas fa-sign-out-alt"></i> Sair da Conta
-                    </button>
-                </div>
+                    <h3 class="section-title">Informações Biológicas</h3>
+                    <!-- Utilizamos form-grid-2 para balancear os 4 itens 2x2 -->
+                    <div class="form-grid-2">
+                        <div class="input-group">
+                            <input type="number" id="idade" placeholder=" ">
+                            <label for="idade">Idade</label>
+                        </div>
+                        <div class="input-group">
+                            <input type="number" id="peso" step="0.1" placeholder=" ">
+                            <label for="peso">Peso (kg)</label>
+                        </div>
+                        <div class="input-group">
+                            <input type="number" id="altura" step="0.01" placeholder=" ">
+                            <label for="altura">Altura (m)</label>
+                        </div>
+                        
+                        <div class="input-group select-group">
+                            <select id="sexo" required>
+                                <option value="" disabled selected></option>
+                                <option value="Masculino">Masculino</option>
+                                <option value="Feminino">Feminino</option>
+                                <option value="Outro">Outro</option>
+                            </select>
+                            <label for="sexo" class="active-label">Sexo</label>
+                        </div>
+                    </div>
+
+                    <h3 class="section-title">Hábitos e Condições Especiais</h3>
+                    <div class="form-grid-2" style="margin-bottom: 16px;">
+                        <div class="radio-card">
+                            <p class="radio-title">É fumante?</p>
+                            <div class="radio-options">
+                                <label class="custom-radio">
+                                    <input type="radio" name="fuma" value="true">
+                                    <span>Sim</span>
+                                </label>
+                                <label class="custom-radio">
+                                    <input type="radio" name="fuma" value="false" checked>
+                                    <span>Não</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="radio-card">
+                            <p class="radio-title">Consome Álcool?</p>
+                            <div class="radio-options">
+                                <label class="custom-radio">
+                                    <input type="radio" name="bebe" value="true">
+                                    <span>Sim</span>
+                                </label>
+                                <label class="custom-radio">
+                                    <input type="radio" name="bebe" value="false" checked>
+                                    <span>Não</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-grid-2">
+                        <div class="input-group">
+                            <input type="text" id="alergia_medicamento" placeholder=" ">
+                            <label for="alergia_medicamento">Alergias (Medicamentos)</label>
+                        </div>
+                        <div class="input-group">
+                            <input type="text" id="possui_deficiencia" placeholder=" ">
+                            <label for="possui_deficiencia">Possui deficiência? Qual?</label>
+                        </div>
+                    </div>
+
+                    <h3 class="section-title">Contatos de Emergência</h3>
+                    <div class="input-group" style="margin-bottom: 32px;">
+                        <input type="text" id="contato_medico" placeholder=" ">
+                        <label for="contato_medico">Médico Particular (Número ou E-mail)</label>
+                    </div>
+
+                    <div class="perfil-actions">
+                        <button type="submit" class="btn-primary" style="flex:1; border-radius: 8px;">
+                            <i class="fas fa-save"></i> Enviar Ficha Integrada
+                        </button>
+                        <button type="button" class="btn-logout" id="btnLogout" title="Sair da Conta Autenticada">
+                            <i class="fas fa-sign-out-alt"></i> Sair
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </main>
