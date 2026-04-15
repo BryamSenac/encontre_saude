@@ -4,5 +4,6 @@ export const ROUTES = {
     prevensao: "/pages/prevencao_pages/prevencao.html",
     farmacia: "/pages/farmacias_pages/farmacias.html",
     login: "/pages/login_pages/login.html",
-    perfil: "/pages/perfil_pages/perfil.html"
+    perfil: "/pages/perfil_pages/perfil.html",
+    preProntuario: "/pages/pre_prontuario_pages/pre_prontuario.html"
 };
