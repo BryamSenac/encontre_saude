@@ -37,8 +37,11 @@
 
 
                         <div class="input-group">
-                            <input type="password" id="password" required placeholder=" ">
+                            <input type="password" id="password" required placeholder=" " class="input-com-toggle">
                             <label for="password">Senha</label>
+                            <button type="button" class="btn-toggle-senha" data-target="password" title="Mostrar senha">
+                                <i class="fas fa-eye"></i>
+                            </button>
                         </div>
 
 
@@ -50,6 +53,13 @@
                             <button type="button" class="btn-text" id="btnGoToRegister">Criar conta</button>
                             <button type="submit" class="btn-primary">Avançar</button>
                         </div>
+
+                        <div class="divider">
+                            <span>ou</span>
+                        </div>
+                        <button type="button" class="btn-google" id="btnGoogleLogin">
+                            <i class="fab fa-google"></i> Continuar com o Google
+                        </button>
                     </form>
                 </div>
 
@@ -71,8 +81,11 @@
                             <label for="regEmail">E-mail</label>
                         </div>
                         <div class="input-group">
-                            <input type="password" id="regPassword" required placeholder=" ">
+                            <input type="password" id="regPassword" required placeholder=" " class="input-com-toggle">
                             <label for="regPassword">Senha</label>
+                            <button type="button" class="btn-toggle-senha" data-target="regPassword" title="Mostrar senha">
+                                <i class="fas fa-eye"></i>
+                            </button>
                         </div>
 
                         <div class="actions">
