@@ -202,159 +202,174 @@ function formatarData(d) {
   return `${dia}/${m}/${a}`;
 }
 
+// ─── Geração de PDF Nativa Vetorial ───────────────────────────────────────────
+async function gerarArquivoPDFPuro(btnElement, onCompleteMessage) {
+  const originalText = btnElement.innerHTML;
+  btnElement.disabled = true;
+  btnElement.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Gerando Documento...';
+
+  try {
+    const nomeSafe = (val('nome') || 'paciente').replace(/\s+/g, '-').toLowerCase();
+
+    // Carrega o motor vetorial nativo (jsPDF) dinamicamente sem afetar o HTML
+    if (!window.jspdf) {
+      await new Promise((r, j) => {
+        const s = document.createElement('script');
+        s.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+        s.onload = r;
+        s.onerror = j;
+        document.head.appendChild(s);
+      });
+    }
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+
+    // Fundo Verde Superior
+    doc.setFillColor(12, 74, 69); // #0c4a45
+    doc.rect(0, 0, 210, 30, 'F');
+    // Linha de Detalhe #14b8a6
+    doc.setDrawColor(20, 184, 166);
+    doc.setLineWidth(1.5);
+    doc.line(0, 30, 210, 30);
+
+    // Titulo e Subtitulo
+    doc.setTextColor(255, 255, 255);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(22);
+    doc.text("ENCONTRE SAÚDE", 15, 15);
+    doc.setTextColor(20, 184, 166);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+    doc.text("Pré-Prontuário Digital | Documento Confidencial", 15, 22);
+
+    // Data Atual
+    const d = new Date();
+    const dataH = d.toLocaleDateString('pt-BR') + ' às ' + d.toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'});
+    doc.setTextColor(203, 213, 225);
+    doc.text("Gerado em: " + dataH, 195, 15, { align: 'right' });
+
+    let y = 40;
+
+    function createSessionHeader(title) {
+      if (y > 265) { doc.addPage(); y = 20; }
+      doc.setFillColor(13, 148, 136); // #0d9488
+      doc.rect(15, y, 180, 8, 'F');
+      doc.setTextColor(255, 255, 255);
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(12);
+      doc.text(title, 18, y + 5.5);
+      y += 15;
+    }
+
+    function createProp(label, value, x, w) {
+      doc.setTextColor(100, 116, 139); // TextSlate
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(9);
+      doc.text(label, x, y);
+      
+      doc.setTextColor(15, 23, 42); // BoldSlate
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(11);
+      const strArr = doc.splitTextToSize(value || '—', w);
+      doc.text(strArr, x, y + 5);
+      return strArr.length * 5;
+    }
+
+    // Seç 1: Pessoais
+    createSessionHeader("Dados Pessoais");
+    const npNasc = val('dataNascimento') ? val('dataNascimento').split('-').reverse().join('/') : '—';
+    createProp("Nome", val('nome') || '—', 15, 85);
+    createProp("Nascimento", npNasc, 110, 85);
+    y += 12;
+    createProp("CPF", val('cpf') || '—', 15, 85);
+    createProp("Sexo", val('sexo') || '—', 110, 85);
+    y += 12;
+    createProp("Telefone", val('telefone') || '—', 15, 85);
+    y += 18;
+
+    // Seç 2: Sintomas
+    createSessionHeader("Sintomas");
+    y += createProp("Queixa Principal", val('queixaPrincipal') || '—', 15, 180) + 5;
+
+    const mk = Array.from(document.querySelectorAll('input[type="checkbox"][name="sintomas"]:checked'));
+    const smk = mk.length ? mk.map(m => m.parentNode.textContent.trim()).join(', ') : 'Nenhum sintoma selecionado.';
+    y += createProp("Sintomas Selecionados", smk, 15, 180) + 12;
+
+    // Seç 3: Histórico e Sinais
+    createSessionHeader("Histórico Clínico e Sinais Vitais");
+    createProp("Alergias", val('alergias') || '—', 15, 85);
+    createProp("Medicamentos em uso", val('medicamentosEmUso') || '—', 110, 85);
+    y += 12;
+    createProp("Doenças Preexistentes", val('doencasPreexistentes') || '—', 15, 85);
+    createProp("Histórico Familiar", val('historicoFamiliar') || '—', 110, 85);
+    y += 15;
+
+    const vpa = val('pressaoArterial') ? val('pressaoArterial') + ' mmHg' : '—';
+    const vfc = val('frequenciaCardiaca') ? val('frequenciaCardiaca') + ' bpm' : '—';
+    const vtp = val('temperatura') ? val('temperatura') + ' °C' : '—';
+    const vso = val('saturacaoOxigenio') ? val('saturacaoOxigenio') + ' %' : '—';
+    
+    doc.setDrawColor(226, 232, 240);
+    createProp("Pressão Arterial", vpa, 15, 55);
+    createProp("Frequência Card.", vfc, 75, 55);
+    createProp("Temperatura", vtp, 135, 55);
+    y += 12;
+    createProp("Saturação O2", vso, 15, 55);
+    const pP = val('peso'), aA = val('altura');
+    createProp("Peso / Altura", (pP || aA) ? `${pP||'--'}kg / ${aA||'--'}cm` : '—', 75, 55);
+    y += 18;
+
+    createProp("Observações Adicionais", val('observacoesAdicionais') || '—', 15, 180);
+
+    // Footer Base
+    doc.setTextColor(148, 163, 184);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(8);
+    doc.text("Este documento confidencial não substitui uma consulta médica presencial. — Encontre Saúde", 105, 285, { align: 'center' });
+
+    // Download PDF (100% Client-Side)
+    doc.save(`pre-prontuario-${nomeSafe}.pdf`);
+
+    mostrarToast('success', '<i class="fas fa-check-circle"></i>', onCompleteMessage);
+  } catch (err) {
+    console.error('Erro ao gerar o PDF autônomo:', err);
+    mostrarToast('error', '<i class="fas fa-triangle-exclamation"></i>', 'Erro inesperado ao gerar PDF no navegador.');
+  } finally {
+    btnElement.disabled = false;
+    btnElement.innerHTML = originalText;
+  }
+}
+
 // ─── Submit do Formulário ─────────────────────────────────────────────────────
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
   if (!validarStep(4)) return;
 
-  const sintomas = [...document.querySelectorAll('input[name="sintomas"]:checked')].map((c) => c.value);
-  const canal    = document.querySelector('input[name="canalEnvio"]:checked')?.value;
+  const canal = document.querySelector('input[name="canalEnvio"]:checked')?.value;
+  let msgEnvio = 'PDF baixado com sucesso!';
+  if (canal === 'email') msgEnvio = 'PDF gerado com sucesso (Envio por e-mail desativado - Baixando direto).';
+  else if (canal === 'whatsapp') msgEnvio = 'PDF gerado com sucesso (Envio por WhatsApp desativado - Baixando direto).';
 
-  const payload = {
-    // Step 1
-    nome:             val('nome'),
-    dataNascimento:   val('dataNascimento'),
-    cpf:              val('cpf'),
-    sexo:             val('sexo'),
-    telefone:         val('telefone'),
-    // Step 2
-    queixaPrincipal:       val('queixaPrincipal'),
-    tempoPrincipalSintoma: val('tempoPrincipalSintoma'),
-    sintomas,
-    pressaoArterial:    val('pressaoArterial')    || null,
-    frequenciaCardiaca: val('frequenciaCardiaca')  ? Number(val('frequenciaCardiaca'))  : null,
-    temperatura:        val('temperatura')          ? Number(val('temperatura'))          : null,
-    saturacaoOxigenio:  val('saturacaoOxigenio')   ? Number(val('saturacaoOxigenio'))   : null,
-    peso:               val('peso')                 ? Number(val('peso'))                 : null,
-    altura:             val('altura')               ? Number(val('altura'))               : null,
-    // Step 3
-    alergias:               val('alergias')               || null,
-    medicamentosEmUso:      val('medicamentosEmUso')      || null,
-    doencasPreexistentes:   val('doencasPreexistentes')   || null,
-    historicoFamiliar:      val('historicoFamiliar')      || null,
-    observacoesAdicionais:  val('observacoesAdicionais')  || null,
-    // Step 4
-    canalEnvio: canal,
-    email:      canal === 'email'     ? val('email')     : undefined,
-    whatsapp:   canal === 'whatsapp'  ? val('whatsapp')  : undefined,
-  };
+  await gerarArquivoPDFPuro(btnSubmit, msgEnvio);
 
-  // Estado de loading
-  btnSubmit.disabled = true;
-  btnSubmit.innerHTML = '<i class="fas fa-spinner"></i> <span>Gerando e Enviando...</span>';
-
-  try {
-    const res  = await fetch(API_URL, {
-      method:  'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify(payload),
-    });
-
-    const data = await res.json();
-
-    if (res.ok && data.success) {
-      mostrarToast('success', `<i class="fas fa-check-circle"></i>`, data.message);
-      form.reset();
-      irParaStep(1);
-      // Zera todos os indicadores de progresso
-      document.querySelectorAll('.pp-step').forEach((s) => {
-        s.classList.remove('active', 'done');
-        if (s.dataset.step === '1') s.classList.add('active');
-      });
-      document.querySelectorAll('.pp-step-line').forEach((l) => l.classList.remove('done'));
-    } else {
-      const msg = data.errors
-        ? data.errors.map((e) => e.message).join('<br>')
-        : data.message;
-      mostrarToast('error', `<i class="fas fa-triangle-exclamation"></i>`, msg);
-    }
-  } catch (err) {
-    console.error('Erro ao enviar pré-prontuário:', err);
-    mostrarToast('error', `<i class="fas fa-wifi"></i>`, 'Não foi possível conectar ao servidor. Verifique sua conexão.');
-  } finally {
-    btnSubmit.disabled = false;
-    btnSubmit.innerHTML = '<i class="fas fa-paper-plane"></i> <span>Enviar Documento</span>';
-  }
+  // Reseta formulario após gerar PDF
+  form.reset();
+  irParaStep(1);
+  document.querySelectorAll('.pp-step').forEach((s) => {
+    s.classList.remove('active', 'done');
+    if (s.dataset.step === '1') s.classList.add('active');
+  });
+  document.querySelectorAll('.pp-step-line').forEach((l) => l.classList.remove('done'));
 });
 
 // ─── Download do PDF ──────────────────────────────────────────────────────────
 btnDownload?.addEventListener('click', async () => {
-  // Valida apenas os steps obrigatórios (1 e 2)
   if (!validarStep(1) || !validarStep(2)) {
     mostrarToast('error', '<i class="fas fa-triangle-exclamation"></i>', 'Preencha os dados obrigatórios antes de baixar.');
     return;
   }
-
-  const sintomas = [...document.querySelectorAll('input[name="sintomas"]:checked')].map((c) => c.value);
-
-  const payload = {
-    nome:             val('nome'),
-    dataNascimento:   val('dataNascimento'),
-    cpf:              val('cpf'),
-    sexo:             val('sexo'),
-    telefone:         val('telefone'),
-    queixaPrincipal:       val('queixaPrincipal'),
-    tempoPrincipalSintoma: val('tempoPrincipalSintoma'),
-    sintomas,
-    pressaoArterial:    val('pressaoArterial')    || null,
-    frequenciaCardiaca: val('frequenciaCardiaca')  ? Number(val('frequenciaCardiaca'))  : null,
-    temperatura:        val('temperatura')          ? Number(val('temperatura'))          : null,
-    saturacaoOxigenio:  val('saturacaoOxigenio')   ? Number(val('saturacaoOxigenio'))   : null,
-    peso:               val('peso')                 ? Number(val('peso'))                 : null,
-    altura:             val('altura')               ? Number(val('altura'))               : null,
-    alergias:               val('alergias')               || null,
-    medicamentosEmUso:      val('medicamentosEmUso')      || null,
-    doencasPreexistentes:   val('doencasPreexistentes')   || null,
-    historicoFamiliar:      val('historicoFamiliar')      || null,
-    observacoesAdicionais:  val('observacoesAdicionais')  || null,
-    canalEnvio: 'download',  // canal especial para download direto
-  };
-
-  btnDownload.disabled = true;
-  btnDownload.innerHTML = '<i class="fas fa-spinner"></i> Gerando PDF...';
-
-  try {
-    const res  = await fetch(API_URL, {
-      method:  'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify(payload),
-    });
-
-    const data = await res.json();
-
-    if (res.ok && data.success && data.download) {
-      // Converte Base64 → Blob → download automático
-      const bytes      = atob(data.pdf);
-      const byteArray  = new Uint8Array(bytes.length);
-      for (let i = 0; i < bytes.length; i++) byteArray[i] = bytes.charCodeAt(i);
-      const blob = new Blob([byteArray], { type: 'application/pdf' });
-
-      const link = document.createElement('a');
-      link.href  = URL.createObjectURL(blob);
-      link.download = data.filename || 'pre-prontuario.pdf';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(link.href);
-
-      mostrarToast('success', '<i class="fas fa-check-circle"></i>', 'PDF baixado com sucesso!');
-    } else {
-      // Mostra exatamente quais campos falharam
-      if (data.errors && data.errors.length > 0) {
-        console.error('Erros de validação:', data.errors);
-        const camposErro = data.errors.map((e) => `<b>${e.field}</b>: ${e.message}`).join('<br>');
-        mostrarToast('error', '<i class="fas fa-triangle-exclamation"></i>', camposErro);
-      } else {
-        mostrarToast('error', '<i class="fas fa-triangle-exclamation"></i>', data.message || 'Erro ao gerar PDF.');
-      }
-    }
-  } catch (err) {
-    console.error('Erro ao baixar PDF:', err);
-    mostrarToast('error', '<i class="fas fa-wifi"></i>', 'Não foi possível conectar ao servidor.');
-  } finally {
-    btnDownload.disabled = false;
-    btnDownload.innerHTML = '<i class="fas fa-download"></i> Baixar PDF';
-  }
+  await gerarArquivoPDFPuro(btnDownload, 'PDF gerado com sucesso e baixado automaticamente!');
 });
 
 // ─── Toast ────────────────────────────────────────────────────────────────────
