@@ -48,6 +48,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 alert("Erro ao entrar com Google: " + error.message);
                 btnGoogleLogin.disabled = false;
                 btnGoogleLogin.innerHTML = '<i class="fab fa-google"></i> Continuar com o Google';
+            } else {
+                // O redirecionamento acontece via Supabase, mas podemos marcar o flag 
+                // se o Supabase não redirecionar imediatamente (embora o OAuth geralmente saia da página)
+                localStorage.setItem("isLoggedIn", "true");
             }
         });
     }
@@ -77,6 +81,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
+        localStorage.setItem("isLoggedIn", "true");
         alert("Bem-vindo de volta!");
         window.location.href = ROUTES.home;
     });
