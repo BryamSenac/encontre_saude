@@ -3,18 +3,6 @@ import { createTelegramWidget } from "./telegram_widget.js";
 import { authService } from "../Services/authService.js";
 
 export function createSidebar() {
-    // Sincroniza estado de login do Supabase com o localStorage
-    authService.getUserSession().then(({ session }) => {
-        if (session && localStorage.getItem("isLoggedIn") !== "true") {
-            localStorage.setItem("isLoggedIn", "true");
-            // Se mudou o estado, recarrega a página para atualizar a UI (opcional, mas seguro)
-            window.location.reload();
-        } else if (!session && localStorage.getItem("isLoggedIn") === "true") {
-            localStorage.removeItem("isLoggedIn");
-            window.location.reload();
-        }
-    });
-
     const header = document.getElementById("header");
     if (!header) return;
 
@@ -31,37 +19,64 @@ export function createSidebar() {
 
     const navList = document.createElement("div");
     navList.className = "sidebar-nav";
+    sidebar.appendChild(navList);
 
-    const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
-
-    const navItems = [
+    const baseNavItems = [
         { text: "Home", icon: "fa-house", href: ROUTES.home },
         { text: "Primeiros Socorros", icon: "fa-kit-medical", href: ROUTES.primeirosSocorros },
         { text: "Ações Preventivas", icon: "fa-shield-heart", href: ROUTES.prevensao },
         { text: "Farmácias", icon: "fa-prescription-bottle-medical", href: ROUTES.farmacia },
-        { text: "Meu Perfil", icon: "fa-user", href: ROUTES.perfil },
+        { text: "Pré-Prontuário", icon: "fa-file-medical", href: ROUTES.preProntuario },
     ];
 
-    // Se NÃO estiver logado, adicionamos o botão de Login/Cadastro
-    if (!isLoggedIn) {
-        // Insere antes de 'Meu Perfil' ou ao final se preferir. 
-        // Vamos manter a ordem original onde Login vinha antes de Perfil.
-        navItems.splice(navItems.length - 1, 0, { text: "Login / Cadastro", icon: "fa-arrow-right-to-bracket", href: ROUTES.login });
-    }
+    const updateNavItems = async () => {
+        const { session } = await authService.getUserSession();
+        
+        const currentItems = [...baseNavItems];
+        if (session) {
+            currentItems.push({ text: "Meu Perfil", icon: "fa-user", href: ROUTES.perfil });
+            currentItems.push({ text: "Sair", icon: "fa-arrow-right-from-bracket", href: "#", id: "btnLogoutSidebar" });
+        } else {
+            currentItems.push({ text: "Login / Cadastro", icon: "fa-arrow-right-to-bracket", href: ROUTES.login });
+        }
 
-    navItems.forEach(({ text, icon, href }) => {
-        const a = document.createElement("a");
-        a.href = href;
-        a.className = "nav-item";
-        a.innerHTML = `
-            <i class="fas ${icon} nav-icon"></i>
-            <span class="nav-text">${text}</span>
-        `;
-        navList.appendChild(a);
-    });
-    sidebar.appendChild(navList);
+        navList.innerHTML = "";
+        currentItems.forEach(({ text, icon, href, id }) => {
+            const a = document.createElement("a");
+            a.href = href;
+            if (id) a.id = id;
+            a.className = "nav-item";
+            a.innerHTML = `
+                <i class="fas ${icon} nav-icon"></i>
+                <span class="nav-text">${text}</span>
+            `;
+            
+            if (id === "btnLogoutSidebar") {
+                a.addEventListener("click", async (e) => {
+                    e.preventDefault();
+                    if (confirm("Deseja realmente sair?")) {
+                        await authService.signOut();
+                        localStorage.removeItem("isLoggedIn");
+                        window.location.href = ROUTES.home;
+                    }
+                });
+            }
 
-    // Ouvir mudanças de auth para atualizar o menu em tempo real (caso mude em outra aba ou via login)
+            // Mobile close on click
+            a.addEventListener("click", () => {
+                if (window.innerWidth <= 768 && !id) {
+                    toggleSidebar();
+                }
+            });
+
+            navList.appendChild(a);
+        });
+    };
+
+    // Initial render
+    updateNavItems();
+
+    // Listen for auth changes
     authService.onAuthStateChange((event, session) => {
         if (session) {
             localStorage.setItem("isLoggedIn", "true");
@@ -90,13 +105,12 @@ export function createSidebar() {
     });
     sidebar.appendChild(footerContacts);
 
-    // Mobile Toggle Button
+    // Mobile Toggle
     const mobileToggle = document.createElement("button");
     mobileToggle.className = "mobile-menu-toggle";
     mobileToggle.innerHTML = '<i class="fas fa-bars"></i>';
     document.body.appendChild(mobileToggle);
 
-    // Overlay for closing on click outside
     const overlay = document.createElement("div");
     overlay.className = "sidebar-overlay";
     document.body.appendChild(overlay);
@@ -112,21 +126,7 @@ export function createSidebar() {
     mobileToggle.addEventListener("click", toggleSidebar);
     overlay.addEventListener("click", toggleSidebar);
 
-    // Close on navigation
-    sidebar.querySelectorAll(".nav-item").forEach(item => {
-        item.addEventListener("click", () => {
-            if (window.innerWidth <= 768) {
-                toggleSidebar();
-            }
-        });
-    });
-
-    // Append to body to avoid positioning issues with transformed parents (like animated headers)
     document.body.prepend(sidebar);
-
-    // Add class to body to adjust layout
     document.body.classList.add("with-sidebar");
-    
-    // Injeta Botão Flutuante Global do Telegram
     createTelegramWidget();
 }

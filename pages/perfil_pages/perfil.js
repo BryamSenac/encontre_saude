@@ -2,8 +2,7 @@ import { createSidebar } from "../../shared/sidebar.js";
 import { createFooter } from "../../shared/footer.js";
 import { ROUTES } from "../../config/routes/routes.js";
 import { authService } from "../../Services/authService.js";
-import { carregarHistorico } from "../home_page/js/sintomas_ai/api.js";
-import { profileService } from "../../Services/profileService.js"; 
+import { profileService } from "../../Services/profileService.js";
 import { chatService } from "../../Services/chatService.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -13,6 +12,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (!session) {
         window.location.href = ROUTES.login;
         return;
+    }
+
+    // Atualiza o nome exibido com o e-mail real do usuário logado
+    const displayNome = document.getElementById("displayNome");
+    if (displayNome && user) {
+        displayNome.textContent = user.email;
     }
 
     createSidebar();
