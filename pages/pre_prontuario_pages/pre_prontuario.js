@@ -4,6 +4,12 @@
  */
 
 import { createSidebar } from './../../shared/sidebar.js';
+import { ROUTES } from "../../config/routes/routes.js";
+
+// ─── Proteção de Rota (Auth Guard) ───────────────────────────────────────────
+if (!localStorage.getItem("isLoggedIn")) {
+  window.location.href = ROUTES.login;
+}
 
 // ─── Inicialização da Sidebar ─────────────────────────────────────────────────
 createSidebar();
@@ -16,19 +22,19 @@ let currentStep = 1;
 const TOTAL_STEPS = 4;
 
 // ─── Elementos DOM ────────────────────────────────────────────────────────────
-const form       = document.getElementById('pp-form');
-const btnNext    = document.getElementById('btn-next');
-const btnBack    = document.getElementById('btn-back');
-const btnSubmit  = document.getElementById('btn-submit');
+const form = document.getElementById('pp-form');
+const btnNext = document.getElementById('btn-next');
+const btnBack = document.getElementById('btn-back');
+const btnSubmit = document.getElementById('btn-submit');
 const btnDownload = document.getElementById('btn-download');
-const toast      = document.getElementById('pp-toast');
-const toastIcon  = document.getElementById('toast-icon');
-const toastMsg   = document.getElementById('toast-msg');
+const toast = document.getElementById('pp-toast');
+const toastIcon = document.getElementById('toast-icon');
+const toastMsg = document.getElementById('toast-msg');
 
 // ─── Máscara de CPF ───────────────────────────────────────────────────────────
 document.getElementById('cpf')?.addEventListener('input', function () {
   let v = this.value.replace(/\D/g, '').slice(0, 11);
-  if (v.length > 9)      v = v.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+  if (v.length > 9) v = v.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
   else if (v.length > 6) v = v.replace(/(\d{3})(\d{3})(\d{3})/, '$1.$2.$3');
   else if (v.length > 3) v = v.replace(/(\d{3})(\d{3})/, '$1.$2');
   this.value = v;
@@ -37,24 +43,131 @@ document.getElementById('cpf')?.addEventListener('input', function () {
 // ─── Máscara de Telefone ──────────────────────────────────────────────────────
 document.getElementById('telefone')?.addEventListener('input', function () {
   let v = this.value.replace(/\D/g, '').slice(0, 11);
-  if (v.length > 10)      v = v.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
-  else if (v.length > 6)  v = v.replace(/(\d{2})(\d{4})(\d+)/, '($1) $2-$3');
-  else if (v.length > 2)  v = v.replace(/(\d{2})(\d+)/, '($1) $2');
+  if (v.length > 10) v = v.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+  else if (v.length > 6) v = v.replace(/(\d{2})(\d{4})(\d+)/, '($1) $2-$3');
+  else if (v.length > 2) v = v.replace(/(\d{2})(\d+)/, '($1) $2');
   this.value = v;
 });
+
+// ─── Carregar Dados da IA ───────────────────────────────────────────────────
+function carregarDadosIA() {
+  const dadosBrutos = localStorage.getItem('ultimaTriagemIA');
+  if (!dadosBrutos) return;
+
+  try {
+    const dados = JSON.parse(dadosBrutos);
+    const agora = Date.now();
+    const VINTE_MINUTOS = 20 * 60 * 1000;
+
+    // Só usa se for recente (menos de 20 minutos)
+    if (agora - dados.timestamp < VINTE_MINUTOS) {
+      const field = document.getElementById('queixaPrincipal');
+      if (field && !field.value) { // Só preenche se estiver vazio
+        const { textoUsuario, resultadoIA } = dados;
+
+        field.value = `RELATO DO PACIENTE: ${textoUsuario}\n\n` +
+          `ANÁLISE IA (Nível ${resultadoIA.nivel}): ${resultadoIA.resumo}\n` +
+          `RECOMENDAÇÃO: ${resultadoIA.recomendacao}`;
+
+        // Dispara evento de input para validar o campo se necessário
+        field.dispatchEvent(new Event('input'));
+      }
+    }
+  } catch (e) {
+    console.error("Erro ao carregar dados da IA:", e);
+  }
+}
+
+// ─── Salvamento Automático (Auto-Save) ─────────────────────────────────────────
+const STORAGE_KEY = 'rascunhoPreProntuario';
+
+function salvarProgresso() {
+  const formData = new FormData(form);
+  const data = {};
+
+  formData.forEach((value, key) => {
+    // Lidar com múltiplos checkboxes (como 'sintomas')
+    if (data[key]) {
+      if (!Array.isArray(data[key])) data[key] = [data[key]];
+      data[key].push(value);
+    } else {
+      data[key] = value;
+    }
+  });
+
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({
+    data,
+    currentStep,
+    timestamp: Date.now()
+  }));
+}
+
+function carregarProgresso() {
+  const rascunho = localStorage.getItem(STORAGE_KEY);
+  if (!rascunho) return;
+
+  try {
+    const { data, step } = JSON.parse(rascunho);
+    
+    // Preenche campos de texto, select, etc.
+    Object.keys(data).forEach(key => {
+      const val = data[key];
+      const element = form.elements[key];
+
+      if (!element) return;
+
+      if (element.type === 'checkbox') {
+        // Se for um único checkbox ou array de checkboxes
+        if (Array.isArray(val)) {
+           const checkboxes = form.querySelectorAll(`input[name="${key}"]`);
+           checkboxes.forEach(cb => cb.checked = val.includes(cb.value));
+        } else {
+          element.checked = !!val;
+        }
+      } else if (element instanceof RadioNodeList || element.type === 'radio') {
+        const radios = form.querySelectorAll(`input[name="${key}"]`);
+        radios.forEach(r => r.checked = r.value === val);
+      } else {
+        element.value = val;
+      }
+
+      // Dispara eventos para aplicar máscaras e atualizar visibilidade de campos condicionais
+      element.dispatchEvent(new Event('input'));
+      element.dispatchEvent(new Event('change'));
+    });
+
+    // Restaura o passo se necessário (opcional, vamos manter no step 1 para segurança)
+    // if (step > 1) irParaStep(step);
+
+  } catch (e) {
+    console.error("Erro ao carregar rascunho:", e);
+  }
+}
+
+function limparRascunho() {
+  localStorage.removeItem(STORAGE_KEY);
+}
+
+// Ouvinte para salvar a cada mudança
+form.addEventListener('input', () => salvarProgresso());
+form.addEventListener('change', () => salvarProgresso());
+
+// ─── Carregar Dados ao Iniciar ────────────────────────────────────────────────
+carregarProgresso();
+carregarDadosIA();
 
 // ─── Seleção de Canal ─────────────────────────────────────────────────────────
 document.querySelectorAll('input[name="canalEnvio"]').forEach((radio) => {
   radio.addEventListener('change', () => {
-    const isEmail     = radio.value === 'email';
-    const isWhatsApp  = radio.value === 'whatsapp';
+    const isEmail = radio.value === 'email';
+    const isWhatsApp = radio.value === 'whatsapp';
 
-    document.getElementById('campo-email').style.display     = isEmail    ? 'block' : 'none';
-    document.getElementById('campo-whatsapp').style.display  = isWhatsApp ? 'block' : 'none';
+    document.getElementById('campo-email').style.display = isEmail ? 'block' : 'none';
+    document.getElementById('campo-whatsapp').style.display = isWhatsApp ? 'block' : 'none';
 
     // Limpa o campo do canal que não foi selecionado
-    if (isEmail)    document.getElementById('whatsapp').value = '';
-    if (isWhatsApp) document.getElementById('email').value    = '';
+    if (isEmail) document.getElementById('whatsapp').value = '';
+    if (isWhatsApp) document.getElementById('email').value = '';
 
     limparErro('canalEnvio');
   });
@@ -100,16 +213,16 @@ function validarCampo(id, regra, mensagem) {
 }
 
 function mostrarErro(id, mensagem) {
-  const el   = document.getElementById(id);
+  const el = document.getElementById(id);
   const erro = document.getElementById(`erro-${id}`);
-  if (el)   el.classList.add('error');
+  if (el) el.classList.add('error');
   if (erro) erro.textContent = `⚠️ ${mensagem}`;
 }
 
 function marcarValido(id) {
-  const el   = document.getElementById(id);
+  const el = document.getElementById(id);
   const erro = document.getElementById(`erro-${id}`);
-  if (el)   { el.classList.remove('error'); el.classList.add('valid'); }
+  if (el) { el.classList.remove('error'); el.classList.add('valid'); }
   if (erro) erro.textContent = '';
 }
 
@@ -146,7 +259,7 @@ function irParaStep(novoStep) {
   btnBack.style.visibility = currentStep === 1 ? 'hidden' : 'visible';
 
   const isLastStep = currentStep === TOTAL_STEPS;
-  btnNext.style.display   = isLastStep ? 'none' : 'flex';
+  btnNext.style.display = isLastStep ? 'none' : 'flex';
 
   // Ao chegar no step 4, preenche o resumo
   if (currentStep === 4) preencherResumo();
@@ -245,7 +358,7 @@ async function gerarArquivoPDFPuro(btnElement, onCompleteMessage) {
 
     // Data Atual
     const d = new Date();
-    const dataH = d.toLocaleDateString('pt-BR') + ' às ' + d.toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'});
+    const dataH = d.toLocaleDateString('pt-BR') + ' às ' + d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
     doc.setTextColor(203, 213, 225);
     doc.text("Gerado em: " + dataH, 195, 15, { align: 'right' });
 
@@ -267,7 +380,7 @@ async function gerarArquivoPDFPuro(btnElement, onCompleteMessage) {
       doc.setFont("helvetica", "normal");
       doc.setFontSize(9);
       doc.text(label, x, y);
-      
+
       doc.setTextColor(15, 23, 42); // BoldSlate
       doc.setFont("helvetica", "bold");
       doc.setFontSize(11);
@@ -309,7 +422,7 @@ async function gerarArquivoPDFPuro(btnElement, onCompleteMessage) {
     const vfc = val('frequenciaCardiaca') ? val('frequenciaCardiaca') + ' bpm' : '—';
     const vtp = val('temperatura') ? val('temperatura') + ' °C' : '—';
     const vso = val('saturacaoOxigenio') ? val('saturacaoOxigenio') + ' %' : '—';
-    
+
     doc.setDrawColor(226, 232, 240);
     createProp("Pressão Arterial", vpa, 15, 55);
     createProp("Frequência Card.", vfc, 75, 55);
@@ -317,7 +430,7 @@ async function gerarArquivoPDFPuro(btnElement, onCompleteMessage) {
     y += 12;
     createProp("Saturação O2", vso, 15, 55);
     const pP = val('peso'), aA = val('altura');
-    createProp("Peso / Altura", (pP || aA) ? `${pP||'--'}kg / ${aA||'--'}cm` : '—', 75, 55);
+    createProp("Peso / Altura", (pP || aA) ? `${pP || '--'}kg / ${aA || '--'}cm` : '—', 75, 55);
     y += 18;
 
     createProp("Observações Adicionais", val('observacoesAdicionais') || '—', 15, 180);
@@ -352,6 +465,9 @@ form.addEventListener('submit', async (e) => {
   else if (canal === 'whatsapp') msgEnvio = 'PDF gerado com sucesso (Envio por WhatsApp desativado - Baixando direto).';
 
   await gerarArquivoPDFPuro(btnSubmit, msgEnvio);
+  
+  // Limpa o rascunho salvo localmente
+  limparRascunho();
 
   // Reseta formulario após gerar PDF
   form.reset();
@@ -378,7 +494,7 @@ function mostrarToast(tipo, icone, mensagem) {
   clearTimeout(toastTimeout);
   toast.className = `pp-toast ${tipo}`;
   toastIcon.innerHTML = icone;
-  toastMsg.innerHTML  = mensagem;
+  toastMsg.innerHTML = mensagem;
   toast.classList.add('show');
   toastTimeout = setTimeout(() => toast.classList.remove('show'), 6000);
 }
