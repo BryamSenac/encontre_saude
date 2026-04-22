@@ -56,7 +56,40 @@ O fluxo usa dois métodos do Supabase Auth e ocorre em duas visitas separadas à
 > Sem isso, o Supabase bloqueia o redirecionamento do link do e-mail.
 
 ## Como rodar o sistema localmente
+
 Se clonou este repositório, atente-se aos próximos passos:
-1. Crie o arquivo `/config/env.js` (ele não sobe pro Git por segurança) com as variáveis `SUPABASE_URL` e `SUPABASE_ANON_KEY`.
-2. No Dashboard do Supabase, crie a tabela `perfis_saude` em Postgres com os campos de saúde usados pela UI.
-3. Configure o **Redirect URL** de recuperação de senha conforme descrito na seção acima.
+
+### 1. Criar o arquivo `config/env.js`
+
+O arquivo `env.js` **não está no repositório** (está no `.gitignore` por segurança). Você deve criá-lo manualmente:
+
+```bash
+# Copie o arquivo de exemplo
+cp config/env.example.js config/env.js
+```
+
+Depois edite `config/env.js` preenchendo suas credenciais reais:
+- **`API_KEY`** → sua chave do [Google AI Studio](https://aistudio.google.com/app/apikey)
+- **`SUPABASE_URL`** e **`SUPABASE_ANON_KEY`** → no [Dashboard do Supabase](https://supabase.com) em *Project → Settings → API*
+
+> ⚠ **Sem este arquivo o app não carrega!** Todos os módulos de autenticação e IA dependem dele.
+
+### 2. Rodar com um servidor HTTP (obrigatório!)
+
+O projeto usa ES Modules com caminhos absolutos (`/pages/...`). **Não funciona abrindo o `index.html` diretamente no browser** (`file://`). Use um servidor local:
+
+**Opção A — Extensão Live Server no VSCode** (recomendado):
+- Instale a extensão "Live Server"
+- Clique com botão direito no `index.html` → "Open with Live Server"
+
+**Opção B — via terminal com `npx serve`**:
+```bash
+npx serve .
+# Acesse: http://localhost:3000
+```
+
+### 3. Configurar o Supabase
+
+- No Dashboard do Supabase, crie a tabela `perfis_saude` em Postgres com os campos de saúde usados pela UI.
+- Configure o **Redirect URL** de recuperação de senha em *Authentication → URL Configuration → Redirect URLs*:
+  - `http://localhost:PORTA/pages/recuperar_senha_pages/recuperar_senha.html` (desenvolvimento)

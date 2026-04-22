@@ -30,12 +30,10 @@ html body {
 }
 
 .with-sidebar {
-    margin-left: 280px;
-    /* 260px width + 20px gap */
-    width: calc(100% - 296px) !important;
-    /* Ajuste para não quebrar layout */
+    padding-left: 296px; /* 260px sidebar + 36px gap */
     margin-right: 1rem;
-    transition: all var(--transition-normal);
+    box-sizing: border-box;
+    transition: padding-left var(--transition-normal);
 }
 
 .sidebar-logo {
@@ -223,8 +221,7 @@ html body {
 
     /* Content push reset */
     .with-sidebar {
-        margin-left: 0 !important;
-        width: 100% !important;
+        padding-left: 0 !important;
         margin-right: 0 !important;
     }
 

@@ -130,6 +130,8 @@ export const chatService = {
             console.groupEnd();
             return { data: null, error };
         }
+    },
+
     // Salva uma consulta feita manualmente (via formulário de pré-prontuário)
     async saveManualConsultation(queixa, sintomas) {
         try {
