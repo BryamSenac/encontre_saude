@@ -4,6 +4,12 @@
  */
 
 import { createSidebar } from './../../shared/sidebar.js';
+import { ROUTES } from "../../config/routes/routes.js";
+
+// ─── Proteção de Rota (Auth Guard) ───────────────────────────────────────────
+if (!localStorage.getItem("isLoggedIn")) {
+  window.location.href = ROUTES.login;
+}
 
 // ─── Inicialização da Sidebar ─────────────────────────────────────────────────
 createSidebar();
@@ -72,7 +78,82 @@ function carregarDadosIA() {
   }
 }
 
-// Chamar ao carregar
+// ─── Salvamento Automático (Auto-Save) ─────────────────────────────────────────
+const STORAGE_KEY = 'rascunhoPreProntuario';
+
+function salvarProgresso() {
+  const formData = new FormData(form);
+  const data = {};
+
+  formData.forEach((value, key) => {
+    // Lidar com múltiplos checkboxes (como 'sintomas')
+    if (data[key]) {
+      if (!Array.isArray(data[key])) data[key] = [data[key]];
+      data[key].push(value);
+    } else {
+      data[key] = value;
+    }
+  });
+
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({
+    data,
+    currentStep,
+    timestamp: Date.now()
+  }));
+}
+
+function carregarProgresso() {
+  const rascunho = localStorage.getItem(STORAGE_KEY);
+  if (!rascunho) return;
+
+  try {
+    const { data, step } = JSON.parse(rascunho);
+    
+    // Preenche campos de texto, select, etc.
+    Object.keys(data).forEach(key => {
+      const val = data[key];
+      const element = form.elements[key];
+
+      if (!element) return;
+
+      if (element.type === 'checkbox') {
+        // Se for um único checkbox ou array de checkboxes
+        if (Array.isArray(val)) {
+           const checkboxes = form.querySelectorAll(`input[name="${key}"]`);
+           checkboxes.forEach(cb => cb.checked = val.includes(cb.value));
+        } else {
+          element.checked = !!val;
+        }
+      } else if (element instanceof RadioNodeList || element.type === 'radio') {
+        const radios = form.querySelectorAll(`input[name="${key}"]`);
+        radios.forEach(r => r.checked = r.value === val);
+      } else {
+        element.value = val;
+      }
+
+      // Dispara eventos para aplicar máscaras e atualizar visibilidade de campos condicionais
+      element.dispatchEvent(new Event('input'));
+      element.dispatchEvent(new Event('change'));
+    });
+
+    // Restaura o passo se necessário (opcional, vamos manter no step 1 para segurança)
+    // if (step > 1) irParaStep(step);
+
+  } catch (e) {
+    console.error("Erro ao carregar rascunho:", e);
+  }
+}
+
+function limparRascunho() {
+  localStorage.removeItem(STORAGE_KEY);
+}
+
+// Ouvinte para salvar a cada mudança
+form.addEventListener('input', () => salvarProgresso());
+form.addEventListener('change', () => salvarProgresso());
+
+// ─── Carregar Dados ao Iniciar ────────────────────────────────────────────────
+carregarProgresso();
 carregarDadosIA();
 
 // ─── Seleção de Canal ─────────────────────────────────────────────────────────
@@ -384,6 +465,9 @@ form.addEventListener('submit', async (e) => {
   else if (canal === 'whatsapp') msgEnvio = 'PDF gerado com sucesso (Envio por WhatsApp desativado - Baixando direto).';
 
   await gerarArquivoPDFPuro(btnSubmit, msgEnvio);
+  
+  // Limpa o rascunho salvo localmente
+  limparRascunho();
 
   // Reseta formulario após gerar PDF
   form.reset();

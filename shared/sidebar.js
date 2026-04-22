@@ -1,7 +1,20 @@
 import { ROUTES } from "../config/routes/routes.js";
 import { createTelegramWidget } from "./telegram_widget.js";
+import { authService } from "../Services/authService.js";
 
 export function createSidebar() {
+    // Sincroniza estado de login do Supabase com o localStorage
+    authService.getUserSession().then(({ session }) => {
+        if (session && localStorage.getItem("isLoggedIn") !== "true") {
+            localStorage.setItem("isLoggedIn", "true");
+            // Se mudou o estado, recarrega a página para atualizar a UI (opcional, mas seguro)
+            window.location.reload();
+        } else if (!session && localStorage.getItem("isLoggedIn") === "true") {
+            localStorage.removeItem("isLoggedIn");
+            window.location.reload();
+        }
+    });
+
     const header = document.getElementById("header");
     if (!header) return;
 
@@ -19,15 +32,22 @@ export function createSidebar() {
     const navList = document.createElement("div");
     navList.className = "sidebar-nav";
 
+    const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+
     const navItems = [
         { text: "Home", icon: "fa-house", href: ROUTES.home },
         { text: "Primeiros Socorros", icon: "fa-kit-medical", href: ROUTES.primeirosSocorros },
         { text: "Ações Preventivas", icon: "fa-shield-heart", href: ROUTES.prevensao },
         { text: "Farmácias", icon: "fa-prescription-bottle-medical", href: ROUTES.farmacia },
-        { text: "Pré-Prontuário", icon: "fa-file-medical", href: ROUTES.preProntuario },
-        { text: "Login / Cadastro", icon: "fa-arrow-right-to-bracket", href: ROUTES.login },
         { text: "Meu Perfil", icon: "fa-user", href: ROUTES.perfil },
     ];
+
+    // Se NÃO estiver logado, adicionamos o botão de Login/Cadastro
+    if (!isLoggedIn) {
+        // Insere antes de 'Meu Perfil' ou ao final se preferir. 
+        // Vamos manter a ordem original onde Login vinha antes de Perfil.
+        navItems.splice(navItems.length - 1, 0, { text: "Login / Cadastro", icon: "fa-arrow-right-to-bracket", href: ROUTES.login });
+    }
 
     navItems.forEach(({ text, icon, href }) => {
         const a = document.createElement("a");

@@ -1,6 +1,7 @@
 import { createSidebar } from "../../shared/sidebar.js";
 import { createFooter } from "../../shared/footer.js";
 import { ROUTES } from "../../config/routes/routes.js";
+import { authService } from "../../Services/authService.js";
 import { carregarHistorico } from "../home_page/js/sintomas_ai/api.js";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -192,7 +193,12 @@ document.addEventListener("DOMContentLoaded", () => {
     // =============================================
     // SISTEMA DE LOGOUT (botão nas duas views)
     // =============================================
-    const handleLogout = () => {
+    const handleLogout = async () => {
+        try {
+            await authService.signOut();
+        } catch (e) {
+            console.error("Erro ao deslogar do Supabase:", e);
+        }
         localStorage.removeItem("isLoggedIn");
         window.location.href = ROUTES.home;
     };

@@ -3,6 +3,12 @@ import { authService } from "../../Services/authService.js";
 import { setupToggleSenha } from "../../shared/toggle_senha.js";
 
 document.addEventListener("DOMContentLoaded", () => {
+    // Redireciona se já estiver logado
+    if (localStorage.getItem("isLoggedIn") === "true") {
+        window.location.href = ROUTES.home;
+        return;
+    }
+
     setupToggleSenha();
 
     // 1. Lógica do botão de voltar
@@ -76,6 +82,9 @@ document.addEventListener("DOMContentLoaded", () => {
             alert("Erro ao fazer login: " + error.message);
             return;
         }
+
+        // SALVAR ESTADO DE LOGIN PARA A UI
+        localStorage.setItem("isLoggedIn", "true");
 
         alert("Bem-vindo de volta!");
         window.location.href = ROUTES.home;
