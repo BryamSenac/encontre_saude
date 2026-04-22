@@ -4,22 +4,67 @@
  */
 
 import { createSidebar } from './../../shared/sidebar.js';
-import { ROUTES } from "../../config/routes/routes.js";
-
-// ─── Proteção de Rota (Auth Guard) ───────────────────────────────────────────
-if (!localStorage.getItem("isLoggedIn")) {
-  window.location.href = ROUTES.login;
-}
+import { profileService } from './../../Services/profileService.js';
+import { chatService } from './../../Services/chatService.js';
+import { authService } from './../../Services/authService.js';
 
 // ─── Inicialização da Sidebar ─────────────────────────────────────────────────
 createSidebar();
 
-// ─── Constante da URL do Backend ─────────────────────────────────────────────
-const API_URL = 'http://localhost:3001/api/pre-prontuario';
-
 // ─── Estado do Formulário ─────────────────────────────────────────────────────
 let currentStep = 1;
 const TOTAL_STEPS = 4;
+
+// Função para preencher o formulário automaticamente com dados do Supabase
+async function carregarDadosAutomaticos() {
+    console.group("🏥 [Pré-Prontuário] Carregando dados automáticos...");
+    
+    // 1. Verifica se está logado
+    const { session } = await authService.getUserSession();
+    if (!session) {
+        console.warn("Usuário não logado. Pulando carregamento automático.");
+        console.groupEnd();
+        return;
+    }
+
+    // 2. Busca dados do Perfil
+    const { profile } = await profileService.getProfile();
+    if (profile) {
+        console.log("Preenchendo dados do perfil...");
+        if (profile.sexo) document.getElementById('sexo').value = profile.sexo;
+        if (profile.peso) document.getElementById('peso').value = profile.peso;
+        if (profile.altura) document.getElementById('altura').value = profile.altura;
+        // Se tivesse data de nascimento no banco, preencheria aqui. Usaremos idade como fallback se necessário.
+    }
+
+    // 3. Busca última consulta da IA
+    const { data: consulta } = await chatService.getLatestFullConsultation();
+    if (consulta) {
+        console.log("Preenchendo dados da última consulta IA...");
+        
+        // Queixa Principal
+        if (consulta.chat.descricao_usuario) {
+            document.getElementById('queixaPrincipal').value = consulta.chat.descricao_usuario;
+        }
+
+        // Sintomas (Checkboxes)
+        if (consulta.symptoms) {
+            const keys = Object.keys(consulta.symptoms);
+            keys.forEach(key => {
+                if (consulta.symptoms[key] === true) {
+                    const checkbox = document.querySelector(`input[name="sintomas"][value="${key}"]`);
+                    if (checkbox) checkbox.checked = true;
+                }
+            });
+        }
+    }
+    
+    console.log("Carregamento automático finalizado!");
+    console.groupEnd();
+}
+
+// Inicializa o carregamento
+document.addEventListener('DOMContentLoaded', carregarDadosAutomaticos);
 
 // ─── Elementos DOM ────────────────────────────────────────────────────────────
 const form = document.getElementById('pp-form');
@@ -459,15 +504,33 @@ form.addEventListener('submit', async (e) => {
   e.preventDefault();
   if (!validarStep(4)) return;
 
+  const btnSubmit = document.getElementById('btn-submit');
+  const originalText = btnSubmit.innerHTML;
+  btnSubmit.disabled = true;
+  btnSubmit.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Salvando e Gerando...';
+
+  // 1. Coleta os sintomas marcados na tela para salvar no banco
+  const sintomasSelecionados = {};
+  document.querySelectorAll('input[name="sintomas"]').forEach(cb => {
+      sintomasSelecionados[cb.value] = cb.checked;
+  });
+
+  // 2. Salva no Supabase (Histórico + Sintomas)
+  const queixa = document.getElementById('queixaPrincipal').value;
+  await chatService.saveManualConsultation(queixa, sintomasSelecionados);
+
   const canal = document.querySelector('input[name="canalEnvio"]:checked')?.value;
-  let msgEnvio = 'PDF baixado com sucesso!';
-  if (canal === 'email') msgEnvio = 'PDF gerado com sucesso (Envio por e-mail desativado - Baixando direto).';
-  else if (canal === 'whatsapp') msgEnvio = 'PDF gerado com sucesso (Envio por WhatsApp desativado - Baixando direto).';
+  let msgEnvio = 'PDF baixado e consulta salva no histórico!';
+  if (canal === 'email') msgEnvio = 'Consulta salva e PDF gerado (Envio por e-mail simulado).';
+  else if (canal === 'whatsapp') msgEnvio = 'Consulta salva e PDF gerado (Envio por WhatsApp simulado).';
 
   await gerarArquivoPDFPuro(btnSubmit, msgEnvio);
   
   // Limpa o rascunho salvo localmente
   limparRascunho();
+
+  btnSubmit.disabled = false;
+  btnSubmit.innerHTML = originalText;
 
   // Reseta formulario após gerar PDF
   form.reset();

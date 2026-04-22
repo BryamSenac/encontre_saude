@@ -1,5 +1,6 @@
 import { GoogleGenerativeAI } from "https://unpkg.com/@google/generative-ai?module";
 import { API_KEY } from "../../../../config/env.js";
+import { chatService } from "../../../../Services/chatService.js";
 
 // =============================================
 // CHAVE DO HISTÓRICO NO localStorage
@@ -48,11 +49,25 @@ Você é um assistente de IA especializado em triagem de sintomas de saúde. Sua
 Você DEVE retornar sua resposta APENAS no formato JSON, sem crase ou markdown (ex: \`\`\`json). O JSON deve conter os seguintes campos:
 
 {
-  "nivel": (número de 1 a 5, conforme escala abaixo),
-  "resumo": "Uma breve explicação do porquê desse nível.",
-  "recomendacao": "O que a pessoa deve fazer imediatamente (ex: repouso, ir ao médico).",
-  "primeiros_socorros": "Dica prática de primeiro socorro ou alívio de sintoma se aplicável (ou null se não houver).",
-  "unidade_recomendada": "Onde buscar ajuda: 'Farmácia', 'Posto de Saúde (UBS)', 'UPA 24h', 'Hospital/Emergência' ou 'Fique em Casa'."
+  "nivel": (número de 1 a 5),
+  "resumo": "...",
+  "recomendacao": "...",
+  "primeiros_socorros": "...",
+  "unidade_recomendada": "...",
+  "sintomas": {
+    "febre": boolean,
+    "dor_de_cabeca": boolean,
+    "tosse": boolean,
+    "falta_de_ar": boolean,
+    "dor_no_peito": boolean,
+    "nausea_vomito": boolean,
+    "diarreia": boolean,
+    "dor_abdominal": boolean,
+    "dor_nas_costas": boolean,
+    "tontura": boolean,
+    "fraqueza": boolean,
+    "coriza": boolean
+  }
 }
 
 **Escala de Classificação:**
@@ -194,16 +209,19 @@ Você DEVE retornar sua resposta APENAS no formato JSON, sem crase ou markdown (
         input.focus();
 
         // 6. Add AI Message
-        const formattedContent = formatResponse(resultado);
-        appendMessage(formattedContent, 'ai');
-
-        // Guarda resposta da IA na sessão atual (texto resumido)
         if (resultado) {
+            const formattedContent = formatResponse(resultado);
+            appendMessage(formattedContent, 'ai');
+
+            // Guarda resposta da IA na sessão atual (texto resumido)
             const resumoAI = `[Nível ${resultado.nivel}] ${resultado.resumo}`;
             sessaoAtual.push({ tipo: 'ai', texto: resumoAI });
+
+            // 7. SALVA NO SUPABASE (Persistência real com sintomas)
+            await chatService.saveInteraction(texto, resumoAI, resultado.sintomas);
         }
 
-        // 7. Salva sessão no histórico (atualiza a cada troca, sobrescrevendo a mais recente)
+        // 8. Salva sessão no histórico local (Cache)
         salvarSessaoNoHistorico(sessaoAtual);
 
         // 8. Salva a última triagem para uso no Pré-Prontuário
