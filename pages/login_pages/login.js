@@ -3,6 +3,12 @@ import { authService } from "../../Services/authService.js";
 import { setupToggleSenha } from "../../shared/toggle_senha.js";
 
 document.addEventListener("DOMContentLoaded", () => {
+    // Redireciona se já estiver logado
+    if (localStorage.getItem("isLoggedIn") === "true") {
+        window.location.href = ROUTES.home;
+        return;
+    }
+
     setupToggleSenha();
 
     // 1. Lógica do botão de voltar

@@ -3,6 +3,18 @@ import { createTelegramWidget } from "./telegram_widget.js";
 import { authService } from "../Services/authService.js";
 
 export function createSidebar() {
+    // Sincroniza estado de login do Supabase com o localStorage
+    authService.getUserSession().then(({ session }) => {
+        if (session && localStorage.getItem("isLoggedIn") !== "true") {
+            localStorage.setItem("isLoggedIn", "true");
+            // Se mudou o estado, recarrega a página para atualizar a UI (opcional, mas seguro)
+            window.location.reload();
+        } else if (!session && localStorage.getItem("isLoggedIn") === "true") {
+            localStorage.removeItem("isLoggedIn");
+            window.location.reload();
+        }
+    });
+
     const header = document.getElementById("header");
     if (!header) return;
 
@@ -20,64 +32,33 @@ export function createSidebar() {
     const navList = document.createElement("div");
     navList.className = "sidebar-nav";
 
+    const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+
     const navItems = [
         { text: "Home", icon: "fa-house", href: ROUTES.home },
         { text: "Primeiros Socorros", icon: "fa-kit-medical", href: ROUTES.primeirosSocorros },
         { text: "Ações Preventivas", icon: "fa-shield-heart", href: ROUTES.prevensao },
         { text: "Farmácias", icon: "fa-prescription-bottle-medical", href: ROUTES.farmacia },
-        { text: "Pré-Prontuário", icon: "fa-file-medical", href: ROUTES.preProntuario },
+        { text: "Meu Perfil", icon: "fa-user", href: ROUTES.perfil },
     ];
 
-    // Adiciona itens dinâmicos baseados no estado de autenticação
-    const updateNavItems = async () => {
-        const { session } = await authService.getUserSession();
-        
-        // Limpa itens dinâmicos anteriores se houver (opcional se reconstruir tudo)
-        const currentNavItems = [...navItems];
-        
-        if (session) {
-            currentNavItems.push({ text: "Meu Perfil", icon: "fa-user", href: ROUTES.perfil });
-            currentNavItems.push({ text: "Sair", icon: "fa-arrow-right-from-bracket", href: "#", id: "btnLogoutSidebar" });
-        } else {
-            currentNavItems.push({ text: "Login / Cadastro", icon: "fa-arrow-right-to-bracket", href: ROUTES.login });
-        }
+    // Se NÃO estiver logado, adicionamos o botão de Login/Cadastro
+    if (!isLoggedIn) {
+        // Insere antes de 'Meu Perfil' ou ao final se preferir. 
+        // Vamos manter a ordem original onde Login vinha antes de Perfil.
+        navItems.splice(navItems.length - 1, 0, { text: "Login / Cadastro", icon: "fa-arrow-right-to-bracket", href: ROUTES.login });
+    }
 
-        navList.innerHTML = "";
-        currentNavItems.forEach(({ text, icon, href, id }) => {
-            const a = document.createElement("a");
-            a.href = href;
-            if (id) a.id = id;
-            a.className = "nav-item";
-            a.innerHTML = `
-                <i class="fas ${icon} nav-icon"></i>
-                <span class="nav-text">${text}</span>
-            `;
-            
-            if (id === "btnLogoutSidebar") {
-                a.addEventListener("click", async (e) => {
-                    e.preventDefault();
-                    if (confirm("Deseja realmente sair?")) {
-                        await authService.signOut();
-                        localStorage.removeItem("isLoggedIn"); // Limpa legado se houver
-                        window.location.href = ROUTES.home;
-                    }
-                });
-            }
-            
-            navList.appendChild(a);
-        });
-
-        // Re-attach navigation close listener for mobile
-        sidebar.querySelectorAll(".nav-item").forEach(item => {
-            item.addEventListener("click", () => {
-                if (window.innerWidth <= 768 && !item.id) {
-                    toggleSidebar();
-                }
-            });
-        });
-    };
-
-    updateNavItems();
+    navItems.forEach(({ text, icon, href }) => {
+        const a = document.createElement("a");
+        a.href = href;
+        a.className = "nav-item";
+        a.innerHTML = `
+            <i class="fas ${icon} nav-icon"></i>
+            <span class="nav-text">${text}</span>
+        `;
+        navList.appendChild(a);
+    });
     sidebar.appendChild(navList);
 
     // Ouvir mudanças de auth para atualizar o menu em tempo real (caso mude em outra aba ou via login)

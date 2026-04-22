@@ -223,6 +223,16 @@ Você DEVE retornar sua resposta APENAS no formato JSON, sem crase ou markdown (
 
         // 8. Salva sessão no histórico local (Cache)
         salvarSessaoNoHistorico(sessaoAtual);
+
+        // 8. Salva a última triagem para uso no Pré-Prontuário
+        if (resultado) {
+            const dadosTriagem = {
+                textoUsuario: texto,
+                resultadoIA: resultado,
+                timestamp: Date.now()
+            };
+            localStorage.setItem('ultimaTriagemIA', JSON.stringify(dadosTriagem));
+        }
     }
 
     function setupInteraction() {
