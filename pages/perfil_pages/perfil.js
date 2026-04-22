@@ -3,9 +3,8 @@ import { createFooter } from "../../shared/footer.js";
 import { ROUTES } from "../../config/routes/routes.js";
 import { authService } from "../../Services/authService.js";
 import { carregarHistorico } from "../home_page/js/sintomas_ai/api.js";
-import { authService } from "../../Services/authService.js";
 import { profileService } from "../../Services/profileService.js"; 
-import { chatService } from "../../Services/chatService.js"; // Importado
+import { chatService } from "../../Services/chatService.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
     // 1. Auth Guard Real usando Supabase
