@@ -3,10 +3,13 @@ import { createFooter } from "../../shared/footer.js";
 import { ROUTES } from "../../config/routes/routes.js";
 import { authService } from "../../Services/authService.js";
 import { carregarHistorico } from "../home_page/js/sintomas_ai/api.js";
+import { authService } from "../../Services/authService.js";
 
-document.addEventListener("DOMContentLoaded", () => {
-    // 1. Auth Guard (Simulado para que colegas continuem testando fluxo de bloqueios)
-    if (!localStorage.getItem("isLoggedIn")) {
+document.addEventListener("DOMContentLoaded", async () => {
+    // 1. Auth Guard Real usando Supabase
+    const { session, user } = await authService.getUserSession();
+    
+    if (!session) {
         window.location.href = ROUTES.login;
         return;
     }
@@ -226,7 +229,7 @@ document.addEventListener("DOMContentLoaded", () => {
          * Nomes e variáveis escritas exatamente nos tipos (typeof) requisitados.
          */
         const payload = {
-            id_usuario:           "123e4567-e89b-12d3-a456-426614174000", /* Exemplo Padrão UUID Supabase Auth.uid()*/
+            id_usuario:           user.id, /* ID Real do Usuário Logado */
             sexo:                 getFieldVal("sexo", "string"),
             idade:                getFieldVal("idade", "number"),
             peso:                 getFieldVal("peso", "number"),

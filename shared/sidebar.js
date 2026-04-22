@@ -61,6 +61,16 @@ export function createSidebar() {
     });
     sidebar.appendChild(navList);
 
+    // Ouvir mudanças de auth para atualizar o menu em tempo real (caso mude em outra aba ou via login)
+    authService.onAuthStateChange((event, session) => {
+        if (session) {
+            localStorage.setItem("isLoggedIn", "true");
+        } else {
+            localStorage.removeItem("isLoggedIn");
+        }
+        updateNavItems();
+    });
+
     const footerContacts = document.createElement("div");
     footerContacts.className = "sidebar-footer";
 

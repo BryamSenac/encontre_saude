@@ -46,13 +46,20 @@ export const authService = {
     // Obter sessão atual do usuário (Verificar quem está logado ao carregar a página)
     async getUserSession() {
         try {
-            const { data: { session }, error } = await supabase.auth.getSession();
+            const { data, error } = await supabase.auth.getSession();
             if (error) throw error;
-            return { session, error: null };
+            return { session: data.session, user: data.session?.user || null, error: null };
         } catch (error) {
             console.error("Erro obtendo sessão:", error.message);
-            return { session: null, error };
+            return { session: null, user: null, error };
         }
+    },
+
+    // Observar mudanças no estado de autenticação
+    onAuthStateChange(callback) {
+        return supabase.auth.onAuthStateChange((event, session) => {
+            callback(event, session);
+        });
     },
     // Login com Google (OAuth)
     async signInWithGoogle() {
