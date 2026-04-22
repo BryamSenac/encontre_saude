@@ -130,8 +130,11 @@ export const chatService = {
             console.groupEnd();
             return { data: null, error };
         }
+    }, // ← fechamento do getLatestFullConsultation
+
     // Salva uma consulta feita manualmente (via formulário de pré-prontuário)
     async saveManualConsultation(queixa, sintomas) {
+
         try {
             console.group("📝 [chatService] Salvando Consulta Manual...");
             const { session } = await authService.getUserSession();
