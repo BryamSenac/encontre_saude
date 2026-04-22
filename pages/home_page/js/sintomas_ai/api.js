@@ -1,5 +1,6 @@
 import { GoogleGenerativeAI } from "https://unpkg.com/@google/generative-ai?module";
 import { API_KEY } from "../../../../config/env.js";
+import { chatService } from "../../../../Services/chatService.js";
 
 // =============================================
 // CHAVE DO HISTÓRICO NO localStorage
@@ -194,16 +195,19 @@ Você DEVE retornar sua resposta APENAS no formato JSON, sem crase ou markdown (
         input.focus();
 
         // 6. Add AI Message
-        const formattedContent = formatResponse(resultado);
-        appendMessage(formattedContent, 'ai');
-
-        // Guarda resposta da IA na sessão atual (texto resumido)
         if (resultado) {
+            const formattedContent = formatResponse(resultado);
+            appendMessage(formattedContent, 'ai');
+
+            // Guarda resposta da IA na sessão atual (texto resumido)
             const resumoAI = `[Nível ${resultado.nivel}] ${resultado.resumo}`;
             sessaoAtual.push({ tipo: 'ai', texto: resumoAI });
+
+            // 7. SALVA NO SUPABASE (Persistência real)
+            await chatService.saveInteraction(texto, resumoAI);
         }
 
-        // 7. Salva sessão no histórico (atualiza a cada troca, sobrescrevendo a mais recente)
+        // 8. Salva sessão no histórico local (Cache)
         salvarSessaoNoHistorico(sessaoAtual);
     }
 
