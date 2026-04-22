@@ -1,8 +1,13 @@
-import { createFarmacias } from "./create_farmacias.js";
+import { pharmacyService } from "../../../Services/pharmacyService.js";
 
-export function createMap() {
+export async function createMap() {
 
-    const farmacias = createFarmacias()
+    const { data: farmacias, error } = await pharmacyService.getPharmacies();
+
+    if (error) {
+        console.error("Erro ao carregar farmácias do banco:", error);
+        // Fallback para lista vazia ou tratar erro na UI
+    }
 
     const map = L.map('map').setView([-26.0815, -53.0556], 14);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -23,7 +28,8 @@ export function createMap() {
             // Evento ao clicar no marcador
             marker.on('click', () => {
                 // Abrir sidebar se estiver fechada
-                if (!sideebar.classList.contains("active")) {
+                const sideebar = document.getElementById("sidebar"); // Assegurando a referência
+                if (sideebar && !sideebar.classList.contains("active")) {
                     sideebar.classList.add("active");
                 }
 
@@ -48,6 +54,7 @@ export function createMap() {
 
     function renderFarmaciasList(lista) {
         const container = document.getElementById("farmacias-list");
+        if (!container) return;
         container.innerHTML = "";
         lista.forEach(f => {
             const card = document.createElement("div");
@@ -91,8 +98,8 @@ export function createMap() {
 
     // Filtragem
     let tipoFiltro = {
-        municipal: false, // Default: Desativado
-        privada: false,   // Default: Desativado
+        municipal: true, // Default: Ativado
+        privada: true,   // Default: Ativado
     };
 
     function filtrar() {
@@ -120,20 +127,29 @@ export function createMap() {
         renderFarmaciasList(filtrados);
     }
 
-    document.getElementById("search").addEventListener("input", filtrar);
-    // Removed 'bairro' listener as the element does not exist
+    const searchInput = document.getElementById("search");
+    if (searchInput) searchInput.addEventListener("input", filtrar);
 
-    document.getElementById("btnMunicipal").addEventListener("click", () => {
-        tipoFiltro.municipal = !tipoFiltro.municipal;
-        document.getElementById("btnMunicipal").classList.toggle("active", tipoFiltro.municipal);
-        filtrar();
-    });
+    const btnMunicipal = document.getElementById("btnMunicipal");
+    if (btnMunicipal) {
+        btnMunicipal.classList.add("active"); // Ativa visualmente por padrão
+        btnMunicipal.addEventListener("click", () => {
+            tipoFiltro.municipal = !tipoFiltro.municipal;
+            btnMunicipal.classList.toggle("active", tipoFiltro.municipal);
+            filtrar();
+        });
+    }
 
-    document.getElementById("btnPrivada").addEventListener("click", () => {
-        tipoFiltro.privada = !tipoFiltro.privada;
-        document.getElementById("btnPrivada").classList.toggle("active", tipoFiltro.privada);
-        filtrar();
-    });
+    const btnPrivada = document.getElementById("btnPrivada");
+    if (btnPrivada) {
+        btnPrivada.classList.add("active"); // Ativa visualmente por padrão
+        btnPrivada.addEventListener("click", () => {
+            tipoFiltro.privada = !tipoFiltro.privada;
+            btnPrivada.classList.toggle("active", tipoFiltro.privada);
+            filtrar();
+        });
+    }
+
     // Mobile Map Toggle Button (Show/Hide List)
     const mapToggleBtn = document.createElement("button");
     mapToggleBtn.className = "map-toggle-btn";
@@ -143,13 +159,15 @@ export function createMap() {
     const overlay = document.getElementById("map-overlay");
 
     mapToggleBtn.addEventListener("click", () => {
-        overlay.classList.toggle("hidden-mobile");
+        if (overlay) {
+            overlay.classList.toggle("hidden-mobile");
 
-        // Update icon based on state
-        if (overlay.classList.contains("hidden-mobile")) {
-            mapToggleBtn.innerHTML = '<i class="fas fa-list"></i>'; // Icon to show list
-        } else {
-            mapToggleBtn.innerHTML = '<i class="fas fa-map"></i>'; // Icon to show map (hide list)
+            // Update icon based on state
+            if (overlay.classList.contains("hidden-mobile")) {
+                mapToggleBtn.innerHTML = '<i class="fas fa-list"></i>'; // Icon to show list
+            } else {
+                mapToggleBtn.innerHTML = '<i class="fas fa-map"></i>'; // Icon to show map (hide list)
+            }
         }
     });
 
