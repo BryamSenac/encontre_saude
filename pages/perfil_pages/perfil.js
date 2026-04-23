@@ -15,11 +15,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const { session, user } = await authService.getUserSession();
     
     if (!session) {
-        // Redirecionamento mais robusto para evitar problemas em subdiretórios
-        const loginPath = window.location.origin.includes('github.io') 
-            ? "/encontre_saude/pages/login_pages/login.html" 
-            : "/pages/login_pages/login.html";
-        window.location.href = loginPath;
+        window.location.href = ROUTES.login;
         return;
     }
 

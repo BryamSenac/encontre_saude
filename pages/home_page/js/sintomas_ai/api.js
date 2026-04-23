@@ -1,11 +1,9 @@
-import { GoogleGenerativeAI } from "https://unpkg.com/@google/generative-ai?module";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 import { API_KEY } from "../../../../config/env.js";
 import { chatService } from "../../../../Services/chatService.js";
 import { authService } from "../../../../Services/authService.js";
 
-// =============================================
 // CHAVE DO HISTÓRICO NO localStorage
-// =============================================
 const HISTORICO_KEY = "chatHistorico";
 
 export async function salvarSessaoNoHistorico(mensagens) {

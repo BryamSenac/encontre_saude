@@ -2,7 +2,7 @@
 import { createApi, carregarHistorico } from "./api.js";
 import { createFeedbacks } from "./create_feedback.js";
 
-import { authService } from "../../../Services/authService.js";
+import { authService } from "../../../../Services/authService.js";
 
 export async function createSintomasSection() {
     const { session } = await authService.getUserSession();

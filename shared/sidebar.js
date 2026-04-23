@@ -14,8 +14,7 @@ export async function createSidebar() {
     const logoContainer = document.createElement("div");
     logoContainer.className = "sidebar-logo";
     const logoImg = document.createElement("img");
-    // Usando caminho relativo para funcionar em subdiretórios hospedados
-    logoImg.src = window.location.origin.includes('github.io') ? "/encontre_saude/assets/logoTipo.png" : "/assets/logoTipo.png";
+    logoImg.src = "/assets/logoTipo.png";
     logoImg.alt = "Encontre Saúde Logo";
     logoContainer.appendChild(logoImg);
     sidebar.appendChild(logoContainer);
