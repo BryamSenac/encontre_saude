@@ -5,14 +5,22 @@
 
 import { createSidebar } from './../../shared/sidebar.js';
 import { ROUTES } from "../../config/routes/routes.js";
+import { authService } from "../../Services/authService.js";
 
 // ─── Proteção de Rota (Auth Guard) ───────────────────────────────────────────
-if (!localStorage.getItem("isLoggedIn")) {
-  window.location.href = ROUTES.login;
-}
+const init = async () => {
+  const { session } = await authService.getUserSession();
+  
+  if (!session) {
+    window.location.href = ROUTES.login;
+    return;
+  }
 
-// ─── Inicialização da Sidebar ─────────────────────────────────────────────────
-createSidebar();
+  // ─── Inicialização da Sidebar ─────────────────────────────────────────────────
+  createSidebar();
+};
+
+init();
 
 // ─── Constante da URL do Backend ─────────────────────────────────────────────
 const API_URL = 'http://localhost:3001/api/pre-prontuario';

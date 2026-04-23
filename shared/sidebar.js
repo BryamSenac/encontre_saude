@@ -7,11 +7,8 @@ export function createSidebar() {
     authService.getUserSession().then(({ session }) => {
         if (session && localStorage.getItem("isLoggedIn") !== "true") {
             localStorage.setItem("isLoggedIn", "true");
-            // Se mudou o estado, recarrega a página para atualizar a UI (opcional, mas seguro)
-            window.location.reload();
         } else if (!session && localStorage.getItem("isLoggedIn") === "true") {
             localStorage.removeItem("isLoggedIn");
-            window.location.reload();
         }
     });
 
@@ -44,8 +41,6 @@ export function createSidebar() {
 
     // Se NÃO estiver logado, adicionamos o botão de Login/Cadastro
     if (!isLoggedIn) {
-        // Insere antes de 'Meu Perfil' ou ao final se preferir. 
-        // Vamos manter a ordem original onde Login vinha antes de Perfil.
         navItems.splice(navItems.length - 1, 0, { text: "Login / Cadastro", icon: "fa-arrow-right-to-bracket", href: ROUTES.login });
     }
 
@@ -60,16 +55,6 @@ export function createSidebar() {
         navList.appendChild(a);
     });
     sidebar.appendChild(navList);
-
-    // Ouvir mudanças de auth para atualizar o menu em tempo real (caso mude em outra aba ou via login)
-    authService.onAuthStateChange((event, session) => {
-        if (session) {
-            localStorage.setItem("isLoggedIn", "true");
-        } else {
-            localStorage.removeItem("isLoggedIn");
-        }
-        updateNavItems();
-    });
 
     const footerContacts = document.createElement("div");
     footerContacts.className = "sidebar-footer";
@@ -121,10 +106,10 @@ export function createSidebar() {
         });
     });
 
-    // Append to body to avoid positioning issues with transformed parents (like animated headers)
+    // Append to body
     document.body.prepend(sidebar);
 
-    // Add class to body to adjust layout
+    // Add class to body
     document.body.classList.add("with-sidebar");
     
     // Injeta Botão Flutuante Global do Telegram
