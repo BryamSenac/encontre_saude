@@ -2,19 +2,9 @@ import { ROUTES } from "../config/routes/routes.js";
 import { createTelegramWidget } from "./telegram_widget.js";
 import { authService } from "../Services/authService.js";
 
-export function createSidebar() {
-    // Sincroniza estado de login do Supabase com o localStorage
-    authService.getUserSession().then(({ session }) => {
-        if (session && localStorage.getItem("isLoggedIn") !== "true") {
-            localStorage.setItem("isLoggedIn", "true");
-            // Se mudou o estado, recarrega a página para atualizar a UI (opcional, mas seguro)
-            window.location.reload();
-        } else if (!session && localStorage.getItem("isLoggedIn") === "true") {
-            localStorage.removeItem("isLoggedIn");
-            window.location.reload();
-        }
-    });
-
+export async function createSidebar() {
+    const { session } = await authService.getUserSession();
+    
     const header = document.getElementById("header");
     if (!header) return;
 
@@ -24,7 +14,8 @@ export function createSidebar() {
     const logoContainer = document.createElement("div");
     logoContainer.className = "sidebar-logo";
     const logoImg = document.createElement("img");
-    logoImg.src = "/assets/logoTipo.png";
+    // Usando caminho relativo para funcionar em subdiretórios hospedados
+    logoImg.src = window.location.origin.includes('github.io') ? "/encontre_saude/assets/logoTipo.png" : "/assets/logoTipo.png";
     logoImg.alt = "Encontre Saúde Logo";
     logoContainer.appendChild(logoImg);
     sidebar.appendChild(logoContainer);
@@ -32,21 +23,18 @@ export function createSidebar() {
     const navList = document.createElement("div");
     navList.className = "sidebar-nav";
 
-    const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
-
     const navItems = [
         { text: "Home", icon: "fa-house", href: ROUTES.home },
         { text: "Primeiros Socorros", icon: "fa-kit-medical", href: ROUTES.primeirosSocorros },
         { text: "Ações Preventivas", icon: "fa-shield-heart", href: ROUTES.prevensao },
         { text: "Farmácias", icon: "fa-prescription-bottle-medical", href: ROUTES.farmacia },
-        { text: "Meu Perfil", icon: "fa-user", href: ROUTES.perfil },
     ];
 
-    // Se NÃO estiver logado, adicionamos o botão de Login/Cadastro
-    if (!isLoggedIn) {
-        // Insere antes de 'Meu Perfil' ou ao final se preferir. 
-        // Vamos manter a ordem original onde Login vinha antes de Perfil.
-        navItems.splice(navItems.length - 1, 0, { text: "Login / Cadastro", icon: "fa-arrow-right-to-bracket", href: ROUTES.login });
+    // Se estiver logado, mostra Perfil. Se não, mostra Login.
+    if (session) {
+        navItems.push({ text: "Meu Perfil", icon: "fa-user", href: ROUTES.perfil });
+    } else {
+        navItems.push({ text: "Login / Cadastro", icon: "fa-arrow-right-to-bracket", href: ROUTES.login });
     }
 
     navItems.forEach(({ text, icon, href }) => {
@@ -61,14 +49,11 @@ export function createSidebar() {
     });
     sidebar.appendChild(navList);
 
-    // Ouvir mudanças de auth para atualizar o menu em tempo real (caso mude em outra aba ou via login)
+    // Ouvir mudanças de auth para atualizar o menu em tempo real
     authService.onAuthStateChange((event, session) => {
-        if (session) {
-            localStorage.setItem("isLoggedIn", "true");
-        } else {
-            localStorage.removeItem("isLoggedIn");
+        if (event === 'SIGNED_OUT') {
+            window.location.href = ROUTES.home;
         }
-        updateNavItems();
     });
 
     const footerContacts = document.createElement("div");

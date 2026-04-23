@@ -3,17 +3,33 @@ import { createFooter } from "../../shared/footer.js";
 import { ROUTES } from "../../config/routes/routes.js";
 import { authService } from "../../Services/authService.js";
 import { carregarHistorico } from "../home_page/js/sintomas_ai/api.js";
-import { authService } from "../../Services/authService.js";
 import { profileService } from "../../Services/profileService.js"; 
-import { chatService } from "../../Services/chatService.js"; // Importado
+import { chatService } from "../../Services/chatService.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
+    // Esconde o container principal até validar a sessão para evitar "flicker"
+    const container = document.querySelector(".perfil-container");
+    if (container) container.style.opacity = "0";
+
     // 1. Auth Guard Real usando Supabase
     const { session, user } = await authService.getUserSession();
     
     if (!session) {
-        window.location.href = ROUTES.login;
+        // Redirecionamento mais robusto para evitar problemas em subdiretórios
+        const loginPath = window.location.origin.includes('github.io') 
+            ? "/encontre_saude/pages/login_pages/login.html" 
+            : "/pages/login_pages/login.html";
+        window.location.href = loginPath;
         return;
+    }
+
+    // Mostra o container agora que sabemos que o usuário está logado
+    if (container) container.style.opacity = "1";
+
+    // Atualiza o nome/email do usuário logado
+    const displayNome = document.getElementById("displayNome");
+    if (displayNome && user) {
+        displayNome.textContent = user.email;
     }
 
     createSidebar();
@@ -212,7 +228,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     // =============================================
     const handleLogout = async () => {
         await authService.signOut();
-        localStorage.removeItem("isLoggedIn");
         window.location.href = ROUTES.home;
     };
 

@@ -1,14 +1,16 @@
 import { GoogleGenerativeAI } from "https://unpkg.com/@google/generative-ai?module";
 import { API_KEY } from "../../../../config/env.js";
 import { chatService } from "../../../../Services/chatService.js";
+import { authService } from "../../../../Services/authService.js";
 
 // =============================================
 // CHAVE DO HISTÓRICO NO localStorage
 // =============================================
 const HISTORICO_KEY = "chatHistorico";
 
-export function salvarSessaoNoHistorico(mensagens) {
-    if (!localStorage.getItem("isLoggedIn")) return; // Só salva se logado
+export async function salvarSessaoNoHistorico(mensagens) {
+    const { session } = await authService.getUserSession();
+    if (!session) return; // Só salva se logado
     if (!mensagens || mensagens.length === 0) return;
 
     const historico = JSON.parse(localStorage.getItem(HISTORICO_KEY) || "[]");
