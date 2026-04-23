@@ -25,7 +25,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Atualiza o nome/email do usuário logado
     const displayNome = document.getElementById("displayNome");
     if (displayNome && user) {
-        displayNome.textContent = user.email;
+        const nomeUsuario = user.user_metadata?.full_name || user.user_metadata?.name || user.email;
+        displayNome.textContent = nomeUsuario;
     }
 
     createSidebar();

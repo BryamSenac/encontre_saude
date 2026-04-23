@@ -133,7 +133,7 @@ export const chatService = {
     }, // ← fechamento do getLatestFullConsultation
 
     // Salva uma consulta feita manualmente (via formulário de pré-prontuário)
-    async saveManualConsultation(queixa, sintomas) {
+    async saveManualConsultation(queixa, sintomas, dadosClinicos = null) {
 
         try {
             console.group("📝 [chatService] Salvando Consulta Manual...");
@@ -149,7 +149,8 @@ export const chatService = {
                 .insert([{
                     user_id: session.user.id,
                     descricao_usuario: queixa,
-                    resposta_ia: "Pré-Prontuário gerado manualmente pelo usuário."
+                    resposta_ia: "Pré-Prontuário gerado manualmente pelo usuário.",
+                    dados_clinicos: dadosClinicos
                 }])
                 .select()
                 .single();

@@ -20,11 +20,20 @@ async function carregarDadosAutomaticos() {
     console.group("🏥 [Pré-Prontuário] Carregando dados automáticos...");
     
     // 1. Verifica se está logado
-    const { session } = await authService.getUserSession();
+    const { session, user } = await authService.getUserSession();
     if (!session) {
         console.warn("Usuário não logado. Pulando carregamento automático.");
         console.groupEnd();
         return;
+    }
+
+    // Preenche o nome se disponível na sessão
+    if (user && user.user_metadata) {
+        const nomeCompleto = user.user_metadata.full_name || user.user_metadata.name;
+        if (nomeCompleto) {
+            const campoNome = document.getElementById('nome');
+            if (campoNome && !campoNome.value) campoNome.value = nomeCompleto;
+        }
     }
 
     // 2. Busca dados do Perfil
@@ -515,9 +524,24 @@ form.addEventListener('submit', async (e) => {
       sintomasSelecionados[cb.value] = cb.checked;
   });
 
-  // 2. Salva no Supabase (Histórico + Sintomas)
+  // 2. Coleta dados clínicos (opcionais) para salvar
+  const dadosClinicos = {
+      alergias: val('alergias'),
+      medicamentos: val('medicamentosEmUso'),
+      doencas: val('doencasPreexistentes'),
+      historico_familiar: val('historicoFamiliar'),
+      pressao: val('pressaoArterial'),
+      freq_cardiaca: val('frequenciaCardiaca'),
+      temperatura: val('temperatura'),
+      saturacao: val('saturacaoOxigenio'),
+      peso: val('peso'),
+      altura: val('altura'),
+      observacoes: val('observacoesAdicionais')
+  };
+
+  // 3. Salva no Supabase (Histórico + Sintomas + Dados Clínicos)
   const queixa = document.getElementById('queixaPrincipal').value;
-  await chatService.saveManualConsultation(queixa, sintomasSelecionados);
+  await chatService.saveManualConsultation(queixa, sintomasSelecionados, JSON.stringify(dadosClinicos));
 
   const canal = document.querySelector('input[name="canalEnvio"]:checked')?.value;
   let msgEnvio = 'PDF baixado e consulta salva no histórico!';
