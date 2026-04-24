@@ -60,6 +60,7 @@ header p {
   border: 1px solid rgba(0, 0, 0, 0.03);
   display: flex;
   flex-direction: column;
+  cursor: pointer;
 }
 
 .prevention-card:hover {
@@ -260,15 +261,21 @@ header p {
   background: var(--white);
   border-radius: var(--radius-lg);
   width: 90%;
-  max-width: 800px;
+  max-width: 1000px;
   max-height: 90vh;
   overflow-y: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
   position: relative;
   padding: 2rem;
   box-shadow: var(--shadow-lg);
   transform: scale(0.9);
   transition: transform 0.3s ease;
   animation: slideUp 0.3s ease forwards;
+}
+
+.modal-content::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
 }
 
 .modal-overlay.show .modal-content {
@@ -323,19 +330,7 @@ header p {
   /* Preserves line breaks from JS string */
 }
 
-/* Scrollbar for modal content */
-.modal-content::-webkit-scrollbar {
-  width: 8px;
-}
 
-.modal-content::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.modal-content::-webkit-scrollbar-thumb {
-  background: var(--gray-light);
-  border-radius: 4px;
-}
 
 @keyframes slideUp {
   from {
