@@ -275,14 +275,14 @@ body {
 .form-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
+    gap: 20px;
     margin-bottom: 24px;
 }
 
 .form-grid-2 {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
     margin-bottom: 24px;
 }
 
@@ -310,16 +310,19 @@ body {
 .g-form input[type="text"],
 .g-form input[type="email"],
 .g-form input[type="tel"],
+.g-form input[type="date"],
 .g-form select {
     width: 100%;
-    padding: 16px 14px;
+    height: 56px; /* Altura fixa para padronização */
+    padding: 12px 14px;
     font-size: 16px;
     color: var(--black-dark);
     border: 1px solid var(--gray-medium);
-    border-radius: 4px;
-    background-color: transparent;
+    border-radius: 8px;
+    background-color: var(--white);
     transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
     font-family: inherit;
+    display: block;
 }
 
 .g-form input:focus,
@@ -370,11 +373,13 @@ body {
 .radio-card {
     background: var(--white);
     border: 1px solid var(--gray-medium);
-    border-radius: 4px;
-    padding: 12px 14px;
+    border-radius: 8px;
+    padding: 10px 14px;
+    height: 56px; /* Mesma altura dos inputs */
     display: flex;
     flex-direction: column;
     justify-content: center;
+    width: 100%;
 }
 
 .radio-title {
