@@ -2,7 +2,14 @@ import { ROUTES } from "../../config/routes/routes.js";
 import { authService } from "../../Services/authService.js";
 import { setupToggleSenha } from "../../shared/toggle_senha.js";
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+    // Redireciona se já estiver logado
+    const { session } = await authService.getUserSession();
+    if (session) {
+        window.location.href = ROUTES.home;
+        return;
+    }
+
     setupToggleSenha();
 
     // 1. Lógica do botão de voltar
@@ -48,10 +55,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 alert("Erro ao entrar com Google: " + error.message);
                 btnGoogleLogin.disabled = false;
                 btnGoogleLogin.innerHTML = '<i class="fab fa-google"></i> Continuar com o Google';
-            } else {
-                // O redirecionamento acontece via Supabase, mas podemos marcar o flag 
-                // se o Supabase não redirecionar imediatamente (embora o OAuth geralmente saia da página)
-                localStorage.setItem("isLoggedIn", "true");
             }
         });
     }
@@ -81,7 +84,6 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        localStorage.setItem("isLoggedIn", "true");
         alert("Bem-vindo de volta!");
         window.location.href = ROUTES.home;
     });
