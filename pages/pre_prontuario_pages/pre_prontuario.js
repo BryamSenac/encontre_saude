@@ -14,6 +14,7 @@ createSidebar();
 // ─── Estado do Formulário ─────────────────────────────────────────────────────
 let currentStep = 1;
 const TOTAL_STEPS = 4;
+let isFromHistory = false; // Flag para saber se viemos do histórico (evita duplicidade)
 
 // Função para preencher o formulário automaticamente com dados do Supabase
 async function carregarDadosAutomaticos() {
@@ -166,6 +167,7 @@ function carregarProgresso() {
     const saved = JSON.parse(rascunho);
     const data = saved.data;
     const step = saved.currentStep || saved.step;
+    isFromHistory = saved.isFromHistory || false; // Recupera a flag
     
     // Preenche campos de texto, select, etc.
     Object.keys(data).forEach(key => {
@@ -558,16 +560,20 @@ form.addEventListener('submit', async (e) => {
       observacoes: val('observacoesAdicionais')
   };
 
-  // 3. Salva no Supabase (Histórico + Sintomas + Dados Clínicos)
+  // 3. Salva no Supabase (Histórico + Sintomas + Dados Clínicos) - APENAS se NÃO vier do histórico
   const queixa = document.getElementById('queixaPrincipal').value;
-  console.log("📝 [Pré-Prontuário] Iniciando salvamento da consulta manual...");
   
-  const consultationRes = await chatService.saveManualConsultation(queixa, sintomasSelecionados, JSON.stringify(dadosClinicos));
-  
-  if (consultationRes.error) {
-      console.error("❌ [Pré-Prontuário] Erro ao salvar histórico:", consultationRes.error);
+  if (!isFromHistory) {
+      console.log("📝 [Pré-Prontuário] Iniciando salvamento da consulta manual...");
+      const consultationRes = await chatService.saveManualConsultation(queixa, sintomasSelecionados, JSON.stringify(dadosClinicos));
+      
+      if (consultationRes.error) {
+          console.error("❌ [Pré-Prontuário] Erro ao salvar histórico:", consultationRes.error);
+      } else {
+          console.log("✅ [Pré-Prontuário] Histórico salvo com sucesso!", consultationRes.data);
+      }
   } else {
-      console.log("✅ [Pré-Prontuário] Histórico salvo com sucesso!", consultationRes.data);
+      console.log("⏭️ [Pré-Prontuário] Pulando salvamento de histórico (Origem: Histórico).");
   }
 
   // 4. Sincroniza com o Perfil (Dados Pessoais + Clínicos)
@@ -654,8 +660,13 @@ btnDownload?.addEventListener('click', async () => {
 
   const queixa = document.getElementById('queixaPrincipal').value;
   
-  // Salva histórico
-  const consultationRes = await chatService.saveManualConsultation(queixa, sintomasSelecionados, JSON.stringify(dadosClinicos));
+  // Salva histórico apenas se não vier do histórico já existente
+  if (!isFromHistory) {
+      console.log("💾 [Pré-Prontuário] Iniciando salvamento automático ao baixar PDF...");
+      const consultationRes = await chatService.saveManualConsultation(queixa, sintomasSelecionados, JSON.stringify(dadosClinicos));
+  } else {
+      console.log("⏭️ [Pré-Prontuário] Pulando salvamento de histórico (Origem: Histórico).");
+  }
   
   // Sincroniza perfil
   const perfilPayload = {

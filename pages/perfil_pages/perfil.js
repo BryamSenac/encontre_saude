@@ -300,6 +300,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         altura: clinicos.altura || "",
         observacoesAdicionais: clinicos.observacoes || ""
       },
+      isFromHistory: true, // Flag para evitar duplicidade ao gerar PDF
       currentStep: 4, // Leva direto para a tela de resumo/envio
       timestamp: Date.now()
     };
