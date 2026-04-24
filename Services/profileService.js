@@ -50,14 +50,26 @@ export const profileService = {
                 peso: typeof profileData.peso === 'number' ? profileData.peso : null,
                 altura: typeof profileData.altura === 'number' ? profileData.altura : null,
                 sexo: profileData.sexo || null,
-                fuma: Boolean(profileData.fuma),
-                bebe: Boolean(profileData.bebe),
-                alergia_medicamento: profileData.alergia_medicamento ? true : false,
-                possui_deficiencia: profileData.possui_deficiencia ? [profileData.possui_deficiencia] : [],
+                CPF: profileData.CPF || null,
+                data_nascimento: profileData.data_nascimento || null,
+                telefone: profileData.telefone || null,
+                fuma: profileData.fuma !== undefined ? Boolean(profileData.fuma) : false,
+                bebe: profileData.bebe !== undefined ? Boolean(profileData.bebe) : false,
+                alergia_medicamento: profileData.alergia_medicamento || null,
+                alergias: profileData.alergias || null,
+                medicamentos_em_uso: profileData.medicamentos_em_uso || null,
+                doencas_preexistentes: profileData.doencas_preexistentes || null,
+                historico_familiar: profileData.historico_familiar || null,
+                possui_deficiencia: profileData.possui_deficiencia || null,
                 contato_medico_particular: profileData.contato_medico_particular || '',
+                pressao_arterial: profileData.pressao_arterial || null,
+                frequencia_cardiaca: profileData.frequencia_cardiaca || null,
+                temperatura: profileData.temperatura || null,
+                saturacao_oxigenio: profileData.saturacao_oxigenio || null,
+                observacoes: profileData.observacoes || null,
             };
 
-            console.log("Enviando dados para o Supabase:", updates);
+            console.log("🚀 [profileService] Enviando dados para o Supabase:", updates);
 
             const { data, error } = await supabase
                 .from('dados_saude')
@@ -65,13 +77,16 @@ export const profileService = {
                 .select()
                 .single();
 
-            if (error) throw error;
+            if (error) {
+                console.error("❌ [profileService] Erro no Supabase:", error);
+                throw error;
+            }
             
-            console.log("✅ Perfil salvo com sucesso!", data);
+            console.log("✅ [profileService] Perfil salvo com sucesso no banco!", data);
             console.groupEnd();
             return { profile: data, error: null };
         } catch (error) {
-            console.error("❌ Erro no saveProfile:", error.message);
+            console.error("❌ [profileService] Erro no saveProfile:", error.message);
             console.groupEnd();
             return { profile: null, error };
         }

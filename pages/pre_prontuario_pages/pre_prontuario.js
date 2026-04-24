@@ -43,7 +43,9 @@ async function carregarDadosAutomaticos() {
         if (profile.sexo) document.getElementById('sexo').value = profile.sexo;
         if (profile.peso) document.getElementById('peso').value = profile.peso;
         if (profile.altura) document.getElementById('altura').value = profile.altura;
-        // Se tivesse data de nascimento no banco, preencheria aqui. Usaremos idade como fallback se necessário.
+        if (profile.CPF) document.getElementById('cpf').value = profile.CPF;
+        if (profile.data_nascimento) document.getElementById('dataNascimento').value = profile.data_nascimento;
+        if (profile.telefone) document.getElementById('telefone').value = profile.telefone;
     }
 
     // 3. Busca última consulta da IA
@@ -542,6 +544,28 @@ form.addEventListener('submit', async (e) => {
   // 3. Salva no Supabase (Histórico + Sintomas + Dados Clínicos)
   const queixa = document.getElementById('queixaPrincipal').value;
   await chatService.saveManualConsultation(queixa, sintomasSelecionados, JSON.stringify(dadosClinicos));
+
+  // 4. Sincroniza com o Perfil (Dados Pessoais + Clínicos)
+  const perfilPayload = {
+      sexo: val('sexo'),
+      CPF: val('cpf'),
+      data_nascimento: val('dataNascimento'),
+      telefone: val('telefone'),
+      peso: Number(val('peso')) || null,
+      altura: Number(val('altura')) || null,
+      alergias: val('alergias'),
+      medicamentos_em_uso: val('medicamentosEmUso'),
+      doencas_preexistentes: val('doencasPreexistentes'),
+      historico_familiar: val('historicoFamiliar'),
+      pressao_arterial: val('pressaoArterial'),
+      frequencia_cardiaca: Number(val('frequenciaCardiaca')) || null,
+      temperatura: Number(val('temperatura')) || null,
+      saturacao_oxigenio: Number(val('saturacaoOxigenio')) || null,
+      observacoes: val('observacoesAdicionais')
+  };
+  
+  console.log("🔄 [Pré-Prontuário] Sincronizando dados com o perfil...", perfilPayload);
+  await profileService.saveProfile(perfilPayload);
 
   const canal = document.querySelector('input[name="canalEnvio"]:checked')?.value;
   let msgEnvio = 'PDF baixado e consulta salva no histórico!';
