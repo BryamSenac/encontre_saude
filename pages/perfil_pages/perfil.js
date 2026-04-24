@@ -131,10 +131,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (dadosSaude.sexo)
       document.getElementById("sexo").value = dadosSaude.sexo;
 
-    if (dadosSaude.alergia_medicamento)
+    if (dadosSaude.alergia_medicamento && dadosSaude.alergia_medicamento !== "false")
         document.getElementById("alergia_medicamento").value = dadosSaude.alergia_medicamento;
     
-    if (dadosSaude.possui_deficiencia)
+    if (dadosSaude.possui_deficiencia && dadosSaude.possui_deficiencia !== "false")
         document.getElementById("possui_deficiencia").value = dadosSaude.possui_deficiencia;
 
     if (dadosSaude.contato_medico_nome) {

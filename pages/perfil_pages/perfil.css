@@ -308,6 +308,8 @@ body {
 
 .g-form input[type="number"],
 .g-form input[type="text"],
+.g-form input[type="email"],
+.g-form input[type="tel"],
 .g-form select {
     width: 100%;
     padding: 16px 14px;
