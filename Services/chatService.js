@@ -157,22 +157,24 @@ export const chatService = {
 
             if (chatError) throw chatError;
 
-            // 2. Salva os sintomas vinculados
+            // 2. Salva os sintomas vinculados (Mapeamento de nomes amigáveis para colunas do banco)
             const symptomsPayload = {
                 historico_id: chatData.id,
-                febre: !!sintomas.febre,
-                dor_de_cabeca: !!sintomas.dor_de_cabeca,
-                tosse: !!sintomas.tosse,
-                falta_de_ar: !!sintomas.falta_de_ar,
-                dor_no_peito: !!sintomas.dor_no_peito,
-                nausea_vomito: !!sintomas.nausea_vomito,
-                diarreia: !!sintomas.diarreia,
-                dor_abdominal: !!sintomas.dor_abdominal,
-                dor_nas_costas: !!sintomas.dor_nas_costas,
-                tontura: !!sintomas.tontura,
-                fraqueza: !!sintomas.fraqueza,
-                coriza: !!sintomas.coriza
+                febre: !!(sintomas["Febre"] || sintomas["febre"]),
+                dor_de_cabeca: !!(sintomas["Dor de Cabeça"] || sintomas["dor_de_cabeca"]),
+                tosse: !!(sintomas["Tosse"] || sintomas["tosse"]),
+                falta_de_ar: !!(sintomas["Falta de Ar"] || sintomas["falta_de_ar"]),
+                dor_no_peito: !!(sintomas["Dor no Peito"] || sintomas["dor_no_peito"]),
+                nausea_vomito: !!(sintomas["Náusea/Vômito"] || sintomas["nausea_vomito"]),
+                diarreia: !!(sintomas["Diarreia"] || sintomas["diarreia"]),
+                dor_abdominal: !!(sintomas["Dor Abdominal"] || sintomas["dor_abdominal"]),
+                dor_nas_costas: !!(sintomas["Dor nas Costas"] || sintomas["dor_nas_costas"]),
+                tontura: !!(sintomas["Tontura"] || sintomas["tontura"]),
+                fraqueza: !!(sintomas["Fraqueza/Cansaço"] || sintomas["fraqueza"]),
+                coriza: !!(sintomas["Coriza"] || sintomas["coriza"])
             };
+
+            console.log("📊 [chatService] Payload de sintomas:", symptomsPayload);
 
             const { error: sympError } = await supabase
                 .from('sintomas_atendimento')

@@ -43,7 +43,9 @@ async function carregarDadosAutomaticos() {
         if (profile.sexo) document.getElementById('sexo').value = profile.sexo;
         if (profile.peso) document.getElementById('peso').value = profile.peso;
         if (profile.altura) document.getElementById('altura').value = profile.altura;
-        // Se tivesse data de nascimento no banco, preencheria aqui. Usaremos idade como fallback se necessário.
+        if (profile.CPF) document.getElementById('cpf').value = profile.CPF;
+        if (profile.data_nascimento) document.getElementById('dataNascimento').value = profile.data_nascimento;
+        if (profile.telefone) document.getElementById('telefone').value = profile.telefone;
     }
 
     // 3. Busca última consulta da IA
@@ -186,8 +188,10 @@ function carregarProgresso() {
       }
 
       // Dispara eventos para aplicar máscaras e atualizar visibilidade de campos condicionais
-      element.dispatchEvent(new Event('input'));
-      element.dispatchEvent(new Event('change'));
+      if (element instanceof HTMLElement) {
+          element.dispatchEvent(new Event('input'));
+          element.dispatchEvent(new Event('change'));
+      }
     });
 
     // Restaura o passo se necessário (opcional, vamos manter no step 1 para segurança)
@@ -583,7 +587,43 @@ form.addEventListener('submit', async (e) => {
 
   // 3. Salva no Supabase (Histórico + Sintomas + Dados Clínicos)
   const queixa = document.getElementById('queixaPrincipal').value;
-  await chatService.saveManualConsultation(queixa, sintomasSelecionados, JSON.stringify(dadosClinicos));
+  console.log("📝 [Pré-Prontuário] Iniciando salvamento da consulta manual...");
+  
+  const consultationRes = await chatService.saveManualConsultation(queixa, sintomasSelecionados, JSON.stringify(dadosClinicos));
+  
+  if (consultationRes.error) {
+      console.error("❌ [Pré-Prontuário] Erro ao salvar histórico:", consultationRes.error);
+  } else {
+      console.log("✅ [Pré-Prontuário] Histórico salvo com sucesso!", consultationRes.data);
+  }
+
+  // 4. Sincroniza com o Perfil (Dados Pessoais + Clínicos)
+  const perfilPayload = {
+      sexo: val('sexo'),
+      CPF: val('cpf'),
+      data_nascimento: val('dataNascimento'),
+      telefone: val('telefone'),
+      peso: Number(val('peso')) || null,
+      altura: Number(val('altura')) || null,
+      alergias: val('alergias'),
+      medicamentos_em_uso: val('medicamentosEmUso'),
+      doencas_preexistentes: val('doencasPreexistentes'),
+      historico_familiar: val('historicoFamiliar'),
+      pressao_arterial: val('pressaoArterial'),
+      frequencia_cardiaca: Number(val('frequenciaCardiaca')) || null,
+      temperatura: Number(val('temperatura')) || null,
+      saturacao_oxigenio: Number(val('saturacaoOxigenio')) || null,
+      observacoes: val('observacoesAdicionais')
+  };
+  
+  console.log("🔄 [Pré-Prontuário] Sincronizando dados com o perfil...", perfilPayload);
+  const profileRes = await profileService.saveProfile(perfilPayload);
+
+  if (profileRes.error) {
+      console.error("❌ [Pré-Prontuário] Erro ao sincronizar perfil:", profileRes.error);
+  } else {
+      console.log("✅ [Pré-Prontuário] Perfil sincronizado com sucesso!");
+  }
 
   const canal = document.querySelector('input[name="canalEnvio"]:checked')?.value;
   let msgEnvio = 'PDF baixado e consulta salva no histórico!';
@@ -610,11 +650,65 @@ form.addEventListener('submit', async (e) => {
 
 // ─── Download do PDF ──────────────────────────────────────────────────────────
 btnDownload?.addEventListener('click', async () => {
-  if (!validarStep(1) || !validarStep(2) || !validarStep(3)) {
+  // Valida passos básicos antes de baixar
+  if (!validarStep(1) || !validarStep(2)) {
     mostrarToast('error', '<i class="fas fa-triangle-exclamation"></i>', 'Preencha os dados obrigatórios antes de baixar.');
     return;
   }
-  await gerarArquivoPDFPuro(btnDownload, 'PDF gerado com sucesso e baixado automaticamente!');
+
+  // Aciona o salvamento (mesma lógica do submit)
+  console.log("💾 [Pré-Prontuário] Iniciando salvamento automático ao baixar PDF...");
+  
+  // Coleta dados
+  const sintomasSelecionados = {};
+  document.querySelectorAll('input[name="sintomas"]').forEach(cb => {
+      sintomasSelecionados[cb.value] = cb.checked;
+  });
+
+  const dadosClinicos = {
+      alergias: val('alergias'),
+      medicamentos: val('medicamentosEmUso'),
+      doencas: val('doencasPreexistentes'),
+      historico_familiar: val('historicoFamiliar'),
+      pressao: val('pressaoArterial'),
+      freq_cardiaca: val('frequenciaCardiaca'),
+      temperatura: val('temperatura'),
+      saturacao: val('saturacaoOxigenio'),
+      peso: val('peso'),
+      altura: val('altura'),
+      observacoes: val('observacoesAdicionais')
+  };
+
+  const queixa = document.getElementById('queixaPrincipal').value;
+  
+  // Salva histórico
+  const consultationRes = await chatService.saveManualConsultation(queixa, sintomasSelecionados, JSON.stringify(dadosClinicos));
+  
+  // Sincroniza perfil
+  const perfilPayload = {
+      sexo: val('sexo'),
+      CPF: val('cpf'),
+      data_nascimento: val('dataNascimento'),
+      telefone: val('telefone'),
+      peso: Number(val('peso')) || null,
+      altura: Number(val('altura')) || null,
+      alergias: val('alergias'),
+      medicamentos_em_uso: val('medicamentosEmUso'),
+      doencas_preexistentes: val('doencasPreexistentes'),
+      historico_familiar: val('historicoFamiliar'),
+      pressao_arterial: val('pressaoArterial'),
+      frequencia_cardiaca: Number(val('frequenciaCardiaca')) || null,
+      temperatura: Number(val('temperatura')) || null,
+      saturacao_oxigenio: Number(val('saturacaoOxigenio')) || null,
+      observacoes: val('observacoesAdicionais')
+  };
+  await profileService.saveProfile(perfilPayload);
+
+  // Gera o PDF
+  await gerarArquivoPDFPuro(btnDownload, 'PDF gerado e dados salvos no histórico!');
+  
+  // Limpa rascunho
+  limparRascunho();
 });
 
 // ─── Toast ────────────────────────────────────────────────────────────────────

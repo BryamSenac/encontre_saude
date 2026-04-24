@@ -63,7 +63,15 @@ document.addEventListener("DOMContentLoaded", async () => {
   // LÓGICA DE DADOS DO PERFIL
   // =============================================
   const carregarDadosIniciais = async () => {
+    console.log("🔄 [Perfil] Carregando dados iniciais...");
     const { profile, error } = await profileService.getProfile();
+    
+    if (error) {
+      console.error("❌ [Perfil] Erro ao carregar perfil:", error);
+    } else {
+      console.log("✅ [Perfil] Dados carregados com sucesso:", profile);
+    }
+
     if (!error && profile) {
       dadosSaude = profile;
       atualizarModoVisualizacao();
@@ -78,14 +86,19 @@ document.addEventListener("DOMContentLoaded", async () => {
       "view-peso": formatarValor(dadosSaude.peso, " kg"),
       "view-altura": formatarValor(dadosSaude.altura, " m"),
       "view-sexo": formatarValor(dadosSaude.sexo),
+      "view-CPF": formatarValor(dadosSaude.CPF),
+      "view-data_nascimento": dadosSaude.data_nascimento ? new Date(dadosSaude.data_nascimento).toLocaleDateString("pt-BR") : "Não Informado",
       "view-fuma": formatarBooleano(dadosSaude.fuma),
       "view-bebe": formatarBooleano(dadosSaude.bebe),
       "view-alergia": formatarBooleano(dadosSaude.alergia_medicamento) !== "Não Informado" ? dadosSaude.alergia_medicamento : "Não Informado",
       "view-deficiencia": formatarValor(dadosSaude.possui_deficiencia),
-      "view-contato-nome": formatarValor(dadosSaude.contato_medico_nome),
-      "view-contato-email": formatarValor(dadosSaude.contato_medico_email),
-      "view-contato-telefone": formatarValor(dadosSaude.contato_medico_telefone)
     };
+
+    // Mapeamento do contato médico (JSONB)
+    const contato = dadosSaude.contato_medico_particular || {};
+    mapeamento["view-contato-nome"] = formatarValor(contato.nome);
+    mapeamento["view-contato-email"] = formatarValor(contato.email);
+    mapeamento["view-contato-telefone"] = formatarValor(contato.telefone);
 
     // Correção para exibir "Sim/Não" se for booleano, ou o texto se for preenchido
     if (typeof dadosSaude.alergia_medicamento === 'boolean') {
@@ -102,9 +115,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (!dadosSaude) return;
 
     const campos = [
-      "idade", "peso", "altura", "sexo",
-      "alergia_medicamento", "possui_deficiencia",
-      "contato_medico_nome", "contato_medico_email", "contato_medico_telefone"
+      "idade", "peso", "altura", "sexo", "CPF", "data_nascimento",
+      "alergia_medicamento", "possui_deficiencia"
     ];
 
     campos.forEach(id => {
@@ -113,6 +125,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         el.value = dadosSaude[id];
       }
     });
+
+    // Preencher Contato Médico (JSONB)
+    const contato = dadosSaude.contato_medico_particular || {};
+    if (document.getElementById("contato_medico_nome")) document.getElementById("contato_medico_nome").value = contato.nome || "";
+    if (document.getElementById("contato_medico_email")) document.getElementById("contato_medico_email").value = contato.email || "";
+    if (document.getElementById("contato_medico_telefone")) document.getElementById("contato_medico_telefone").value = contato.telefone || "";
 
     // Radios (Fuma/Bebe)
     ["fuma", "bebe"].forEach(name => {
@@ -267,14 +285,20 @@ document.addEventListener("DOMContentLoaded", async () => {
       idade: getFieldVal("idade", "number"),
       peso: getFieldVal("peso", "number"),
       altura: getFieldVal("altura", "number"),
+      CPF: getFieldVal("CPF", "string"),
+      data_nascimento: getFieldVal("data_nascimento", "string"),
       fuma: document.querySelector('input[name="fuma"]:checked')?.value === "true",
       bebe: document.querySelector('input[name="bebe"]:checked')?.value === "true",
       alergia_medicamento: getFieldVal("alergia_medicamento", "string"),
       possui_deficiencia: getFieldVal("possui_deficiencia", "string"),
-      contato_medico_nome: getFieldVal("contato_medico_nome", "string"),
-      contato_medico_email: getFieldVal("contato_medico_email", "string"),
-      contato_medico_telefone: getFieldVal("contato_medico_telefone", "string"),
+      contato_medico_particular: {
+        nome: getFieldVal("contato_medico_nome", "string"),
+        email: getFieldVal("contato_medico_email", "string"),
+        telefone: getFieldVal("contato_medico_telefone", "string")
+      },
     };
+
+    console.log("📤 [Perfil] Enviando payload para o serviço:", payload);
 
     const { profile, error } = await profileService.saveProfile(payload);
 
@@ -282,13 +306,26 @@ document.addEventListener("DOMContentLoaded", async () => {
     btnSave.textContent = originalText;
 
     if (error) {
+      console.error("❌ [Perfil] Erro ao salvar perfil:", error);
       alert("Erro ao salvar: " + error.message);
     } else {
+      console.log("✅ [Perfil] Perfil salvo com sucesso!", profile);
       dadosSaude = profile;
       perfilForm.style.display = "none";
       viewMode.style.display = "block";
       atualizarModoVisualizacao();
     }
+  });
+
+  // =============================================
+  // MÁSCARA DE CPF
+  // =============================================
+  document.getElementById('CPF')?.addEventListener('input', function (e) {
+    let v = e.target.value.replace(/\D/g, '').slice(0, 11);
+    if (v.length > 9) v = v.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+    else if (v.length > 6) v = v.replace(/(\d{3})(\d{3})(\d{3})/, '$1.$2.$3');
+    else if (v.length > 3) v = v.replace(/(\d{3})(\d{3})/, '$1.$2');
+    e.target.value = v;
   });
 
   // =============================================
