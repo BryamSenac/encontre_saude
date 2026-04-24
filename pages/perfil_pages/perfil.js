@@ -59,6 +59,30 @@ document.addEventListener("DOMContentLoaded", async () => {
     return "Não Informado";
   };
 
+  const extrairSintomas = (sintomasData) => {
+    if (!sintomasData) return [];
+    
+    // Se vier do join do Supabase, virá como um array
+    const sintomasObj = Array.isArray(sintomasData) ? sintomasData[0] : sintomasData;
+    if (!sintomasObj) return [];
+
+    const nomes = {
+      febre: "Febre",
+      dor_de_cabeca: "Dor de Cabeça",
+      tosse: "Tosse",
+      falta_de_ar: "Falta de Ar",
+      dor_no_peito: "Dor no Peito",
+      nausea_vomito: "Náusea/Vômito",
+      diarreia: "Diarreia",
+      dor_abdominal: "Dor Abdominal",
+      dor_nas_costas: "Dor nas Costas",
+      tontura: "Tontura",
+      fraqueza: "Fraqueza/Cansaço",
+      coriza: "Coriza"
+    };
+    return Object.keys(nomes).filter(key => sintomasObj[key] === true).map(key => nomes[key]);
+  };
+
   // =============================================
   // LÓGICA DE DADOS DO PERFIL
   // =============================================
@@ -175,15 +199,25 @@ document.addEventListener("DOMContentLoaded", async () => {
                 </div>
                 <div class="perfil-historico-item__row">
                     <span class="perfil-historico-badge perfil-historico-badge--user">Você</span>
-                    <p>${sessao.descricao_usuario || "Consulta de sintomas"}</p>
+                    <div class="perfil-historico-content">
+                        <p>${sessao.descricao_usuario || "Consulta de sintomas"}</p>
+                        ${extrairSintomas(sessao.sintomas_atendimento).length > 0 
+                          ? `<div class="perfil-historico-item__sintomas">${extrairSintomas(sessao.sintomas_atendimento).map(s => `<span>${s}</span>`).join("")}</div>` 
+                          : ""}
+                    </div>
                 </div>
                 <div class="perfil-historico-item__row">
                     <span class="perfil-historico-badge perfil-historico-badge--ai">IA</span>
                     <p>${sessao.resposta_ia}</p>
                 </div>
-                <button class="btn-detalhes-ia" data-index="${index}">
-                    <i class="fas fa-expand-alt"></i> Ver detalhes
-                </button>
+                <div class="perfil-historico-actions">
+                    <button class="btn-detalhes-ia" data-index="${index}">
+                        <i class="fas fa-expand-alt"></i> Ver detalhes
+                    </button>
+                    <button class="btn-gerar-pdf-fluxo" data-index="${index}">
+                        <i class="fas fa-file-pdf"></i> Gerar PDF
+                    </button>
+                </div>
             `;
       lista.appendChild(item);
     });
@@ -200,6 +234,18 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("modal-data").textContent = new Date(dados.created_at).toLocaleString("pt-BR");
     document.getElementById("modal-usuario").textContent = dados.descricao_usuario;
     document.getElementById("modal-ia").textContent = dados.resposta_ia;
+    
+    // Sintomas no Modal
+    const listaSintomas = extrairSintomas(dados.sintomas_atendimento);
+    const containerSintomas = document.getElementById("modal-sintomas");
+    const groupSintomas = document.getElementById("modal-sintomas-group");
+    
+    if (listaSintomas.length > 0) {
+      containerSintomas.innerHTML = listaSintomas.map(s => `<span class="sintoma-badge">${s}</span>`).join("");
+      groupSintomas.style.display = "block";
+    } else {
+      groupSintomas.style.display = "none";
+    }
     modalHistorico.classList.add("show");
     document.body.style.overflow = "hidden";
   };
@@ -215,12 +261,52 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
   document.getElementById("perfil-historico-lista")?.addEventListener("click", (e) => {
-    const btn = e.target.closest(".btn-detalhes-ia");
-    if (btn) {
-      const idx = btn.getAttribute("data-index");
+    const btnDet = e.target.closest(".btn-detalhes-ia");
+    const btnPdf = e.target.closest(".btn-gerar-pdf-fluxo");
+
+    if (btnDet) {
+      const idx = btnDet.getAttribute("data-index");
       if (sessoesHistoricoCache[idx]) abrirModalHistorico(sessoesHistoricoCache[idx]);
     }
+
+    if (btnPdf) {
+      const idx = btnPdf.getAttribute("data-index");
+      if (sessoesHistoricoCache[idx]) prepararEdicaoEPdf(sessoesHistoricoCache[idx]);
+    }
   });
+
+  const prepararEdicaoEPdf = (sessao) => {
+    let clinicos = {};
+    try { clinicos = JSON.parse(sessao.dados_clinicos || "{}"); } catch(e) {}
+
+    const draftData = {
+      data: {
+        nome: document.getElementById("view-nome")?.textContent || "",
+        dataNascimento: dadosSaude?.data_nascimento || "",
+        cpf: dadosSaude?.CPF || "",
+        sexo: dadosSaude?.sexo || "",
+        telefone: dadosSaude?.telefone || "",
+        queixaPrincipal: sessao.descricao_usuario || "",
+        sintomas: extrairSintomas(sessao.sintomas_atendimento),
+        alergias: clinicos.alergias || "",
+        medicamentosEmUso: clinicos.medicamentos || "",
+        doencasPreexistentes: clinicos.doencas || "",
+        historicoFamiliar: clinicos.historico_familiar || "",
+        pressaoArterial: clinicos.pressao || "",
+        frequenciaCardiaca: clinicos.freq_cardiaca || "",
+        temperatura: clinicos.temperatura || "",
+        saturacaoOxigenio: clinicos.saturacao || "",
+        peso: clinicos.peso || "",
+        altura: clinicos.altura || "",
+        observacoesAdicionais: clinicos.observacoes || ""
+      },
+      currentStep: 4, // Leva direto para a tela de resumo/envio
+      timestamp: Date.now()
+    };
+
+    localStorage.setItem('rascunhoPreProntuario', JSON.stringify(draftData));
+    window.location.href = "../pre_prontuario_pages/pre_prontuario.html";
+  };
 
   // =============================================
   // EVENTOS DE NAVEGAÇÃO E MODOS

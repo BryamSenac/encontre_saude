@@ -163,7 +163,9 @@ function carregarProgresso() {
   if (!rascunho) return;
 
   try {
-    const { data, step } = JSON.parse(rascunho);
+    const saved = JSON.parse(rascunho);
+    const data = saved.data;
+    const step = saved.currentStep || saved.step;
     
     // Preenche campos de texto, select, etc.
     Object.keys(data).forEach(key => {
@@ -172,31 +174,44 @@ function carregarProgresso() {
 
       if (!element) return;
 
-      if (element.type === 'checkbox') {
-        // Se for um único checkbox ou array de checkboxes
+      // Se for um grupo de elementos (como checkboxes ou radios com o mesmo nome)
+      if (element instanceof RadioNodeList) {
         if (Array.isArray(val)) {
-           const checkboxes = form.querySelectorAll(`input[name="${key}"]`);
-           checkboxes.forEach(cb => cb.checked = val.includes(cb.value));
+          console.log(`🔍 [Pré-Prontuário] Preenchendo checkboxes para ${key}:`, val);
+          element.forEach(el => {
+            if (el.type === 'checkbox') {
+              el.checked = val.includes(el.value);
+            }
+          });
         } else {
-          element.checked = !!val;
+          // Caso de radios
+          element.forEach(el => {
+            if (el.type === 'radio') el.checked = el.value === val;
+          });
         }
-      } else if (element instanceof RadioNodeList || element.type === 'radio') {
-        const radios = form.querySelectorAll(`input[name="${key}"]`);
-        radios.forEach(r => r.checked = r.value === val);
+      } else if (element.type === 'checkbox') {
+        // Checkbox único
+        element.checked = !!val;
       } else {
+        // Campos de texto, select, etc.
         element.value = val;
       }
 
-      // Dispara eventos para aplicar máscaras e atualizar visibilidade de campos condicionais
-      if (element instanceof HTMLElement) {
-          element.dispatchEvent(new Event('input'));
-          element.dispatchEvent(new Event('change'));
+      if (element instanceof HTMLElement || element instanceof RadioNodeList) {
+          const firstEl = element instanceof RadioNodeList ? element[0] : element;
+          firstEl?.dispatchEvent(new Event('input', { bubbles: true }));
+          firstEl?.dispatchEvent(new Event('change', { bubbles: true }));
       }
     });
 
-    // Restaura o passo se necessário (opcional, vamos manter no step 1 para segurança)
-    // if (step > 1) irParaStep(step);
+    // Atualiza o resumo antes de ir para o passo 4
+    atualizarResumo();
 
+    // Restaura o passo se necessário
+    if (step && step > 1) {
+      console.log(`🚀 [Pré-Prontuário] Restaurando passo ${step} do rascunho.`);
+      irParaStep(step);
+    }
   } catch (e) {
     console.error("Erro ao carregar rascunho:", e);
   }
