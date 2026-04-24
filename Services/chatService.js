@@ -72,7 +72,10 @@ export const chatService = {
 
             const { data, error } = await supabase
                 .from('historico_ia')
-                .select('*')
+                .select(`
+                    *,
+                    sintomas_atendimento (*)
+                `)
                 .eq('user_id', session.user.id)
                 .order('created_at', { ascending: false });
 
