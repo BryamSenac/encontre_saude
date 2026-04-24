@@ -187,8 +187,7 @@ body {
     }
 }
 
-<<<<<<< Updated upstream
-=======
+
 /* Botão de Pré-Prontuário Estilo "Ghost" Green (Alinhado com Sair) */
 .btn-pre-prontuario {
     display: flex;
@@ -234,7 +233,6 @@ body {
     display: none; /* Escondemos o texto antigo e a seta */
 }
 
->>>>>>> Stashed changes
 /* ===========================
    MODO EDIÇÃO (formulário)
    =========================== */
