@@ -3,10 +3,10 @@ import { createSidebar } from "./../../../shared/sidebar.js";
 import { createFooter } from "./../../../shared/footer.js";
 import { createSintomasSection } from "./sintomas_ai/sintomas.js";
 
-document.addEventListener("DOMContentLoaded", () => {
-    createSidebar()
+document.addEventListener("DOMContentLoaded", async () => {
+    await createSidebar()
     try {
-        createSintomasSection()
+        await createSintomasSection()
     } catch (e) {
         console.error("Error creating sintomas section:", e);
     }

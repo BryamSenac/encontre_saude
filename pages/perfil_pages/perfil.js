@@ -2,16 +2,32 @@ import { createSidebar } from "../../shared/sidebar.js";
 import { createFooter } from "../../shared/footer.js";
 import { ROUTES } from "../../config/routes/routes.js";
 import { carregarHistorico } from "../home_page/js/sintomas_ai/api.js";
-<<<<<<< Updated upstream
 import { authService } from "../../Services/authService.js";
+import { carregarHistorico } from "../home_page/js/sintomas_ai/api.js";
+import { profileService } from "../../Services/profileService.js"; 
+import { chatService } from "../../Services/chatService.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
+    // Esconde o container principal até validar a sessão para evitar "flicker"
+    const container = document.querySelector(".perfil-container");
+    if (container) container.style.opacity = "0";
+
     // 1. Auth Guard Real usando Supabase
     const { session, user } = await authService.getUserSession();
     
     if (!session) {
         window.location.href = ROUTES.login;
         return;
+    }
+
+    // Mostra o container agora que sabemos que o usuário está logado
+    if (container) container.style.opacity = "1";
+
+    // Atualiza o nome/email do usuário logado
+    const displayNome = document.getElementById("displayNome");
+    if (displayNome && user) {
+        const nomeUsuario = user.user_metadata?.full_name || user.user_metadata?.name || user.email;
+        displayNome.textContent = nomeUsuario;
     }
 
     createSidebar();
@@ -184,7 +200,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (bebeRadio) bebeRadio.checked = true;
     }
   };
->>>>>>> Stashed changes
 
   // Carrega do banco ao iniciar
   carregarDadosIniciais();
@@ -198,25 +213,33 @@ document.addEventListener("DOMContentLoaded", async () => {
     const lista = document.getElementById("perfil-historico-lista");
     if (!lista) return;
 
-<<<<<<< Updated upstream
     // =============================================
     // HELPER: formata valor para exibição em texto
     // =============================================
     const formatarValor = (val, sufixo = "") => {
-        if (val === null || val === undefined || val === "") return "Há Prencher";
+        if (val === null || val === undefined || val === "" || (Array.isArray(val) && val.length === 0)) return "Não Informado";
         return `${val}${sufixo}`;
     };
 
     const formatarBooleano = (val) => {
         if (val === true || val === "true") return "Sim";
         if (val === false || val === "false") return "Não";
-        return "Há Prencher";
+        return "Não Informado";
     };
 
     // =============================================
-    // ESTADO LOCAL: dados de saúde salvos
+    // ESTADO LOCAL: dados de saúde
     // =============================================
-    let dadosSaude = JSON.parse(localStorage.getItem("dadosSaude") || "null");
+    let dadosSaude = null;
+
+    // Busca dados iniciais do Supabase
+    const carregarDadosIniciais = async () => {
+        const { profile, error } = await profileService.getProfile();
+        if (!error && profile) {
+            dadosSaude = profile;
+            atualizarModoVisualizacao();
+        }
+    };
 
     // =============================================
     // POPULA O MODO VISUALIZAÇÃO com os dados
@@ -230,9 +253,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         viewSexo.textContent        = formatarValor(dadosSaude.sexo);
         viewFuma.textContent        = formatarBooleano(dadosSaude.fuma);
         viewBebe.textContent        = formatarBooleano(dadosSaude.bebe);
-        viewAlergia.textContent     = formatarValor(dadosSaude.alergia_medicamento);
-        viewDeficiencia.textContent = formatarValor(dadosSaude.possui_deficiencia);
-        viewContato.textContent     = formatarValor(dadosSaude.contato_medico);
+        
+        // Conversão para exibição amigável dos tipos do banco
+        viewAlergia.textContent     = formatarBooleano(dadosSaude.alergia_medicamento);
+        viewDeficiencia.textContent = Array.isArray(dadosSaude.possui_deficiencia) 
+                                      ? formatarValor(dadosSaude.possui_deficiencia.join(", ")) 
+                                      : formatarValor(dadosSaude.possui_deficiencia);
+        viewContato.textContent     = formatarValor(dadosSaude.contato_medico_particular);
     };
 
     // =============================================
@@ -246,9 +273,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (dadosSaude.altura)   document.getElementById("altura").value   = dadosSaude.altura;
         if (dadosSaude.sexo)     document.getElementById("sexo").value     = dadosSaude.sexo;
 
-        if (dadosSaude.alergia_medicamento) document.getElementById("alergia_medicamento").value = dadosSaude.alergia_medicamento;
-        if (dadosSaude.possui_deficiencia)  document.getElementById("possui_deficiencia").value  = dadosSaude.possui_deficiencia;
-        if (dadosSaude.contato_medico)      document.getElementById("contato_medico").value      = dadosSaude.contato_medico;
+        // Note: para alergia no formulário, se for booleano no banco mas texto na UI, 
+        // aqui você pode decidir como preencher. Se quiser manter texto local, use localStorage como cache.
+        if (dadosSaude.contato_medico_particular) {
+            document.getElementById("contato_medico").value = dadosSaude.contato_medico_particular;
+        }
 
         // Radios
         const fumaVal = dadosSaude.fuma?.toString();
@@ -264,29 +293,27 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     };
 
-    // Carrega os dados ao iniciar
-    atualizarModoVisualizacao();
+    // Carrega do banco ao iniciar
+    carregarDadosIniciais();
 
     // =============================================
-    // HISTÓRICO DE CONVERSAS DA IA NO PERFIL
+    // HISTÓRICO DE CONVERSAS DA IA NO PERFIL (Real do Banco)
     // =============================================
-    const renderizarHistoricoPerfil = () => {
+    const renderizarHistoricoPerfil = async () => {
         const lista = document.getElementById("perfil-historico-lista");
         if (!lista) return;
 
-        const historico = carregarHistorico();
+        const { history, error } = await chatService.getUserHistory();
         lista.innerHTML = "";
 
-        if (historico.length === 0) {
+        if (error || history.length === 0) {
             lista.innerHTML = `
-=======
     const { history, error } = await chatService.getUserHistory();
     lista.innerHTML = "";
     sessoesHistoricoCache = history || [];
 
     if (error || history.length === 0) {
       lista.innerHTML = `
->>>>>>> Stashed changes
                 <div class="perfil-historico-vazio">
                     <i class="fas fa-comment-medical"></i>
                     <p>Nenhuma consulta registrada.</p>
@@ -296,43 +323,42 @@ document.addEventListener("DOMContentLoaded", async () => {
       return;
     }
 
-<<<<<<< Updated upstream
         historico.forEach((sessao) => {
             const item = document.createElement("div");
             item.className = "perfil-historico-item";
 
             const userMsg = sessao.mensagens.find(m => m.tipo === "user");
             const aiMsg   = sessao.mensagens.find(m => m.tipo === "ai");
-=======
     history.forEach((sessao, index) => {
       const item = document.createElement("div");
       item.className = "perfil-historico-item";
->>>>>>> Stashed changes
+        history.forEach((sessao) => {
+            const item = document.createElement("div");
+            item.className = "perfil-historico-item";
+            
+            const dataFormatada = new Date(sessao.created_at).toLocaleString("pt-BR");
 
       const dataFormatada = new Date(sessao.created_at).toLocaleString("pt-BR");
 
       item.innerHTML = `
                 <div class="perfil-historico-item__data">
-                    <i class="fas fa-calendar-alt"></i> ${sessao.data}
+                    <i class="fas fa-calendar-alt"></i> ${dataFormatada}
                 </div>
-                ${userMsg ? `
                 <div class="perfil-historico-item__row">
                     <span class="perfil-historico-badge perfil-historico-badge--user">Você</span>
-                    <p>${userMsg.texto}</p>
-                </div>` : ''}
-                ${aiMsg ? `
+                    <p>${sessao.descricao_usuario}</p>
+                </div>
                 <div class="perfil-historico-item__row">
                     <span class="perfil-historico-badge perfil-historico-badge--ai">IA</span>
-<<<<<<< Updated upstream
                     <p>${aiMsg.texto}</p>
                 </div>` : ''}
-=======
                     <p>${sessao.resposta_ia}</p>
                 </div>
                 <button class="btn-detalhes-ia" data-index="${index}">
                     <i class="fas fa-expand-alt"></i> Ver detalhes
                 </button>
->>>>>>> Stashed changes
+                    <p>${sessao.resposta_ia}</p>
+                </div>
             `;
 
       lista.appendChild(item);
@@ -489,13 +515,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     viewMode.style.display = "block";
     atualizarModoVisualizacao();
 
-<<<<<<< Updated upstream
     // =============================================
     // SISTEMA DE LOGOUT (botão nas duas views)
     // =============================================
     const handleLogout = async () => {
         await authService.signOut();
-        localStorage.removeItem("isLoggedIn"); // Limpa legado
         window.location.href = ROUTES.home;
     };
 
@@ -503,7 +527,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("btnLogoutForm")?.addEventListener("click", handleLogout);
 
     // =============================================
-    // SUBMIT DO FORMULÁRIO
+    // SUBMIT DO FORMULÁRIO (Conectado ao Supabase)
     // =============================================
     const getFieldVal = (id, type) => {
         const rawVal = document.getElementById(id).value.trim();
@@ -512,43 +536,48 @@ document.addEventListener("DOMContentLoaded", async () => {
         return rawVal;
     };
 
-    perfilForm.addEventListener("submit", (e) => {
+    perfilForm.addEventListener("submit", async (e) => {
         e.preventDefault();
 
-        /*
-         * ENGINE DO SUPABASE:
-         * Campos vazios (Strings sem conteudo, length == 0) devem ser submetidos
-         * estritamente como NULL para o banco para ele lidar com o Update de row perfeitamente.
-         * Nomes e variáveis escritas exatamente nos tipos (typeof) requisitados.
-         */
+        const btnSave = perfilForm.querySelector('button[type="submit"]');
+        const originalText = btnSave.textContent;
+        btnSave.disabled = true;
+        btnSave.textContent = "Salvando...";
+
         const payload = {
-            id_usuario:           user.id, /* ID Real do Usuário Logado */
-            sexo:                 getFieldVal("sexo", "string"),
-            idade:                getFieldVal("idade", "number"),
-            peso:                 getFieldVal("peso", "number"),
-            altura:               getFieldVal("altura", "number"),
-            fuma:                 document.querySelector('input[name="fuma"]:checked').value === "true",
-            bebe:                 document.querySelector('input[name="bebe"]:checked').value === "true",
-            alergia_medicamento:  getFieldVal("alergia_medicamento", "string"),
-            possui_deficiencia:   getFieldVal("possui_deficiencia", "string"),
-            contato_medico:       getFieldVal("contato_medico", "string")
+            sexo:                       getFieldVal("sexo", "string"),
+            idade:                      getFieldVal("idade", "number"),
+            peso:                       getFieldVal("peso", "number"),
+            altura:                     getFieldVal("altura", "number"),
+            fuma:                       document.querySelector('input[name="fuma"]:checked').value === "true",
+            bebe:                       document.querySelector('input[name="bebe"]:checked').value === "true",
+            alergia_medicamento:        getFieldVal("alergia_medicamento", "string"),
+            possui_deficiencia:         getFieldVal("possui_deficiencia", "string"),
+            contato_medico_particular:  getFieldVal("contato_medico", "string")
         };
 
-        // Salva localmente para persistir entre sessões (simulação)
-        dadosSaude = payload;
-        localStorage.setItem("dadosSaude", JSON.stringify(dadosSaude));
+        // Salva no SUPABASE
+        const { profile, error } = await profileService.saveProfile(payload);
+
+        btnSave.disabled = false;
+        btnSave.textContent = originalText;
+
+        if (error) {
+            alert("Erro ao salvar no banco: " + error.message);
+            return;
+        }
+
+        // Sucesso
+        dadosSaude = profile;
+        localStorage.setItem("dadosSaude", JSON.stringify(dadosSaude)); // Mantém cache por conveniência
 
         // Volta para o modo visualização e atualiza os textos
         perfilForm.style.display = "none";
         viewMode.style.display   = "block";
         atualizarModoVisualizacao();
 
-        // Log para validação da API
-        console.warn("====[ SUPABASE PAYLOAD PRONTO ] ====");
-        console.table(payload);
+        console.log("Dados salvos no Supabase com sucesso!");
     });
-=======
     console.log("Dados salvos no Supabase com sucesso!");
   });
->>>>>>> Stashed changes
 });

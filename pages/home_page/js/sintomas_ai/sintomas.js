@@ -2,9 +2,12 @@
 import { createApi, carregarHistorico } from "./api.js";
 import { createFeedbacks } from "./create_feedback.js";
 
-const isLoggedIn = !!localStorage.getItem("isLoggedIn");
+import { authService } from "../../../../Services/authService.js";
 
-export function createSintomasSection() {
+export async function createSintomasSection() {
+    const { session } = await authService.getUserSession();
+    const isLoggedIn = !!session;
+
     const header = document.getElementById("header");
     const main = document.querySelector("main");
 
@@ -127,8 +130,8 @@ export function createSintomasSection() {
         const btnFechar = document.getElementById("btn-fechar-historico");
         const historicoLista = document.getElementById("historico-lista");
 
-        function renderizarHistorico() {
-            const historico = carregarHistorico();
+        async function renderizarHistorico() {
+            const historico = await carregarHistorico();
             historicoLista.innerHTML = "";
 
             if (historico.length === 0) {

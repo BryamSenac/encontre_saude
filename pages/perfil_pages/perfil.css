@@ -187,8 +187,6 @@ body {
     }
 }
 
-<<<<<<< Updated upstream
-=======
 /* Botão de Pré-Prontuário Estilo "Ghost" Green (Alinhado com Sair) */
 .btn-pre-prontuario {
     display: flex;
@@ -217,6 +215,29 @@ body {
 
 .btn-pre-prontuario i {
     font-size: 18px;
+/* Botão de Pré-Prontuário no Card de Perfil */
+.btn-pre-prontuario-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(135deg, var(--green-medium), var(--green-dark));
+    color: var(--white);
+    padding: 20px;
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+    box-shadow: var(--shadow-sm);
+    margin-top: 10px;
+}
+
+.btn-pre-prontuario-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    color: var(--white);
+}
+
+.btn-pre-prontuario-card:active {
+    transform: translateY(0);
 }
 
 .btn-pre-prontuario-content {
@@ -233,8 +254,40 @@ body {
 .btn-pre-prontuario-card > i.fa-chevron-right {
     display: none; /* Escondemos o texto antigo e a seta */
 }
+    gap: 16px;
+}
 
->>>>>>> Stashed changes
+.btn-pre-prontuario-content i {
+    font-size: 24px;
+    opacity: 0.9;
+}
+
+.btn-pre-prontuario-content div {
+    display: flex;
+    flex-direction: column;
+}
+
+.btn-pre-prontuario-content strong {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+
+.btn-pre-prontuario-content span {
+    font-size: 13px;
+    opacity: 0.8;
+}
+
+.btn-pre-prontuario-card > i.fa-chevron-right {
+    font-size: 14px;
+    opacity: 0.7;
+    transition: transform var(--transition-fast);
+}
+
+.btn-pre-prontuario-card:hover > i.fa-chevron-right {
+    transform: translateX(4px);
+}
+
 /* ===========================
    MODO EDIÇÃO (formulário)
    =========================== */
