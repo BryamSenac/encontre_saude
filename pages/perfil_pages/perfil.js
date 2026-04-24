@@ -1,38 +1,7 @@
 import { createSidebar } from "../../shared/sidebar.js";
 import { createFooter } from "../../shared/footer.js";
 import { ROUTES } from "../../config/routes/routes.js";
-import { carregarHistorico } from "../home_page/js/sintomas_ai/api.js";
 import { authService } from "../../Services/authService.js";
-import { carregarHistorico } from "../home_page/js/sintomas_ai/api.js";
-import { profileService } from "../../Services/profileService.js"; 
-import { chatService } from "../../Services/chatService.js";
-
-document.addEventListener("DOMContentLoaded", async () => {
-    // Esconde o container principal até validar a sessão para evitar "flicker"
-    const container = document.querySelector(".perfil-container");
-    if (container) container.style.opacity = "0";
-
-    // 1. Auth Guard Real usando Supabase
-    const { session, user } = await authService.getUserSession();
-    
-    if (!session) {
-        window.location.href = ROUTES.login;
-        return;
-    }
-
-    // Mostra o container agora que sabemos que o usuário está logado
-    if (container) container.style.opacity = "1";
-
-    // Atualiza o nome/email do usuário logado
-    const displayNome = document.getElementById("displayNome");
-    if (displayNome && user) {
-        const nomeUsuario = user.user_metadata?.full_name || user.user_metadata?.name || user.email;
-        displayNome.textContent = nomeUsuario;
-    }
-
-    createSidebar();
-    createFooter();
-=======
 import { profileService } from "../../Services/profileService.js";
 import { chatService } from "../../Services/chatService.js";
 
@@ -140,17 +109,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     viewBebe.textContent = formatarBooleano(dadosSaude.bebe);
 
     // Conversão para exibição amigável dos tipos do banco
-    viewAlergia.textContent = formatarBooleano(dadosSaude.alergia_medicamento);
-    viewDeficiencia.textContent = Array.isArray(dadosSaude.possui_deficiencia)
-      ? formatarValor(dadosSaude.possui_deficiencia.join(", "))
-      : formatarValor(dadosSaude.possui_deficiencia);
+    viewAlergia.textContent = formatarValor(dadosSaude.alergia_medicamento);
+    viewDeficiencia.textContent = formatarValor(dadosSaude.possui_deficiencia);
     viewContatoNome.textContent = formatarValor(dadosSaude.contato_medico_nome);
-    viewContatoEmail.textContent = formatarValor(
-      dadosSaude.contato_medico_email,
-    );
-    viewContatoTelefone.textContent = formatarValor(
-      dadosSaude.contato_medico_telefone,
-    );
+    viewContatoEmail.textContent = formatarValor(dadosSaude.contato_medico_email);
+    viewContatoTelefone.textContent = formatarValor(dadosSaude.contato_medico_telefone);
   };
 
   // =============================================
@@ -168,8 +131,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (dadosSaude.sexo)
       document.getElementById("sexo").value = dadosSaude.sexo;
 
-    // Note: para alergia no formulário, se for booleano no banco mas texto na UI,
-    // aqui você pode decidir como preencher. Se quiser manter texto local, use localStorage como cache.
+    if (dadosSaude.alergia_medicamento)
+        document.getElementById("alergia_medicamento").value = dadosSaude.alergia_medicamento;
+    
+    if (dadosSaude.possui_deficiencia)
+        document.getElementById("possui_deficiencia").value = dadosSaude.possui_deficiencia;
+
     if (dadosSaude.contato_medico_nome) {
       document.getElementById("contato_medico_nome").value =
         dadosSaude.contato_medico_nome;
@@ -213,106 +180,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     const lista = document.getElementById("perfil-historico-lista");
     if (!lista) return;
 
-    // =============================================
-    // HELPER: formata valor para exibição em texto
-    // =============================================
-    const formatarValor = (val, sufixo = "") => {
-        if (val === null || val === undefined || val === "" || (Array.isArray(val) && val.length === 0)) return "Não Informado";
-        return `${val}${sufixo}`;
-    };
-
-    const formatarBooleano = (val) => {
-        if (val === true || val === "true") return "Sim";
-        if (val === false || val === "false") return "Não";
-        return "Não Informado";
-    };
-
-    // =============================================
-    // ESTADO LOCAL: dados de saúde
-    // =============================================
-    let dadosSaude = null;
-
-    // Busca dados iniciais do Supabase
-    const carregarDadosIniciais = async () => {
-        const { profile, error } = await profileService.getProfile();
-        if (!error && profile) {
-            dadosSaude = profile;
-            atualizarModoVisualizacao();
-        }
-    };
-
-    // =============================================
-    // POPULA O MODO VISUALIZAÇÃO com os dados
-    // =============================================
-    const atualizarModoVisualizacao = () => {
-        if (!dadosSaude) return;
-
-        viewIdade.textContent       = formatarValor(dadosSaude.idade, " anos");
-        viewPeso.textContent        = formatarValor(dadosSaude.peso, " kg");
-        viewAltura.textContent      = formatarValor(dadosSaude.altura, " m");
-        viewSexo.textContent        = formatarValor(dadosSaude.sexo);
-        viewFuma.textContent        = formatarBooleano(dadosSaude.fuma);
-        viewBebe.textContent        = formatarBooleano(dadosSaude.bebe);
-        
-        // Conversão para exibição amigável dos tipos do banco
-        viewAlergia.textContent     = formatarBooleano(dadosSaude.alergia_medicamento);
-        viewDeficiencia.textContent = Array.isArray(dadosSaude.possui_deficiencia) 
-                                      ? formatarValor(dadosSaude.possui_deficiencia.join(", ")) 
-                                      : formatarValor(dadosSaude.possui_deficiencia);
-        viewContato.textContent     = formatarValor(dadosSaude.contato_medico_particular);
-    };
-
-    // =============================================
-    // POPULA O FORMULÁRIO com os dados existentes
-    // =============================================
-    const preencherFormulario = () => {
-        if (!dadosSaude) return;
-
-        if (dadosSaude.idade)    document.getElementById("idade").value    = dadosSaude.idade;
-        if (dadosSaude.peso)     document.getElementById("peso").value     = dadosSaude.peso;
-        if (dadosSaude.altura)   document.getElementById("altura").value   = dadosSaude.altura;
-        if (dadosSaude.sexo)     document.getElementById("sexo").value     = dadosSaude.sexo;
-
-        // Note: para alergia no formulário, se for booleano no banco mas texto na UI, 
-        // aqui você pode decidir como preencher. Se quiser manter texto local, use localStorage como cache.
-        if (dadosSaude.contato_medico_particular) {
-            document.getElementById("contato_medico").value = dadosSaude.contato_medico_particular;
-        }
-
-        // Radios
-        const fumaVal = dadosSaude.fuma?.toString();
-        if (fumaVal) {
-            const fumaRadio = document.querySelector(`input[name="fuma"][value="${fumaVal}"]`);
-            if (fumaRadio) fumaRadio.checked = true;
-        }
-
-        const bebeVal = dadosSaude.bebe?.toString();
-        if (bebeVal) {
-            const bebeRadio = document.querySelector(`input[name="bebe"][value="${bebeVal}"]`);
-            if (bebeRadio) bebeRadio.checked = true;
-        }
-    };
-
-    // Carrega do banco ao iniciar
-    carregarDadosIniciais();
-
-    // =============================================
-    // HISTÓRICO DE CONVERSAS DA IA NO PERFIL (Real do Banco)
-    // =============================================
-    const renderizarHistoricoPerfil = async () => {
-        const lista = document.getElementById("perfil-historico-lista");
-        if (!lista) return;
-
-        const { history, error } = await chatService.getUserHistory();
-        lista.innerHTML = "";
-
-        if (error || history.length === 0) {
-            lista.innerHTML = `
     const { history, error } = await chatService.getUserHistory();
     lista.innerHTML = "";
     sessoesHistoricoCache = history || [];
 
-    if (error || history.length === 0) {
+    if (error || !history || history.length === 0) {
       lista.innerHTML = `
                 <div class="perfil-historico-vazio">
                     <i class="fas fa-comment-medical"></i>
@@ -323,20 +195,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       return;
     }
 
-        historico.forEach((sessao) => {
-            const item = document.createElement("div");
-            item.className = "perfil-historico-item";
-
-            const userMsg = sessao.mensagens.find(m => m.tipo === "user");
-            const aiMsg   = sessao.mensagens.find(m => m.tipo === "ai");
     history.forEach((sessao, index) => {
       const item = document.createElement("div");
       item.className = "perfil-historico-item";
-        history.forEach((sessao) => {
-            const item = document.createElement("div");
-            item.className = "perfil-historico-item";
-            
-            const dataFormatada = new Date(sessao.created_at).toLocaleString("pt-BR");
 
       const dataFormatada = new Date(sessao.created_at).toLocaleString("pt-BR");
 
@@ -346,19 +207,15 @@ document.addEventListener("DOMContentLoaded", async () => {
                 </div>
                 <div class="perfil-historico-item__row">
                     <span class="perfil-historico-badge perfil-historico-badge--user">Você</span>
-                    <p>${sessao.descricao_usuario}</p>
+                    <p>${sessao.descricao_usuario || "Consulta de sintomas"}</p>
                 </div>
                 <div class="perfil-historico-item__row">
                     <span class="perfil-historico-badge perfil-historico-badge--ai">IA</span>
-                    <p>${aiMsg.texto}</p>
-                </div>` : ''}
                     <p>${sessao.resposta_ia}</p>
                 </div>
                 <button class="btn-detalhes-ia" data-index="${index}">
                     <i class="fas fa-expand-alt"></i> Ver detalhes
                 </button>
-                    <p>${sessao.resposta_ia}</p>
-                </div>
             `;
 
       lista.appendChild(item);
@@ -434,7 +291,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   // =============================================
   // ALTERNÂNCIA: Visualização → Edição
   // =============================================
-  btnEditSaude.addEventListener("click", () => {
+  btnEditSaude?.addEventListener("click", () => {
     preencherFormulario();
     viewMode.style.display = "none";
     perfilForm.style.display = "block";
@@ -443,7 +300,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   // =============================================
   // ALTERNÂNCIA: Edição → Visualização (cancelar)
   // =============================================
-  btnCancelEdit.addEventListener("click", () => {
+  btnCancelEdit?.addEventListener("click", () => {
     perfilForm.style.display = "none";
     viewMode.style.display = "block";
   });
@@ -457,15 +314,15 @@ document.addEventListener("DOMContentLoaded", async () => {
   };
 
   document.getElementById("btnLogout")?.addEventListener("click", handleLogout);
-  document
-    .getElementById("btnLogoutForm")
-    ?.addEventListener("click", handleLogout);
+  document.getElementById("btnLogoutForm")?.addEventListener("click", handleLogout);
 
   // =============================================
   // SUBMIT DO FORMULÁRIO (Conectado ao Supabase)
   // =============================================
   const getFieldVal = (id, type) => {
-    const rawVal = document.getElementById(id).value.trim();
+    const el = document.getElementById(id);
+    if (!el) return null;
+    const rawVal = el.value.trim();
     if (rawVal === "") return null;
     if (type === "number") return Number(rawVal);
     return rawVal;
@@ -475,7 +332,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     e.preventDefault();
 
     const btnSave = perfilForm.querySelector('button[type="submit"]');
-    const originalText = btnSave.textContent;
+    const originalText = btnSave.innerHTML;
     btnSave.disabled = true;
     btnSave.textContent = "Salvando...";
 
@@ -485,9 +342,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       peso: getFieldVal("peso", "number"),
       altura: getFieldVal("altura", "number"),
       fuma:
-        document.querySelector('input[name="fuma"]:checked').value === "true",
+        document.querySelector('input[name="fuma"]:checked')?.value === "true",
       bebe:
-        document.querySelector('input[name="bebe"]:checked').value === "true",
+        document.querySelector('input[name="bebe"]:checked')?.value === "true",
       alergia_medicamento: getFieldVal("alergia_medicamento", "string"),
       possui_deficiencia: getFieldVal("possui_deficiencia", "string"),
       contato_medico_nome: getFieldVal("contato_medico_nome", "string"),
@@ -499,7 +356,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const { profile, error } = await profileService.saveProfile(payload);
 
     btnSave.disabled = false;
-    btnSave.textContent = originalText;
+    btnSave.innerHTML = originalText;
 
     if (error) {
       alert("Erro ao salvar no banco: " + error.message);
@@ -508,76 +365,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Sucesso
     dadosSaude = profile;
-    localStorage.setItem("dadosSaude", JSON.stringify(dadosSaude)); // Mantém cache por conveniência
-
+    
     // Volta para o modo visualização e atualiza os textos
     perfilForm.style.display = "none";
     viewMode.style.display = "block";
     atualizarModoVisualizacao();
 
-    // =============================================
-    // SISTEMA DE LOGOUT (botão nas duas views)
-    // =============================================
-    const handleLogout = async () => {
-        await authService.signOut();
-        window.location.href = ROUTES.home;
-    };
-
-    document.getElementById("btnLogout")?.addEventListener("click", handleLogout);
-    document.getElementById("btnLogoutForm")?.addEventListener("click", handleLogout);
-
-    // =============================================
-    // SUBMIT DO FORMULÁRIO (Conectado ao Supabase)
-    // =============================================
-    const getFieldVal = (id, type) => {
-        const rawVal = document.getElementById(id).value.trim();
-        if (rawVal === "") return null;
-        if (type === "number") return Number(rawVal);
-        return rawVal;
-    };
-
-    perfilForm.addEventListener("submit", async (e) => {
-        e.preventDefault();
-
-        const btnSave = perfilForm.querySelector('button[type="submit"]');
-        const originalText = btnSave.textContent;
-        btnSave.disabled = true;
-        btnSave.textContent = "Salvando...";
-
-        const payload = {
-            sexo:                       getFieldVal("sexo", "string"),
-            idade:                      getFieldVal("idade", "number"),
-            peso:                       getFieldVal("peso", "number"),
-            altura:                     getFieldVal("altura", "number"),
-            fuma:                       document.querySelector('input[name="fuma"]:checked').value === "true",
-            bebe:                       document.querySelector('input[name="bebe"]:checked').value === "true",
-            alergia_medicamento:        getFieldVal("alergia_medicamento", "string"),
-            possui_deficiencia:         getFieldVal("possui_deficiencia", "string"),
-            contato_medico_particular:  getFieldVal("contato_medico", "string")
-        };
-
-        // Salva no SUPABASE
-        const { profile, error } = await profileService.saveProfile(payload);
-
-        btnSave.disabled = false;
-        btnSave.textContent = originalText;
-
-        if (error) {
-            alert("Erro ao salvar no banco: " + error.message);
-            return;
-        }
-
-        // Sucesso
-        dadosSaude = profile;
-        localStorage.setItem("dadosSaude", JSON.stringify(dadosSaude)); // Mantém cache por conveniência
-
-        // Volta para o modo visualização e atualiza os textos
-        perfilForm.style.display = "none";
-        viewMode.style.display   = "block";
-        atualizarModoVisualizacao();
-
-        console.log("Dados salvos no Supabase com sucesso!");
-    });
     console.log("Dados salvos no Supabase com sucesso!");
   });
 });
