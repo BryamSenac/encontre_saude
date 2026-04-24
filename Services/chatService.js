@@ -60,24 +60,28 @@ export const chatService = {
         }
     },
 
-    // Busca o histórico completo do usuário logado
+    // Busca o histórico completo do usuário logado (incluindo sintomas)
     async getUserHistory() {
         try {
-            console.group("📜 [chatService] Buscando Histórico IA...");
+            console.group("📜 [chatService] Buscando Histórico IA completo...");
             const { session } = await authService.getUserSession();
             if (!session) {
                 console.groupEnd();
                 return { history: [], error: "Usuário não logado" };
             }
 
+            // Busca histórico e sintomas em uma única consulta usando JOIN do Supabase
             const { data, error } = await supabase
                 .from('historico_ia')
-                .select('*')
+                .select(`
+                    *,
+                    sintomas_atendimento (*)
+                `)
                 .eq('user_id', session.user.id)
                 .order('created_at', { ascending: false });
 
             if (error) throw error;
-            console.log("Sucesso! Total de registros:", data.length);
+            console.log("Sucesso! Total de registros com sintomas:", data.length);
             console.groupEnd();
             return { history: data, error: null };
         } catch (error) {

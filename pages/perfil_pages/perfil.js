@@ -94,6 +94,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         viewFuma.textContent        = formatarBooleano(dadosSaude.fuma);
         viewBebe.textContent        = formatarBooleano(dadosSaude.bebe);
         
+        // Novos campos clínicos e vitais
+        document.getElementById("view-pressao").textContent = formatarValor(dadosSaude.pressao_arterial);
+        document.getElementById("view-temperatura").textContent = formatarValor(dadosSaude.temperatura, " °C");
+        document.getElementById("view-freq-cardiaca").textContent = formatarValor(dadosSaude.frequencia_cardiaca, " bpm");
+        document.getElementById("view-saturacao").textContent = formatarValor(dadosSaude.saturacao_oxigenio, " %");
+        document.getElementById("view-medicamentos").textContent = formatarValor(dadosSaude.medicamentos_em_uso);
+        document.getElementById("view-alergias-clinicas").textContent = formatarValor(dadosSaude.alergias);
+
         // Conversão para exibição amigável dos tipos do banco
         viewAlergia.textContent     = formatarBooleano(dadosSaude.alergia_medicamento);
         viewDeficiencia.textContent = Array.isArray(dadosSaude.possui_deficiencia) 
@@ -163,16 +171,37 @@ document.addEventListener("DOMContentLoaded", async () => {
             
             const dataFormatada = new Date(sessao.created_at).toLocaleString("pt-BR");
 
+            // Tradução e extração de sintomas para exibição
+            const sintomasObj = sessao.sintomas_atendimento;
+            let sintomasTexto = "Nenhum sintoma registrado.";
+            
+            if (sintomasObj) {
+                const ativos = Object.keys(sintomasObj)
+                    .filter(key => sintomasObj[key] === true && !['id', 'historico_id', 'created_at'].includes(key))
+                    .map(key => {
+                        const traduzido = key.replace(/_/g, ' ');
+                        return traduzido.charAt(0).toUpperCase() + traduzido.slice(1);
+                    });
+                
+                if (ativos.length > 0) {
+                    sintomasTexto = ativos.join(', ');
+                }
+            }
+
             item.innerHTML = `
                 <div class="perfil-historico-item__data">
                     <i class="fas fa-calendar-alt"></i> ${dataFormatada}
                 </div>
                 <div class="perfil-historico-item__row">
-                    <span class="perfil-historico-badge perfil-historico-badge--user">Você</span>
+                    <span class="perfil-historico-badge perfil-historico-badge--user">Queixa</span>
                     <p>${sessao.descricao_usuario}</p>
                 </div>
                 <div class="perfil-historico-item__row">
-                    <span class="perfil-historico-badge perfil-historico-badge--ai">IA</span>
+                    <span class="perfil-historico-badge perfil-historico-badge--sintomas">Sintomas</span>
+                    <p><strong>Sintomas:</strong> ${sintomasTexto}</p>
+                </div>
+                <div class="perfil-historico-item__row">
+                    <span class="perfil-historico-badge perfil-historico-badge--ai">IA / Notas</span>
                     <p>${sessao.resposta_ia}</p>
                 </div>
             `;

@@ -55,7 +55,26 @@ export const profileService = {
                 alergia_medicamento: profileData.alergia_medicamento ? true : false,
                 possui_deficiencia: profileData.possui_deficiencia ? [profileData.possui_deficiencia] : [],
                 contato_medico_particular: profileData.contato_medico_particular || '',
+                // Campos sincronizados do pré-prontuário
+                data_nascimento: profileData.data_nascimento || null,
+                CPF: profileData.cpf || null,
+                telefone: profileData.telefone || null,
+                
+                // Novos campos clínicos e sinais vitais (Substituem os anteriores no banco)
+                alergias: profileData.alergias || null,
+                medicamentos_em_uso: profileData.medicamentos || null,
+                doencas_preexistentes: profileData.doencas || null,
+                historico_familiar: profileData.historico_familiar || null,
+                pressao_arterial: profileData.pressao || null,
+                frequencia_cardiaca: profileData.freq_cardiaca || null,
+                temperatura: profileData.temperatura || null,
+                saturacao_oxigenio: profileData.saturacao || null,
+                observacoes: profileData.observacoes || null,
             };
+
+            console.log("📤 [profileService] Dados brutos recebidos:", profileData);
+            console.log("📤 [profileService] Objeto de atualização (updates):", updates);
+            console.table(updates);
 
             console.log("Enviando dados para o Supabase:", updates);
 
