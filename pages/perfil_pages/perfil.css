@@ -19,22 +19,26 @@ body {
     justify-content: center;
     align-items: flex-start;
     min-height: calc(100vh - 80px);
-    padding: 60px 20px;
+    padding: 30px 20px;
 }
 
 .perfil-container {
     width: 100%;
-    max-width: 600px;
+    max-width: 1000px;
 }
 
 .perfil-card {
+    position: relative;
     background-color: var(--white);
     border-radius: var(--radius-lg);
-    padding: 40px;
+    padding: 30px;
     box-shadow: var(--shadow-md);
 }
 
 .perfil-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     text-align: center;
     margin-bottom: 32px;
 }
@@ -65,13 +69,14 @@ body {
 }
 
 .account-info {
-    background-color: var(--beige-light);
-    border-radius: var(--radius-sm);
-    padding: 16px;
-    margin-bottom: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     color: var(--text-light);
     font-size: 14px;
-    line-height: 1.6;
+    margin-top: -4px;
+    margin-bottom: 16px;
+    opacity: 0.8;
 }
 
 .section-title {
@@ -138,7 +143,7 @@ body {
 /* Grid de informações no modo texto */
 .info-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(4, 1fr);
     gap: 14px;
 }
 
@@ -170,12 +175,46 @@ body {
     font-weight: 500;
 }
 
+@media (max-width: 900px) {
+    .info-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
 @media (max-width: 500px) {
     .info-grid {
         grid-template-columns: 1fr;
     }
 }
 
+/* Botão de Pré-Prontuário Estilo "Ghost" Green (Alinhado com Sair) */
+.btn-pre-prontuario {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background-color: transparent;
+    color: var(--green-medium);
+    border: 1.5px solid var(--green-medium);
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all var(--transition-fast);
+    font-family: inherit;
+}
+
+.btn-pre-prontuario:hover {
+    background-color: var(--green-accent);
+    color: var(--green-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-pre-prontuario i {
+    font-size: 18px;
 /* Botão de Pré-Prontuário no Card de Perfil */
 .btn-pre-prontuario-card {
     display: flex;
@@ -204,6 +243,17 @@ body {
 .btn-pre-prontuario-content {
     display: flex;
     align-items: center;
+    justify-content: center;
+}
+
+.btn-pre-prontuario-content i {
+    font-size: 26px;
+}
+
+.btn-pre-prontuario-content div, 
+.btn-pre-prontuario-card > i.fa-chevron-right {
+    display: none; /* Escondemos o texto antigo e a seta */
+}
     gap: 16px;
 }
 
@@ -286,13 +336,19 @@ body {
 
 .form-grid-2 {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(4, 1fr);
     gap: 16px;
     margin-bottom: 24px;
 }
 
-@media (max-width: 500px) {
+@media (max-width: 900px) {
+    .form-grid,
+    .form-grid-2 {
+        grid-template-columns: 1fr 1fr;
+    }
+}
 
+@media (max-width: 500px) {
     .form-grid,
     .form-grid-2 {
         grid-template-columns: 1fr;
@@ -458,19 +514,39 @@ body {
 .perfil-historico-lista {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    max-height: 320px;
+    gap: 12px;
+    max-height: 400px; /* Limite de altura para não quebrar o layout */
     overflow-y: auto;
-    padding-right: 4px;
-    overflow: hidden;
-    transition: max-height 0.35s ease, opacity 0.25s ease;
+    padding-right: 8px;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     opacity: 1;
+    margin-top: 10px;
 }
 
 .perfil-historico-lista--oculto {
     max-height: 0 !important;
     opacity: 0;
+    margin-top: 0;
     pointer-events: none;
+    overflow: hidden;
+}
+
+/* Custom Scrollbar para o Histórico */
+.perfil-historico-lista::-webkit-scrollbar {
+    width: 6px;
+}
+
+.perfil-historico-lista::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.perfil-historico-lista::-webkit-scrollbar-thumb {
+    background: var(--gray-light);
+    border-radius: 10px;
+}
+
+.perfil-historico-lista::-webkit-scrollbar-thumb:hover {
+    background: var(--gray-medium);
 }
 
 /* Botão Ver mais / Ocultar */
@@ -501,13 +577,162 @@ body {
 }
 
 
-.perfil-historico-lista::-webkit-scrollbar {
-    width: 4px;
+/* =============================================
+   MODAL DE DETALHES (Histórico IA)
+   ============================================= */
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    display: none; /* Controlado via JS */
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
-.perfil-historico-lista::-webkit-scrollbar-thumb {
-    background: var(--gray-light);
-    border-radius: 2px;
+.modal-overlay.show {
+    display: flex;
+    opacity: 1;
+}
+
+.modal-content {
+    background-color: var(--white);
+    width: 90%;
+    max-width: 650px;
+    border-radius: var(--radius-lg);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    transform: translateY(20px);
+    transition: transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    max-height: 85vh;
+}
+
+.modal-overlay.show .modal-content {
+    transform: translateY(0);
+}
+
+.modal-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--gray-light);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(to right, var(--green-accent), var(--white));
+    border-top-left-radius: var(--radius-lg);
+    border-top-right-radius: var(--radius-lg);
+}
+
+.modal-header h3 {
+    font-size: 18px;
+    color: var(--green-dark);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+}
+
+.btn-close-modal {
+    background: transparent;
+    border: none;
+    font-size: 28px;
+    color: var(--text-light);
+    cursor: pointer;
+    line-height: 1;
+    transition: color 0.2s;
+}
+
+.btn-close-modal:hover {
+    color: var(--error);
+}
+
+.modal-body {
+    padding: 24px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.detail-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.detail-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.detail-group p {
+    margin: 0;
+    font-size: 14px;
+    color: var(--black-dark);
+    font-weight: 500;
+}
+
+.detail-box {
+    padding: 16px;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    line-height: 1.6;
+    border-left: 4px solid transparent;
+}
+
+.user-box {
+    background-color: var(--beige-light);
+    color: var(--text-color);
+    border-color: var(--green-light);
+}
+
+.ai-box {
+    background-color: #f0f7ff;
+    color: #2c3e50;
+    border-color: #3498db;
+    white-space: pre-line; /* Mantém as quebras de linha da IA */
+}
+
+.btn-detalhes-ia {
+    margin-top: 10px;
+    align-self: flex-end;
+    background-color: var(--white);
+    color: var(--green-medium);
+    border: 1px solid var(--green-medium);
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s;
+}
+
+.btn-detalhes-ia:hover {
+    background-color: var(--green-medium);
+    color: var(--white);
+}
+
+@media (max-width: 600px) {
+    .modal-content {
+        width: 95%;
+        margin: 10px;
+    }
 }
 
 .perfil-historico-item {
@@ -518,6 +743,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 8px;
+    position: relative;
 }
 
 .perfil-historico-item__data {
@@ -532,6 +758,20 @@ body {
     display: flex;
     flex-direction: column;
     gap: 3px;
+    max-height: 60px; /* Limita visualização rápida no card */
+    overflow: hidden;
+    position: relative;
+}
+
+/* Efeito fade out para texto cortado no card */
+.perfil-historico-item__row::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 20px;
+    background: linear-gradient(transparent, var(--beige-light));
 }
 
 .perfil-historico-item__row p {

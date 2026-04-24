@@ -4,6 +4,7 @@
   "description": "Este projeto é uma aplicação de saúde (\"Encontre Saúde\") construída puramente em **HTML, CSS e Vanilla JS** utilizando módulos modernos do Javascript (ES Modules - ESM).\r Recentemente, a arquitetura do projeto foi expandida para suportar Autenticação e Banco de Dados (BaaS) através do servidor **Supabase**, adotando uma importação unificada via CDN JSDelivr para não ferir o design sem empacotadores (Node.js/NPM) do projeto original.",
   "main": "index.js",
   "scripts": {
+    "start":"vite",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview"
