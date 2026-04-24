@@ -50,8 +50,7 @@ export function createFooter() {
     rightSection.className = "footer-right";
 
     const projectTitle = document.createElement("h3");
-    projectTitle.textContent = "Projeto Integrador Front-End";
-
+    projectTitle.textContent = "Projeto Integrador  ";
     const projectDesc = document.createElement("p");
     projectDesc.textContent = "Site desenvolvido em equipe pela turma 202500002 como parte do projeto integrador com o objetivo de auxiliar pessoas novas em beltrão ou com duvidas sobre situações de saude.";
 
