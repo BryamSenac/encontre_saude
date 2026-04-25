@@ -14,6 +14,7 @@ createSidebar();
 // ─── Estado do Formulário ─────────────────────────────────────────────────────
 let currentStep = 1;
 const TOTAL_STEPS = 4;
+let isFromHistory = false; // Flag para saber se viemos do histórico (evita duplicidade)
 
 // Função para preencher o formulário automaticamente com dados do Supabase
 async function carregarDadosAutomaticos() {
@@ -43,23 +44,9 @@ async function carregarDadosAutomaticos() {
         if (profile.sexo) document.getElementById('sexo').value = profile.sexo;
         if (profile.peso) document.getElementById('peso').value = profile.peso;
         if (profile.altura) document.getElementById('altura').value = profile.altura;
-        
-        // Novos campos sincronizados
+        if (profile.CPF) document.getElementById('cpf').value = profile.CPF;
         if (profile.data_nascimento) document.getElementById('dataNascimento').value = profile.data_nascimento;
-        if (profile.CPF) {
-          const campoCpf = document.getElementById('cpf');
-          if (campoCpf) {
-            campoCpf.value = profile.CPF;
-            campoCpf.dispatchEvent(new Event('input')); // Dispara máscara
-          }
-        }
-        if (profile.telefone) {
-          const campoTel = document.getElementById('telefone');
-          if (campoTel) {
-            campoTel.value = profile.telefone;
-            campoTel.dispatchEvent(new Event('input')); // Dispara máscara
-          }
-        }
+        if (profile.telefone) document.getElementById('telefone').value = profile.telefone;
     }
 
     // 3. Fallback para o Telefone caso não esteja no perfil, busca do Auth
@@ -185,7 +172,10 @@ function carregarProgresso() {
   if (!rascunho) return;
 
   try {
-    const { data, step } = JSON.parse(rascunho);
+    const saved = JSON.parse(rascunho);
+    const data = saved.data;
+    const step = saved.currentStep || saved.step;
+    isFromHistory = saved.isFromHistory || false; // Recupera a flag
     
     // Preenche campos de texto, select, etc.
     Object.keys(data).forEach(key => {
@@ -194,29 +184,44 @@ function carregarProgresso() {
 
       if (!element) return;
 
-      if (element.type === 'checkbox') {
-        // Se for um único checkbox ou array de checkboxes
+      // Se for um grupo de elementos (como checkboxes ou radios com o mesmo nome)
+      if (element instanceof RadioNodeList) {
         if (Array.isArray(val)) {
-           const checkboxes = form.querySelectorAll(`input[name="${key}"]`);
-           checkboxes.forEach(cb => cb.checked = val.includes(cb.value));
+          console.log(`🔍 [Pré-Prontuário] Preenchendo checkboxes para ${key}:`, val);
+          element.forEach(el => {
+            if (el.type === 'checkbox') {
+              el.checked = val.includes(el.value);
+            }
+          });
         } else {
-          element.checked = !!val;
+          // Caso de radios
+          element.forEach(el => {
+            if (el.type === 'radio') el.checked = el.value === val;
+          });
         }
-      } else if (element instanceof RadioNodeList || element.type === 'radio') {
-        const radios = form.querySelectorAll(`input[name="${key}"]`);
-        radios.forEach(r => r.checked = r.value === val);
+      } else if (element.type === 'checkbox') {
+        // Checkbox único
+        element.checked = !!val;
       } else {
+        // Campos de texto, select, etc.
         element.value = val;
       }
 
-      // Dispara eventos para aplicar máscaras e atualizar visibilidade de campos condicionais
-      element.dispatchEvent(new Event('input'));
-      element.dispatchEvent(new Event('change'));
+      if (element instanceof HTMLElement || element instanceof RadioNodeList) {
+          const firstEl = element instanceof RadioNodeList ? element[0] : element;
+          firstEl?.dispatchEvent(new Event('input', { bubbles: true }));
+          firstEl?.dispatchEvent(new Event('change', { bubbles: true }));
+      }
     });
 
-    // Restaura o passo se necessário (opcional, vamos manter no step 1 para segurança)
-    // if (step > 1) irParaStep(step);
+    // Atualiza o resumo antes de ir para o passo 4
+    atualizarResumo();
 
+    // Restaura o passo se necessário
+    if (step && step > 1) {
+      console.log(`🚀 [Pré-Prontuário] Restaurando passo ${step} do rascunho.`);
+      irParaStep(step);
+    }
   } catch (e) {
     console.error("Erro ao carregar rascunho:", e);
   }
@@ -581,19 +586,93 @@ btnDownload?.addEventListener('click', async () => {
       peso: val('peso'),
       altura: val('altura'),
       observacoes: val('observacoesAdicionais')
-    };
+  };
 
-    // 3. Salva no Perfil (Tabela dados_saude: CPF, Telefone, Nascimento + Dados Clínicos)
-    const dadosPerfil = {
-      data_nascimento: val('dataNascimento'),
-      cpf: val('cpf'),
-      telefone: val('telefone'),
-      sexo: val('sexo'),
-      peso: parseFloat(val('peso')) || null,
-      altura: parseFloat(val('altura')) || null,
-      alergia_medicamento: val('alergias') ? true : false,
+  // 3. Salva no Supabase (Histórico + Sintomas + Dados Clínicos) - APENAS se NÃO vier do histórico
+  const queixa = document.getElementById('queixaPrincipal').value;
+  
+  if (!isFromHistory) {
+      console.log("📝 [Pré-Prontuário] Iniciando salvamento da consulta manual...");
+      const consultationRes = await chatService.saveManualConsultation(queixa, sintomasSelecionados, JSON.stringify(dadosClinicos));
       
-      // Adicionando dados clínicos ao perfil (Substituição automática no banco)
+      if (consultationRes.error) {
+          console.error("❌ [Pré-Prontuário] Erro ao salvar histórico:", consultationRes.error);
+      } else {
+          console.log("✅ [Pré-Prontuário] Histórico salvo com sucesso!", consultationRes.data);
+      }
+  } else {
+      console.log("⏭️ [Pré-Prontuário] Pulando salvamento de histórico (Origem: Histórico).");
+  }
+
+  // 4. Sincroniza com o Perfil (Dados Pessoais + Clínicos)
+  const perfilPayload = {
+      sexo: val('sexo'),
+      CPF: val('cpf'),
+      data_nascimento: val('dataNascimento'),
+      telefone: val('telefone'),
+      peso: Number(val('peso')) || null,
+      altura: Number(val('altura')) || null,
+      alergias: val('alergias'),
+      medicamentos_em_uso: val('medicamentosEmUso'),
+      doencas_preexistentes: val('doencasPreexistentes'),
+      historico_familiar: val('historicoFamiliar'),
+      pressao_arterial: val('pressaoArterial'),
+      frequencia_cardiaca: Number(val('frequenciaCardiaca')) || null,
+      temperatura: Number(val('temperatura')) || null,
+      saturacao_oxigenio: Number(val('saturacaoOxigenio')) || null,
+      observacoes: val('observacoesAdicionais')
+  };
+  
+  console.log("🔄 [Pré-Prontuário] Sincronizando dados com o perfil...", perfilPayload);
+  const profileRes = await profileService.saveProfile(perfilPayload);
+
+  if (profileRes.error) {
+      console.error("❌ [Pré-Prontuário] Erro ao sincronizar perfil:", profileRes.error);
+  } else {
+      console.log("✅ [Pré-Prontuário] Perfil sincronizado com sucesso!");
+  }
+
+  const canal = document.querySelector('input[name="canalEnvio"]:checked')?.value;
+  let msgEnvio = 'PDF baixado e consulta salva no histórico!';
+  if (canal === 'email') msgEnvio = 'Consulta salva e PDF gerado (Envio por e-mail simulado).';
+  else if (canal === 'whatsapp') msgEnvio = 'Consulta salva e PDF gerado (Envio por WhatsApp simulado).';
+
+  await gerarArquivoPDFPuro(btnSubmit, msgEnvio);
+  
+  // Limpa o rascunho salvo localmente
+  limparRascunho();
+
+  btnSubmit.disabled = false;
+  btnSubmit.innerHTML = originalText;
+
+  // Reseta formulario após gerar PDF
+  form.reset();
+  irParaStep(1);
+  document.querySelectorAll('.pp-step').forEach((s) => {
+    s.classList.remove('active', 'done');
+    if (s.dataset.step === '1') s.classList.add('active');
+  });
+  document.querySelectorAll('.pp-step-line').forEach((l) => l.classList.remove('done'));
+});
+
+// ─── Download do PDF ──────────────────────────────────────────────────────────
+btnDownload?.addEventListener('click', async () => {
+  // Valida passos básicos
+  if (!validarStep(1) || !validarStep(2)) {
+    mostrarToast('error', '<i class="fas fa-triangle-exclamation"></i>', 'Preencha os dados obrigatórios antes de baixar.');
+    return;
+  }
+
+  // Aciona o salvamento (mesma lógica do submit)
+  console.log("💾 [Pré-Prontuário] Iniciando salvamento automático ao baixar PDF...");
+  
+  // Coleta dados
+  const sintomasSelecionados = {};
+  document.querySelectorAll('input[name="sintomas"]').forEach(cb => {
+      sintomasSelecionados[cb.value] = cb.checked;
+  });
+
+  const dadosClinicos = {
       alergias: val('alergias'),
       medicamentos: val('medicamentosEmUso'),
       doencas: val('doencasPreexistentes'),
@@ -602,41 +681,46 @@ btnDownload?.addEventListener('click', async () => {
       freq_cardiaca: val('frequenciaCardiaca'),
       temperatura: val('temperatura'),
       saturacao: val('saturacaoOxigenio'),
+      peso: val('peso'),
+      altura: val('altura'),
       observacoes: val('observacoesAdicionais')
-    };
-    
-    console.log("🏥 [Pré-Prontuário] Dados do Perfil completos capturados:", dadosPerfil);
-    console.log("💾 Sincronizando perfil com o banco de dados...");
-    
-    await profileService.saveProfile(dadosPerfil);
+  };
 
-    // 4. Salva a Consulta no Histórico (Supabase)
-    console.log("💾 Salvando consulta no histórico...");
-    const queixa = document.getElementById('queixaPrincipal').value;
-    const { error: saveError } = await chatService.saveManualConsultation(queixa, sintomasSelecionados, dadosClinicos);
-    
-    if (saveError) throw new Error("Erro ao salvar no banco: " + saveError.message);
-
-    // 5. Gera e baixa o PDF
-    await gerarArquivoPDFPuro(btnDownload, 'Dados salvos no histórico e PDF gerado com sucesso!');
-
-    // 6. Limpeza e Reset
-    limparRascunho();
-    form.reset();
-    irParaStep(1);
-    
-    // Reset visual do progresso
-    document.querySelectorAll('.pp-step').forEach(s => s.classList.remove('active', 'done'));
-    document.getElementById('progress-step-1').classList.add('active');
-    document.querySelectorAll('.pp-step-line').forEach(l => l.classList.remove('done'));
-
-  } catch (err) {
-    console.error('❌ Erro na finalização:', err);
-    mostrarToast('error', '<i class="fas fa-triangle-exclamation"></i>', 'Ocorreu um erro: ' + err.message);
-  } finally {
-    btnDownload.disabled = false;
-    btnDownload.innerHTML = originalText;
+  const queixa = document.getElementById('queixaPrincipal').value;
+  
+  // Salva histórico apenas se não vier do histórico já existente
+  if (!isFromHistory) {
+      console.log("💾 [Pré-Prontuário] Iniciando salvamento automático ao baixar PDF...");
+      const consultationRes = await chatService.saveManualConsultation(queixa, sintomasSelecionados, JSON.stringify(dadosClinicos));
+  } else {
+      console.log("⏭️ [Pré-Prontuário] Pulando salvamento de histórico (Origem: Histórico).");
   }
+  
+  // Sincroniza perfil
+  const perfilPayload = {
+      sexo: val('sexo'),
+      CPF: val('cpf'),
+      data_nascimento: val('dataNascimento'),
+      telefone: val('telefone'),
+      peso: Number(val('peso')) || null,
+      altura: Number(val('altura')) || null,
+      alergias: val('alergias'),
+      medicamentos_em_uso: val('medicamentosEmUso'),
+      doencas_preexistentes: val('doencasPreexistentes'),
+      historico_familiar: val('historicoFamiliar'),
+      pressao_arterial: val('pressaoArterial'),
+      frequencia_cardiaca: Number(val('frequenciaCardiaca')) || null,
+      temperatura: Number(val('temperatura')) || null,
+      saturacao_oxigenio: Number(val('saturacaoOxigenio')) || null,
+      observacoes: val('observacoesAdicionais')
+  };
+  await profileService.saveProfile(perfilPayload);
+
+  // Gera o PDF
+  await gerarArquivoPDFPuro(btnDownload, 'PDF gerado e dados salvos no histórico!');
+  
+  // Limpa rascunho
+  limparRascunho();
 });
 
 // ─── Toast ────────────────────────────────────────────────────────────────────

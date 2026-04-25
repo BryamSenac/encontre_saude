@@ -60,6 +60,14 @@
                                 <span class="info-label">Sexo</span>
                                 <span class="info-value" id="view-sexo">Preencher</span>
                             </div>
+                            <div class="info-item">
+                                <span class="info-label">CPF</span>
+                                <span class="info-value" id="view-CPF">Preencher</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Nascimento</span>
+                                <span class="info-value" id="view-data_nascimento">Preencher</span>
+                            </div>
                         </div>
                     </div>
 
@@ -138,20 +146,7 @@
                             </div>
                         </div>
                     </div>
-                  
-                    <!-- Seção: Link para Pré-Prontuário -->
-                    <div class="view-section">
-                        <a href="../pre_prontuario_pages/pre_prontuario.html" class="btn-pre-prontuario-card">
-                            <div class="btn-pre-prontuario-content">
-                                <i class="fas fa-file-medical"></i>
-                                <div>
-                                    <strong>Pré-Prontuário Digital</strong>
-                                    <span>Preencha seus dados antes da consulta</span>
-                                </div>
-                            </div>
-                            <i class="fas fa-chevron-right"></i>
-                        </a>
-                    </div>
+
 
                     <!-- Seção: Histórico de Conversas com a IA -->
                     <div class="view-section">
@@ -218,6 +213,14 @@
                             </select>
                             <label for="sexo" class="active-label">Sexo</label>
                         </div>
+                        <div class="input-group">
+                            <input type="text" id="CPF" placeholder=" " maxlength="14">
+                            <label for="CPF">CPF</label>
+                        </div>
+                        <div class="input-group">
+                            <input type="date" id="data_nascimento" placeholder=" ">
+                            <label for="data_nascimento" class="active-label">Data de Nascimento</label>
+                        </div>
                     </div>
 
                     <h3 class="section-title">Hábitos e Condições Especiais</h3>
@@ -276,15 +279,9 @@
                         </div>
                     </div>
 
-                    <div class="perfil-actions">
-                        <button type="submit" class="btn-primary" style="flex:1; border-radius: 8px;">
-                            <i class="fas fa-save"></i> Salvar Informações
-                        </button>
-                        <a href="../pre_prontuario_pages/pre_prontuario.html" class="btn-pre-prontuario">
-                            <i class="fas fa-file-pdf"></i> Pré-Prontuário
-                        </a>
-                        <button type="button" class="btn-logout" id="btnLogoutForm" title="Sair da Conta Autenticada">
-                            <i class="fas fa-sign-out-alt"></i> Sair
+                    <div class="perfil-actions" style="justify-content: center;">
+                        <button type="submit" class="btn-primary" style="min-width: 280px; border-radius: 8px;">
+                            <i class="fas fa-save"></i> Salvar Alterações
                         </button>
                     </div>
                 </form>
@@ -314,6 +311,12 @@
                     <span class="detail-label"><i class="fas fa-magic"></i> Resposta da IA</span>
                     <div class="detail-box ai-box" id="modal-ia">
                         Resposta da IA...
+                    </div>
+                </div>
+                <div class="detail-group" id="modal-sintomas-group" style="display: none;">
+                    <span class="detail-label"><i class="fas fa-notes-medical"></i> Sintomas Identificados</span>
+                    <div class="sintomas-badges-container" id="modal-sintomas">
+                        <!-- Badges de sintomas aqui -->
                     </div>
                 </div>
             </div>
