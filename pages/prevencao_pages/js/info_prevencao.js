@@ -118,6 +118,7 @@ export function infoPrevencao() {
     modalText.textContent = item.text; // TextContent preserves whitespace if CSS white-space is pre-line
 
     modalOverlay.style.display = "flex";
+    document.body.style.overflow = "hidden";
     // Small delay to allow display flex to apply before adding opacity class for transition
     setTimeout(() => {
       modalOverlay.classList.add("show");
@@ -129,6 +130,7 @@ export function infoPrevencao() {
     modalOverlay.classList.remove("show");
     setTimeout(() => {
       modalOverlay.style.display = "none";
+      document.body.style.overflow = "auto";
     }, 300); // Wait for transition
   }
 
@@ -148,6 +150,7 @@ export function infoPrevencao() {
   data.forEach((item, index) => {
     const card = document.createElement('div');
     card.className = 'prevention-card';
+    card.onclick = () => openModal(item);
 
     // Imagem
     const imgContainer = document.createElement('div');
@@ -176,6 +179,7 @@ export function infoPrevencao() {
     readMore.innerHTML = 'Ler mais <i class="fas fa-arrow-right"></i>';
     readMore.onclick = (e) => {
       e.preventDefault();
+      e.stopPropagation();
       openModal(item);
     };
 

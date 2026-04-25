@@ -82,7 +82,6 @@ document.addEventListener('DOMContentLoaded', carregarDadosAutomaticos);
 const form = document.getElementById('pp-form');
 const btnNext = document.getElementById('btn-next');
 const btnBack = document.getElementById('btn-back');
-const btnSubmit = document.getElementById('btn-submit');
 const btnDownload = document.getElementById('btn-download');
 const toast = document.getElementById('pp-toast');
 const toastIcon = document.getElementById('toast-icon');
@@ -231,7 +230,6 @@ form.addEventListener('change', () => salvarProgresso());
 carregarProgresso();
 carregarDadosIA();
 
-// ─── Seleção de Canal ─────────────────────────────────────────────────────────
 document.querySelectorAll('input[name="canalEnvio"]').forEach((radio) => {
   radio.addEventListener('change', () => {
     const isEmail = radio.value === 'email';
@@ -245,6 +243,42 @@ document.querySelectorAll('input[name="canalEnvio"]').forEach((radio) => {
     if (isWhatsApp) document.getElementById('email').value = '';
 
     limparErro('canalEnvio');
+  });
+});
+
+// ─── Clique na Barra de Progresso ───────────────────────────────────────────
+document.querySelectorAll('.pp-step').forEach((stepEl) => {
+  stepEl.addEventListener('click', () => {
+    const targetStep = parseInt(stepEl.id.replace('progress-step-', ''));
+    if (isNaN(targetStep)) return;
+
+    if (targetStep === currentStep) return;
+
+    if (targetStep < currentStep) {
+      irParaStep(targetStep);
+    } else {
+      // Tentar avançar: validar todos os passos intermediários
+      let canGo = true;
+      let stepComErro = currentStep;
+
+      for (let i = currentStep; i < targetStep; i++) {
+        if (!validarStep(i)) {
+          canGo = false;
+          stepComErro = i;
+          break;
+        }
+      }
+
+      if (canGo) {
+        irParaStep(targetStep);
+      } else {
+        // Se não puder ir, avisa o usuário e vai para o primeiro step com erro
+        mostrarToast('error', '<i class="fas fa-exclamation-circle"></i>', 'Preencha os campos obrigatórios antes de avançar.');
+        if (stepComErro !== currentStep) {
+          irParaStep(stepComErro);
+        }
+      }
+    }
   });
 });
 
@@ -308,27 +342,34 @@ function limparErro(id) {
 
 // ─── Navegação entre Steps ────────────────────────────────────────────────────
 function irParaStep(novoStep) {
-  // Oculta o step atual
-  document.getElementById(`step-${currentStep}`)?.classList.remove('active');
+  // Oculta todos os steps primeiro (segurança)
+  for (let i = 1; i <= TOTAL_STEPS; i++) {
+    document.getElementById(`step-${i}`)?.classList.remove('active');
+  }
 
-  // Marca step anterior como done
-  const stepEl = document.getElementById(`progress-step-${currentStep}`);
-  if (stepEl && novoStep > currentStep) {
-    stepEl.classList.remove('active');
-    stepEl.classList.add('done');
-    const line = document.getElementById(`line-${currentStep}-${currentStep + 1}`);
-    if (line) line.classList.add('done');
+  // Ativa o novo step
+  document.getElementById(`step-${novoStep}`)?.classList.add('active');
+
+  // Atualiza a Barra de Progresso visualmente
+  for (let i = 1; i <= TOTAL_STEPS; i++) {
+    const stepEl = document.getElementById(`progress-step-${i}`);
+    const line = document.getElementById(`line-${i}-${i + 1}`);
+
+    if (i < novoStep) {
+      stepEl?.classList.remove('active');
+      stepEl?.classList.add('done');
+      line?.classList.add('done');
+    } else if (i === novoStep) {
+      stepEl?.classList.remove('done');
+      stepEl?.classList.add('active');
+      line?.classList.remove('done');
+    } else {
+      stepEl?.classList.remove('active', 'done');
+      line?.classList.remove('done');
+    }
   }
 
   currentStep = novoStep;
-
-  // Ativa o novo step
-  document.getElementById(`step-${currentStep}`)?.classList.add('active');
-  const novoStepEl = document.getElementById(`progress-step-${currentStep}`);
-  if (novoStepEl) {
-    novoStepEl.classList.remove('done');
-    novoStepEl.classList.add('active');
-  }
 
   // Atualiza botões
   btnBack.style.visibility = currentStep === 1 ? 'hidden' : 'visible';
@@ -529,15 +570,18 @@ async function gerarArquivoPDFPuro(btnElement, onCompleteMessage) {
   }
 }
 
-// ─── Submit do Formulário ─────────────────────────────────────────────────────
-form.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  if (!validarStep(4)) return;
+// ─── Finalização (Salvar no Banco + Gerar PDF) ───────────────────────────────
+btnDownload?.addEventListener('click', async () => {
+  // Valida passos obrigatórios antes de prosseguir
+  if (!validarStep(1) || !validarStep(2)) {
+    mostrarToast('error', '<i class="fas fa-triangle-exclamation"></i>', 'Preencha os dados obrigatórios nos passos 1 e 2.');
+    irParaStep(!validarStep(1) ? 1 : 2);
+    return;
+  }
 
-  const btnSubmit = document.getElementById('btn-submit');
-  const originalText = btnSubmit.innerHTML;
-  btnSubmit.disabled = true;
-  btnSubmit.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Salvando e Gerando...';
+  const originalText = btnDownload.innerHTML;
+  btnDownload.disabled = true;
+  btnDownload.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Salvando e Gerando...';
 
   // 1. Coleta os sintomas marcados na tela para salvar no banco
   const sintomasSelecionados = {};
@@ -629,7 +673,7 @@ form.addEventListener('submit', async (e) => {
 
 // ─── Download do PDF ──────────────────────────────────────────────────────────
 btnDownload?.addEventListener('click', async () => {
-  // Valida passos básicos
+  // Valida passos básicos antes de baixar
   if (!validarStep(1) || !validarStep(2)) {
     mostrarToast('error', '<i class="fas fa-triangle-exclamation"></i>', 'Preencha os dados obrigatórios antes de baixar.');
     return;
