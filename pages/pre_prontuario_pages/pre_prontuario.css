@@ -108,6 +108,21 @@ body {
   flex-direction: column;
   align-items: center;
   gap: 3px;
+  cursor: pointer;
+  transition: transform var(--transition-fast);
+}
+
+.pp-step:hover {
+  transform: translateY(-2px);
+}
+
+.pp-step:hover .pp-step-circle {
+  border-color: var(--green-medium);
+  background: var(--green-accent);
+}
+
+.pp-step.active:hover {
+  transform: none;
 }
 
 .pp-step-circle {
