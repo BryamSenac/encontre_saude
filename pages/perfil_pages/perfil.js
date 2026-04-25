@@ -207,6 +207,11 @@ document.addEventListener("DOMContentLoaded", async () => {
                     </div>
                 </div>
                 <div class="perfil-historico-item__row">
+                    <span class="perfil-historico-badge perfil-historico-badge--sintomas">Sintomas</span>
+                    <p><strong>Sintomas:</strong> ${sintomasTexto}</p>
+                </div>
+                <div class="perfil-historico-item__row">
+                    <span class="perfil-historico-badge perfil-historico-badge--ai">IA / Notas</span>
                     <span class="perfil-historico-badge perfil-historico-badge--ai">IA</span>
                     <p>${sessao.resposta_ia}</p>
                 </div>

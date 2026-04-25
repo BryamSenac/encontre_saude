@@ -37,10 +37,10 @@ async function carregarDadosAutomaticos() {
         }
     }
 
-    // 2. Busca dados do Perfil
+    // 2. Busca dados do Perfil (Tabela dados_saude)
     const { profile } = await profileService.getProfile();
     if (profile) {
-        console.log("Preenchendo dados do perfil...");
+        console.log("Preenchendo dados do perfil...", profile);
         if (profile.sexo) document.getElementById('sexo').value = profile.sexo;
         if (profile.peso) document.getElementById('peso').value = profile.peso;
         if (profile.altura) document.getElementById('altura').value = profile.altura;
@@ -49,7 +49,16 @@ async function carregarDadosAutomaticos() {
         if (profile.telefone) document.getElementById('telefone').value = profile.telefone;
     }
 
-    // 3. Busca última consulta da IA
+    // 3. Fallback para o Telefone caso não esteja no perfil, busca do Auth
+    if (user && user.phone) {
+      const campoTel = document.getElementById('telefone');
+      if (campoTel && !campoTel.value) {
+        campoTel.value = user.phone;
+        campoTel.dispatchEvent(new Event('input'));
+      }
+    }
+
+    // 4. Busca última consulta da IA
     const { data: consulta } = await chatService.getLatestFullConsultation();
     if (consulta) {
         console.log("Preenchendo dados da última consulta IA...");
@@ -82,7 +91,6 @@ document.addEventListener('DOMContentLoaded', carregarDadosAutomaticos);
 const form = document.getElementById('pp-form');
 const btnNext = document.getElementById('btn-next');
 const btnBack = document.getElementById('btn-back');
-const btnSubmit = document.getElementById('btn-submit');
 const btnDownload = document.getElementById('btn-download');
 const toast = document.getElementById('pp-toast');
 const toastIcon = document.getElementById('toast-icon');
@@ -529,24 +537,44 @@ async function gerarArquivoPDFPuro(btnElement, onCompleteMessage) {
   }
 }
 
-// ─── Submit do Formulário ─────────────────────────────────────────────────────
-form.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  if (!validarStep(4)) return;
+// ─── Finalização (Salvar no Banco + Gerar PDF) ───────────────────────────────
+btnDownload?.addEventListener('click', async () => {
+  // Valida passos obrigatórios antes de prosseguir
+  if (!validarStep(1) || !validarStep(2)) {
+    mostrarToast('error', '<i class="fas fa-triangle-exclamation"></i>', 'Preencha os dados obrigatórios nos passos 1 e 2.');
+    irParaStep(!validarStep(1) ? 1 : 2);
+    return;
+  }
 
-  const btnSubmit = document.getElementById('btn-submit');
-  const originalText = btnSubmit.innerHTML;
-  btnSubmit.disabled = true;
-  btnSubmit.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Salvando e Gerando...';
+  const originalText = btnDownload.innerHTML;
+  btnDownload.disabled = true;
+  btnDownload.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Salvando e Gerando...';
 
-  // 1. Coleta os sintomas marcados na tela para salvar no banco
-  const sintomasSelecionados = {};
-  document.querySelectorAll('input[name="sintomas"]').forEach(cb => {
-      sintomasSelecionados[cb.value] = cb.checked;
-  });
+  try {
+    // 1. Mapeamento de Sintomas para o Banco
+    const MAPPING_SINTOMAS = {
+      "Febre": "febre",
+      "Dor de Cabeça": "dor_de_cabeca",
+      "Tosse": "tosse",
+      "Falta de Ar": "falta_de_ar",
+      "Dor no Peito": "dor_no_peito",
+      "Náusea/Vômito": "nausea_vomito",
+      "Diarreia": "diarreia",
+      "Dor Abdominal": "dor_abdominal",
+      "Dor nas Costas": "dor_nas_costas",
+      "Tontura": "tontura",
+      "Fraqueza/Cansaço": "fraqueza",
+      "Coriza": "coriza"
+    };
 
-  // 2. Coleta dados clínicos (opcionais) para salvar
-  const dadosClinicos = {
+    const sintomasSelecionados = {};
+    document.querySelectorAll('input[name="sintomas"]').forEach(cb => {
+      const dbKey = MAPPING_SINTOMAS[cb.value] || cb.value.toLowerCase().replace(/\s+/g, '_');
+      sintomasSelecionados[dbKey] = cb.checked;
+    });
+
+    // 2. Coleta dados clínicos para o histórico (JSON)
+    const dadosClinicos = {
       alergias: val('alergias'),
       medicamentos: val('medicamentosEmUso'),
       doencas: val('doencasPreexistentes'),
