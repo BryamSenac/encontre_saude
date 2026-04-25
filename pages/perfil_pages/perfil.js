@@ -192,6 +192,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       const item = document.createElement("div");
       item.className = "perfil-historico-item";
       const dataFormatada = new Date(sessao.created_at).toLocaleString("pt-BR");
+      
+      const listaSintomas = extrairSintomas(sessao.sintomas_atendimento);
+      const sintomasTexto = listaSintomas.length > 0 ? listaSintomas.join(", ") : "Nenhum registrado";
 
       item.innerHTML = `
                 <div class="perfil-historico-item__data">
@@ -201,8 +204,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                     <span class="perfil-historico-badge perfil-historico-badge--user">Você</span>
                     <div class="perfil-historico-content">
                         <p>${sessao.descricao_usuario || "Consulta de sintomas"}</p>
-                        ${extrairSintomas(sessao.sintomas_atendimento).length > 0
-          ? `<div class="perfil-historico-item__sintomas">${extrairSintomas(sessao.sintomas_atendimento).map(s => `<span>${s}</span>`).join("")}</div>`
+                        ${listaSintomas.length > 0
+          ? `<div class="perfil-historico-item__sintomas">${listaSintomas.map(s => `<span>${s}</span>`).join("")}</div>`
           : ""}
                     </div>
                 </div>
