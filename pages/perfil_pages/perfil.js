@@ -1,9 +1,9 @@
 import { createSidebar } from "../../shared/sidebar.js";
 import { createFooter } from "../../shared/footer.js";
 import { ROUTES } from "../../config/routes/routes.js";
-import { authService } from "../../Services/authService.js";
-import { profileService } from "../../Services/profileService.js";
-import { chatService } from "../../Services/chatService.js";
+import { authService } from "../../ServicesTemporario/authService.js";
+import { profileService } from "../../ServicesTemporario/profileService.js";
+import { chatService } from "../../ServicesTemporario/chatService.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
   // 1. Auth Guard: Validar sessão com Supabase
@@ -61,7 +61,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const extrairSintomas = (sintomasData) => {
     if (!sintomasData) return [];
-    
+
     // Se vier do join do Supabase, virá como um array
     const sintomasObj = Array.isArray(sintomasData) ? sintomasData[0] : sintomasData;
     if (!sintomasObj) return [];
@@ -89,7 +89,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const carregarDadosIniciais = async () => {
     console.log("🔄 [Perfil] Carregando dados iniciais...");
     const { profile, error } = await profileService.getProfile();
-    
+
     if (error) {
       console.error("❌ [Perfil] Erro ao carregar perfil:", error);
     } else {
@@ -201,9 +201,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                     <span class="perfil-historico-badge perfil-historico-badge--user">Você</span>
                     <div class="perfil-historico-content">
                         <p>${sessao.descricao_usuario || "Consulta de sintomas"}</p>
-                        ${extrairSintomas(sessao.sintomas_atendimento).length > 0 
-                          ? `<div class="perfil-historico-item__sintomas">${extrairSintomas(sessao.sintomas_atendimento).map(s => `<span>${s}</span>`).join("")}</div>` 
-                          : ""}
+                        ${extrairSintomas(sessao.sintomas_atendimento).length > 0
+          ? `<div class="perfil-historico-item__sintomas">${extrairSintomas(sessao.sintomas_atendimento).map(s => `<span>${s}</span>`).join("")}</div>`
+          : ""}
                     </div>
                 </div>
                 <div class="perfil-historico-item__row">
@@ -234,12 +234,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("modal-data").textContent = new Date(dados.created_at).toLocaleString("pt-BR");
     document.getElementById("modal-usuario").textContent = dados.descricao_usuario;
     document.getElementById("modal-ia").textContent = dados.resposta_ia;
-    
+
     // Sintomas no Modal
     const listaSintomas = extrairSintomas(dados.sintomas_atendimento);
     const containerSintomas = document.getElementById("modal-sintomas");
     const groupSintomas = document.getElementById("modal-sintomas-group");
-    
+
     if (listaSintomas.length > 0) {
       containerSintomas.innerHTML = listaSintomas.map(s => `<span class="sintoma-badge">${s}</span>`).join("");
       groupSintomas.style.display = "block";
@@ -277,7 +277,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const prepararEdicaoEPdf = (sessao) => {
     let clinicos = {};
-    try { clinicos = JSON.parse(sessao.dados_clinicos || "{}"); } catch(e) {}
+    try { clinicos = JSON.parse(sessao.dados_clinicos || "{}"); } catch (e) { }
 
     const draftData = {
       data: {
