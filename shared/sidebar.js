@@ -1,6 +1,6 @@
 import { ROUTES } from "../config/routes/routes.js";
 import { createTelegramWidget } from "./telegram_widget.js";
-import { authService } from "../ServicesTemporario/authService.js";
+import { authService } from "../Services/authService.js";
 
 export async function createSidebar() {
     const { session } = await authService.getUserSession();

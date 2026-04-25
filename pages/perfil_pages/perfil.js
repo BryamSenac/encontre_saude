@@ -1,9 +1,9 @@
 import { createSidebar } from "../../shared/sidebar.js";
 import { createFooter } from "../../shared/footer.js";
 import { ROUTES } from "../../config/routes/routes.js";
-import { authService } from "../../ServicesTemporario/authService.js";
-import { profileService } from "../../ServicesTemporario/profileService.js";
-import { chatService } from "../../ServicesTemporario/chatService.js";
+import { authService } from "../../Services/authService.js";
+import { profileService } from "../../Services/profileService.js";
+import { chatService } from "../../Services/chatService.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
   // 1. Auth Guard: Validar sessão com Supabase

@@ -4,9 +4,9 @@
  */
 
 import { createSidebar } from './../../shared/sidebar.js';
-import { profileService } from '../../ServicesTemporario/profileService.js';
-import { chatService } from '../../ServicesTemporario/chatService.js';
-import { authService } from '../../ServicesTemporario/authService.js';
+import { profileService } from '../../Services/profileService.js';
+import { chatService } from '../../Services/chatService.js';
+import { authService } from '../../Services/authService.js';
 
 // ─── Inicialização da Sidebar ─────────────────────────────────────────────────
 createSidebar();
