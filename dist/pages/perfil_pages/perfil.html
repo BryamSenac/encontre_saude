@@ -9,13 +9,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-  <script type="module" crossorigin src="/assets/perfil-CnmvzVBT.js"></script>
+  <script type="module" crossorigin src="/assets/perfil-CFykH-gv.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/authService-FkTjPsGX.js">
   <link rel="modulepreload" crossorigin href="/assets/sidebar-BkaUTNX8.js">
-  <link rel="modulepreload" crossorigin href="/assets/footer-DRCRWYCK.js">
+  <link rel="modulepreload" crossorigin href="/assets/footer-B06_h6Rx.js">
   <link rel="modulepreload" crossorigin href="/assets/profileService-BVFTB378.js">
-  <link rel="modulepreload" crossorigin href="/assets/chatService-DsIP-FKz.js">
-  <link rel="stylesheet" crossorigin href="/assets/perfil-BIsTDvKW.css">
+  <link rel="modulepreload" crossorigin href="/assets/chatService-C8Ne2wPU.js">
+  <link rel="stylesheet" crossorigin href="/assets/perfil-aH3yhgsl.css">
 </head>
 
 <body>
@@ -94,6 +94,40 @@
                             </div>
                             <div class="info-item">
                                 <span class="info-label">Deficiência</span>
+                                <span class="info-value" id="view-deficiencia">Não Informado</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Seção: Sinais Vitais e Medicamentos (Novos) -->
+                    <div class="view-section">
+                        <h3 class="section-title">Sinais Vitais e Medicamentos</h3>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <span class="info-label">Pressão Arterial</span>
+                                <span class="info-value" id="view-pressao">Não Informado</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Temperatura</span>
+                                <span class="info-value" id="view-temperatura">Não Informado</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Freq. Cardíaca</span>
+                                <span class="info-value" id="view-freq-cardiaca">Não Informado</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Saturação O2</span>
+                                <span class="info-value" id="view-saturacao">Não Informado</span>
+                            </div>
+                        </div>
+                        <div class="info-grid info-grid-full" style="margin-top: 14px;">
+                            <div class="info-item">
+                                <span class="info-label">Medicamentos em Uso</span>
+                                <span class="info-value" id="view-medicamentos">Não Informado</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Alergias</span>
+                                <span class="info-value" id="view-alergias-clinicas">Não Informado</span>
                                 <span class="info-value" id="view-deficiencia">Preencher</span>
                             </div>
                         </div>
@@ -163,15 +197,15 @@
                     <!-- Utilizamos form-grid-2 para balancear os 4 itens 2x2 -->
                     <div class="form-grid-2">
                         <div class="input-group">
-                            <input type="number" id="idade" placeholder=" ">
+                            <input type="number" id="idade" placeholder=" " min="0" max="130">
                             <label for="idade">Idade</label>
                         </div>
                         <div class="input-group">
-                            <input type="number" id="peso" step="0.1" placeholder=" ">
+                            <input type="number" id="peso" step="0.1" placeholder=" " min="0" max="300">
                             <label for="peso">Peso (kg)</label>
                         </div>
                         <div class="input-group">
-                            <input type="number" id="altura" step="0.01" placeholder=" ">
+                            <input type="number" id="altura" step="0.01" placeholder=" " min="0.30" max="3.00">
                             <label for="altura">Altura (m)</label>
                         </div>
 

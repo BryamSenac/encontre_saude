@@ -653,90 +653,22 @@ btnDownload?.addEventListener('click', async () => {
   if (canal === 'email') msgEnvio = 'Consulta salva e PDF gerado (Envio por e-mail simulado).';
   else if (canal === 'whatsapp') msgEnvio = 'Consulta salva e PDF gerado (Envio por WhatsApp simulado).';
 
-  await gerarArquivoPDFPuro(btnSubmit, msgEnvio);
+  await gerarArquivoPDFPuro(btnDownload, msgEnvio);
 
   // Limpa o rascunho salvo localmente
   limparRascunho();
 
-  btnSubmit.disabled = false;
-  btnSubmit.innerHTML = originalText;
+  btnDownload.disabled = false;
+  btnDownload.innerHTML = originalText;
 
   // Reseta formulario após gerar PDF
   form.reset();
   irParaStep(1);
   document.querySelectorAll('.pp-step').forEach((s) => {
     s.classList.remove('active', 'done');
-    if (s.dataset.step === '1') s.classList.add('active');
+    if (s.id === 'progress-step-1') s.classList.add('active');
   });
   document.querySelectorAll('.pp-step-line').forEach((l) => l.classList.remove('done'));
-});
-
-// ─── Download do PDF ──────────────────────────────────────────────────────────
-btnDownload?.addEventListener('click', async () => {
-  // Valida passos básicos antes de baixar
-  if (!validarStep(1) || !validarStep(2)) {
-    mostrarToast('error', '<i class="fas fa-triangle-exclamation"></i>', 'Preencha os dados obrigatórios antes de baixar.');
-    return;
-  }
-
-  // Aciona o salvamento (mesma lógica do submit)
-  console.log("💾 [Pré-Prontuário] Iniciando salvamento automático ao baixar PDF...");
-
-  // Coleta dados
-  const sintomasSelecionados = {};
-  document.querySelectorAll('input[name="sintomas"]').forEach(cb => {
-    sintomasSelecionados[cb.value] = cb.checked;
-  });
-
-  const dadosClinicos = {
-    alergias: val('alergias'),
-    medicamentos: val('medicamentosEmUso'),
-    doencas: val('doencasPreexistentes'),
-    historico_familiar: val('historicoFamiliar'),
-    pressao: val('pressaoArterial'),
-    freq_cardiaca: val('frequenciaCardiaca'),
-    temperatura: val('temperatura'),
-    saturacao: val('saturacaoOxigenio'),
-    peso: val('peso'),
-    altura: val('altura'),
-    observacoes: val('observacoesAdicionais')
-  };
-
-  const queixa = document.getElementById('queixaPrincipal').value;
-
-  // Salva histórico apenas se não vier do histórico já existente
-  if (!isFromHistory) {
-    console.log("💾 [Pré-Prontuário] Iniciando salvamento automático ao baixar PDF...");
-    const consultationRes = await chatService.saveManualConsultation(queixa, sintomasSelecionados, JSON.stringify(dadosClinicos));
-  } else {
-    console.log("⏭️ [Pré-Prontuário] Pulando salvamento de histórico (Origem: Histórico).");
-  }
-
-  // Sincroniza perfil
-  const perfilPayload = {
-    sexo: val('sexo'),
-    CPF: val('cpf'),
-    data_nascimento: val('dataNascimento'),
-    telefone: val('telefone'),
-    peso: Number(val('peso')) || null,
-    altura: Number(val('altura')) || null,
-    alergias: val('alergias'),
-    medicamentos_em_uso: val('medicamentosEmUso'),
-    doencas_preexistentes: val('doencasPreexistentes'),
-    historico_familiar: val('historicoFamiliar'),
-    pressao_arterial: val('pressaoArterial'),
-    frequencia_cardiaca: Number(val('frequenciaCardiaca')) || null,
-    temperatura: Number(val('temperatura')) || null,
-    saturacao_oxigenio: Number(val('saturacaoOxigenio')) || null,
-    observacoes: val('observacoesAdicionais')
-  };
-  await profileService.saveProfile(perfilPayload);
-
-  // Gera o PDF
-  await gerarArquivoPDFPuro(btnDownload, 'PDF gerado e dados salvos no histórico!');
-
-  // Limpa rascunho
-  limparRascunho();
 });
 
 // ─── Toast ────────────────────────────────────────────────────────────────────

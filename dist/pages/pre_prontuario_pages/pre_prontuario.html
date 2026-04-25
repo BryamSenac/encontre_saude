@@ -8,12 +8,12 @@
   <meta name="description"
     content="Preencha seu pré-prontuário digital e receba o documento pelo e-mail ou WhatsApp antes da consulta.">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script type="module" crossorigin src="/assets/pre_prontuario-BO_3xh1E.js"></script>
+  <script type="module" crossorigin src="/assets/pre_prontuario-qCHbIskq.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/authService-FkTjPsGX.js">
   <link rel="modulepreload" crossorigin href="/assets/sidebar-BkaUTNX8.js">
   <link rel="modulepreload" crossorigin href="/assets/profileService-BVFTB378.js">
-  <link rel="modulepreload" crossorigin href="/assets/chatService-DsIP-FKz.js">
-  <link rel="stylesheet" crossorigin href="/assets/pre_prontuario-Bi85dDw2.css">
+  <link rel="modulepreload" crossorigin href="/assets/chatService-C8Ne2wPU.js">
+  <link rel="stylesheet" crossorigin href="/assets/pre_prontuario-CPV9123h.css">
 </head>
 
 <body>
@@ -190,23 +190,23 @@
                 </div>
                 <div class="pp-field">
                   <label for="frequenciaCardiaca"><i class="fas fa-heart"></i> Freq. Cardíaca</label>
-                  <input type="number" id="frequenciaCardiaca" name="frequenciaCardiaca" placeholder="bpm">
+                  <input type="number" id="frequenciaCardiaca" name="frequenciaCardiaca" placeholder="bpm" min="0" max="300">
                 </div>
                 <div class="pp-field">
                   <label for="temperatura"><i class="fas fa-thermometer"></i> Temperatura</label>
-                  <input type="number" id="temperatura" name="temperatura" placeholder="°C" step="0.1">
+                  <input type="number" id="temperatura" name="temperatura" placeholder="°C" step="0.1" min="30" max="45">
                 </div>
                 <div class="pp-field">
                   <label for="saturacaoOxigenio"><i class="fas fa-lungs"></i> Saturação O₂</label>
-                  <input type="number" id="saturacaoOxigenio" name="saturacaoOxigenio" placeholder="%">
+                  <input type="number" id="saturacaoOxigenio" name="saturacaoOxigenio" placeholder="%" min="0" max="100">
                 </div>
                 <div class="pp-field">
                   <label for="peso"><i class="fas fa-weight-scale"></i> Peso (kg)</label>
-                  <input type="number" id="peso" name="peso" placeholder="kg" step="0.1">
+                  <input type="number" id="peso" name="peso" placeholder="kg" step="0.1" min="0" max="300">
                 </div>
                 <div class="pp-field">
                   <label for="altura"><i class="fas fa-ruler-vertical"></i> Altura (cm)</label>
-                  <input type="number" id="altura" name="altura" placeholder="cm">
+                  <input type="number" id="altura" name="altura" placeholder="cm" min="0" max="300">
                 </div>
               </div>
             </div>
