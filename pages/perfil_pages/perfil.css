@@ -743,6 +743,11 @@ body {
     color: #2471a3;
 }
 
+.perfil-historico-badge--sintomas {
+    background-color: #f4ecf7;
+    color: #8e44ad;
+}
+
 /* Estado vazio dentro do perfil */
 .perfil-historico-vazio {
     text-align: center;

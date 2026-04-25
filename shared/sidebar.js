@@ -4,7 +4,7 @@ import { authService } from "../Services/authService.js";
 
 export async function createSidebar() {
     const { session } = await authService.getUserSession();
-    
+
     const header = document.getElementById("header");
     if (!header) return;
 
@@ -110,7 +110,7 @@ export async function createSidebar() {
 
     // Add class to body to adjust layout
     document.body.classList.add("with-sidebar");
-    
+
     // Injeta Botão Flutuante Global do Telegram
     createTelegramWidget();
 }

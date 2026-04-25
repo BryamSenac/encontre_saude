@@ -61,7 +61,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const extrairSintomas = (sintomasData) => {
     if (!sintomasData) return [];
-    
+
     // Se vier do join do Supabase, virá como um array
     const sintomasObj = Array.isArray(sintomasData) ? sintomasData[0] : sintomasData;
     if (!sintomasObj) return [];
@@ -89,7 +89,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const carregarDadosIniciais = async () => {
     console.log("🔄 [Perfil] Carregando dados iniciais...");
     const { profile, error } = await profileService.getProfile();
-    
+
     if (error) {
       console.error("❌ [Perfil] Erro ao carregar perfil:", error);
     } else {
@@ -192,6 +192,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       const item = document.createElement("div");
       item.className = "perfil-historico-item";
       const dataFormatada = new Date(sessao.created_at).toLocaleString("pt-BR");
+      
+      const listaSintomas = extrairSintomas(sessao.sintomas_atendimento);
+      const sintomasTexto = listaSintomas.length > 0 ? listaSintomas.join(", ") : "Nenhum registrado";
 
       item.innerHTML = `
                 <div class="perfil-historico-item__data">
@@ -201,13 +204,17 @@ document.addEventListener("DOMContentLoaded", async () => {
                     <span class="perfil-historico-badge perfil-historico-badge--user">Você</span>
                     <div class="perfil-historico-content">
                         <p>${sessao.descricao_usuario || "Consulta de sintomas"}</p>
-                        ${extrairSintomas(sessao.sintomas_atendimento).length > 0 
-                          ? `<div class="perfil-historico-item__sintomas">${extrairSintomas(sessao.sintomas_atendimento).map(s => `<span>${s}</span>`).join("")}</div>` 
-                          : ""}
+                        ${listaSintomas.length > 0
+          ? `<div class="perfil-historico-item__sintomas">${listaSintomas.map(s => `<span>${s}</span>`).join("")}</div>`
+          : ""}
                     </div>
                 </div>
                 <div class="perfil-historico-item__row">
-                    <span class="perfil-historico-badge perfil-historico-badge--ai">IA</span>
+                    <span class="perfil-historico-badge perfil-historico-badge--sintomas">Sintomas</span>
+                    <p><strong>Sintomas:</strong> ${sintomasTexto}</p>
+                </div>
+                <div class="perfil-historico-item__row">
+                    <span class="perfil-historico-badge perfil-historico-badge--ai">IA / Notas</span>
                     <p>${sessao.resposta_ia}</p>
                 </div>
                 <div class="perfil-historico-actions">
@@ -234,12 +241,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("modal-data").textContent = new Date(dados.created_at).toLocaleString("pt-BR");
     document.getElementById("modal-usuario").textContent = dados.descricao_usuario;
     document.getElementById("modal-ia").textContent = dados.resposta_ia;
-    
+
     // Sintomas no Modal
     const listaSintomas = extrairSintomas(dados.sintomas_atendimento);
     const containerSintomas = document.getElementById("modal-sintomas");
     const groupSintomas = document.getElementById("modal-sintomas-group");
-    
+
     if (listaSintomas.length > 0) {
       containerSintomas.innerHTML = listaSintomas.map(s => `<span class="sintoma-badge">${s}</span>`).join("");
       groupSintomas.style.display = "block";
@@ -277,7 +284,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const prepararEdicaoEPdf = (sessao) => {
     let clinicos = {};
-    try { clinicos = JSON.parse(sessao.dados_clinicos || "{}"); } catch(e) {}
+    try { clinicos = JSON.parse(sessao.dados_clinicos || "{}"); } catch (e) { }
 
     const draftData = {
       data: {
@@ -300,6 +307,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         altura: clinicos.altura || "",
         observacoesAdicionais: clinicos.observacoes || ""
       },
+      isFromHistory: true, // Flag para evitar duplicidade ao gerar PDF
       currentStep: 4, // Leva direto para a tela de resumo/envio
       timestamp: Date.now()
     };
